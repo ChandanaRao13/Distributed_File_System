@@ -14,18 +14,18 @@ import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
 
 
-public class InboundQueueThread extends Thread {
+public class InboundCommandQueueThread extends Thread {
 
 	private QueueManager manager;
 	private WriteRouterHandler writerRouter;
 	private ReadRouterHandler readRouter;
-	protected static Logger logger = LoggerFactory.getLogger(InboundQueueThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(InboundCommandQueueThread.class);
 
-	public InboundQueueThread(QueueManager manager) {
+	public InboundCommandQueueThread(QueueManager manager) {
 		super();
 		this.manager = manager;
 		if (manager.inboundCommandQueue == null)
-			throw new RuntimeException("Poller has a null queue");
+			throw new RuntimeException("Manager has no inbound command queue");
 		
 		writerRouter = new WriteRouterHandler();
 		readRouter = new ReadRouterHandler();
