@@ -1,20 +1,21 @@
 package gash.router.database;
 
+import gash.router.database.datatypes.FluffyFile;
+import gash.router.server.manage.exceptions.FileNotFoundException;
+import gash.router.util.Constants;
+
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gash.router.server.manage.exceptions.FileNotFoundException;
-import gash.router.util.Constants;
-
 import com.rethinkdb.RethinkDB;
-import com.rethinkdb.gen.ast.Limit;
 import com.rethinkdb.net.Connection;
 import com.rethinkdb.net.Cursor;
 
@@ -130,21 +131,24 @@ public class DatabaseHandler {
 	 * @throws ParseException
 	 * @throws FileNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
-	public static JSONArray getFileContents(String filename) throws IOException, ParseException, FileNotFoundException {
-		Connection conn = getConnection();
-		Cursor<String> data = rethinkDBInstance.db(Constants.DATABASE)
+	public static List<FluffyFile> getFileContents(String filename) throws IOException, ParseException, FileNotFoundException {
+		Connection connection = getConnection();
+		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE)
 				.table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap("filename", filename))
-				.run(conn);
-		if (data == null)
+				.run(connection);
+		if (dataFromDB == null)
 			throw new FileNotFoundException(filename);
 		else {
-			JSONArray fileContents = new JSONArray();
-			for (Object change : data) {
-				System.out.println(change);
-				JSONObject fileContent = (JSONObject) jsonParse.parse(new StringReader((String) change));
-				fileContents.add(fileContent);
+			List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
+			for (Object record : dataFromDB) {
+				JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
+				FluffyFile fluffyFile = new FluffyFile();
+				fluffyFile.setChunkId(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_ID)));
+				fluffyFile.setFile((byte[]) fileContentJSON.get(Constants.FILE_CONTENT));
+				fluffyFile.setFilename((String) fileContentJSON.get(Constants.FILE_NAME));
+				fluffyFile.setTotalChunks(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_COUNT)));
+				fileContents.add(fluffyFile);
 			}
 			return fileContents;
 		}
@@ -159,22 +163,26 @@ public class DatabaseHandler {
 	 * @throws ParseException
 	 * @throws FileNotFoundException
 	 */
-	@SuppressWarnings("unchecked")
-	public static JSONArray getFileContentWithChunkId(String filename, int chunkId) throws IOException, ParseException, FileNotFoundException {
-		Connection conn = getConnection();
-		Cursor<String> data = rethinkDBInstance.db(Constants.DATABASE)
+	public static List<FluffyFile> getFileContentWithChunkId(String filename, int chunkId) throws IOException, ParseException, FileNotFoundException {
+		Connection connection = getConnection();
+
+		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE)
 				.table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap("filename", filename).with(Constants.CHUNK_ID, chunkId))
-				.run(conn);
-				//.with(Constants.CHUNK_ID, chunkId)
-		if (data == null)
+				.run(connection);
+
+		if (dataFromDB == null)
 			throw new FileNotFoundException(filename);
 		else {
-			JSONArray fileContents = new JSONArray();
-			for (Object change : data) {
-				System.out.println(change);
-				JSONObject fileContent = (JSONObject) jsonParse.parse(new StringReader((String) change));
-				fileContents.add(fileContent);
+			List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
+			for (Object record : dataFromDB) {
+				JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
+				FluffyFile fluffyFile = new FluffyFile();
+				fluffyFile.setChunkId(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_ID)));
+				fluffyFile.setFile((byte[]) fileContentJSON.get(Constants.FILE_CONTENT));
+				fluffyFile.setFilename((String) fileContentJSON.get(Constants.FILE_NAME));
+				fluffyFile.setTotalChunks(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_COUNT)));
+				fileContents.add(fluffyFile);
 			}
 			return fileContents;
 		}
