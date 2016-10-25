@@ -50,9 +50,10 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param line
 	 * @param chunkId
+	 * @return 
 	 */
 	@Deprecated
-	public static void addFile(String filename, String line, int chunkId) {
+	public static boolean addFile(String filename, String line, int chunkId) {
 		Connection conn = getConnection();
 		try {
 			rethinkDBInstance
@@ -65,7 +66,9 @@ public class DatabaseHandler {
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to store file in the database");
 			System.out.println("File is not added");
+			return false;
 		}
+		return true;
 	}
 
 	/**

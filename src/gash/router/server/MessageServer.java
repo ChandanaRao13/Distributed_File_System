@@ -29,6 +29,7 @@ import gash.router.container.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.election.RaftElectionContext;
 import gash.router.server.queue.management.QueueManager;
+import gash.router.server.replication.DataReplicationManager;
 import gash.router.server.tasks.NoOpBalancer;
 import gash.router.server.tasks.TaskList;
 import io.netty.bootstrap.ServerBootstrap;
@@ -66,6 +67,8 @@ public class MessageServer {
 	}
 
 	public void startServer() throws InterruptedException {
+		QueueManager.initManager();
+		DataReplicationManager.initDataReplicationManager();
 		StartWorkCommunication comm = new StartWorkCommunication(conf);
 		logger.info("Work starting");
 

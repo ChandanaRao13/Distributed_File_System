@@ -349,13 +349,7 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 			try {
 				while (forever) {
 					addToNode2ChannelMap(getInboundEdges());
-					addToNode2ChannelMap(getOutboundEdges());
-				
-				//	System.out.println("node2Channel Map : " + node2ChannelMap.toString());
-					// Make it efficient
-					// Thread.sleep(NodeChannelManager.delay);
-				}
-
+					addToNode2ChannelMap(getOutboundEdges());				}
 			} catch (Exception e) {
 				logger.error("An error has occured ", e);
 			}

@@ -4,6 +4,7 @@ option java_package = "pipe.work";
 
 import "common.proto";
 import "election.proto";
+import "pipe.proto";
 
 message WorkState {
    required int32 enqueued = 1;
@@ -26,6 +27,12 @@ message Task {
 message WorkMessage {
    required Header header = 1;
    required int64 secret = 2;
+   enum Worktype {
+      REPLICATE_REQUEST = 1;
+
+   }
+
+   optional Worktype worktype = 13;
 
    /**
     * The actions (request or response) is
@@ -41,7 +48,7 @@ message WorkMessage {
       // status updates between adjacent workers
       Heartbeat beat = 5;
 
-      Task task = 6;
+      FileTask filetask = 6;
       WorkState state = 7;
       LeaderStatus leader = 8;
 

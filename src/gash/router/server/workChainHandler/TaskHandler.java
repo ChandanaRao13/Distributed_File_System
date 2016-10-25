@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.netty.channel.Channel;
-import pipe.work.Work.Task;
 import pipe.work.Work.WorkMessage;
+import routing.Pipe.FileTask;
 
 /**
  * 
@@ -24,8 +24,9 @@ public class TaskHandler implements IWorkChainHandler{
 	@Override
 	public void handle(WorkMessage workMessage, Channel channel) {
 		// TODO Auto-generated method stub
-		if(workMessage.hasTask()) {
-			Task t = workMessage.getTask();
+		if(workMessage.hasFiletask()) {
+			logger.info("Recieved replicate work message");
+		//	QueueManager.getInstance().enqueueInboundWork(msg, channel);
 		}
 		else {
 			this.nextChainHandler.handle(workMessage, channel);

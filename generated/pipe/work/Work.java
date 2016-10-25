@@ -1551,6 +1551,15 @@ public final class Work {
     long getSecret();
 
     /**
+     * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+     */
+    boolean hasWorktype();
+    /**
+     * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+     */
+    pipe.work.Work.WorkMessage.Worktype getWorktype();
+
+    /**
      * <code>optional .Failure err = 3;</code>
      */
     boolean hasErr();
@@ -1606,17 +1615,17 @@ public final class Work {
     pipe.work.Work.HeartbeatOrBuilder getBeatOrBuilder();
 
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    boolean hasTask();
+    boolean hasFiletask();
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    pipe.work.Work.Task getTask();
+    routing.Pipe.FileTask getFiletask();
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    pipe.work.Work.TaskOrBuilder getTaskOrBuilder();
+    routing.Pipe.FileTaskOrBuilder getFiletaskOrBuilder();
 
     /**
      * <code>optional .WorkState state = 7;</code>
@@ -1781,13 +1790,13 @@ public final class Work {
               break;
             }
             case 50: {
-              pipe.work.Work.Task.Builder subBuilder = null;
+              routing.Pipe.FileTask.Builder subBuilder = null;
               if (payloadCase_ == 6) {
-                subBuilder = ((pipe.work.Work.Task) payload_).toBuilder();
+                subBuilder = ((routing.Pipe.FileTask) payload_).toBuilder();
               }
-              payload_ = input.readMessage(pipe.work.Work.Task.PARSER, extensionRegistry);
+              payload_ = input.readMessage(routing.Pipe.FileTask.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((pipe.work.Work.Task) payload_);
+                subBuilder.mergeFrom((routing.Pipe.FileTask) payload_);
                 payload_ = subBuilder.buildPartial();
               }
               payloadCase_ = 6;
@@ -1842,6 +1851,17 @@ public final class Work {
               payload_ = input.readBool();
               break;
             }
+            case 104: {
+              int rawValue = input.readEnum();
+              pipe.work.Work.WorkMessage.Worktype value = pipe.work.Work.WorkMessage.Worktype.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(13, rawValue);
+              } else {
+                bitField0_ |= 0x00000004;
+                worktype_ = value;
+              }
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1881,6 +1901,79 @@ public final class Work {
       return PARSER;
     }
 
+    /**
+     * Protobuf enum {@code WorkMessage.Worktype}
+     */
+    public enum Worktype
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>REPLICATE_REQUEST = 1;</code>
+       */
+      REPLICATE_REQUEST(0, 1),
+      ;
+
+      /**
+       * <code>REPLICATE_REQUEST = 1;</code>
+       */
+      public static final int REPLICATE_REQUEST_VALUE = 1;
+
+
+      public final int getNumber() { return value; }
+
+      public static Worktype valueOf(int value) {
+        switch (value) {
+          case 1: return REPLICATE_REQUEST;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Worktype>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<Worktype>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Worktype>() {
+              public Worktype findValueByNumber(int number) {
+                return Worktype.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return pipe.work.Work.WorkMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Worktype[] VALUES = values();
+
+      public static Worktype valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Worktype(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:WorkMessage.Worktype)
+    }
+
     private int bitField0_;
     private int payloadCase_ = 0;
     private java.lang.Object payload_;
@@ -1889,7 +1982,7 @@ public final class Work {
       ERR(3),
       PING(4),
       BEAT(5),
-      TASK(6),
+      FILETASK(6),
       STATE(7),
       LEADER(8),
       RAFTMESSAGE(9),
@@ -1905,7 +1998,7 @@ public final class Work {
           case 3: return ERR;
           case 4: return PING;
           case 5: return BEAT;
-          case 6: return TASK;
+          case 6: return FILETASK;
           case 7: return STATE;
           case 8: return LEADER;
           case 9: return RAFTMESSAGE;
@@ -1961,6 +2054,21 @@ public final class Work {
      */
     public long getSecret() {
       return secret_;
+    }
+
+    public static final int WORKTYPE_FIELD_NUMBER = 13;
+    private pipe.work.Work.WorkMessage.Worktype worktype_;
+    /**
+     * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+     */
+    public boolean hasWorktype() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+     */
+    public pipe.work.Work.WorkMessage.Worktype getWorktype() {
+      return worktype_;
     }
 
     public static final int ERR_FIELD_NUMBER = 3;
@@ -2052,30 +2160,30 @@ public final class Work {
       return pipe.work.Work.Heartbeat.getDefaultInstance();
     }
 
-    public static final int TASK_FIELD_NUMBER = 6;
+    public static final int FILETASK_FIELD_NUMBER = 6;
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    public boolean hasTask() {
+    public boolean hasFiletask() {
       return payloadCase_ == 6;
     }
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    public pipe.work.Work.Task getTask() {
+    public routing.Pipe.FileTask getFiletask() {
       if (payloadCase_ == 6) {
-         return (pipe.work.Work.Task) payload_;
+         return (routing.Pipe.FileTask) payload_;
       }
-      return pipe.work.Work.Task.getDefaultInstance();
+      return routing.Pipe.FileTask.getDefaultInstance();
     }
     /**
-     * <code>optional .Task task = 6;</code>
+     * <code>optional .FileTask filetask = 6;</code>
      */
-    public pipe.work.Work.TaskOrBuilder getTaskOrBuilder() {
+    public routing.Pipe.FileTaskOrBuilder getFiletaskOrBuilder() {
       if (payloadCase_ == 6) {
-         return (pipe.work.Work.Task) payload_;
+         return (routing.Pipe.FileTask) payload_;
       }
-      return pipe.work.Work.Task.getDefaultInstance();
+      return routing.Pipe.FileTask.getDefaultInstance();
     }
 
     public static final int STATE_FIELD_NUMBER = 7;
@@ -2193,6 +2301,7 @@ public final class Work {
     private void initFields() {
       header_ = pipe.common.Common.Header.getDefaultInstance();
       secret_ = 0L;
+      worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2224,8 +2333,8 @@ public final class Work {
           return false;
         }
       }
-      if (hasTask()) {
-        if (!getTask().isInitialized()) {
+      if (hasFiletask()) {
+        if (!getFiletask().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -2266,7 +2375,7 @@ public final class Work {
         output.writeMessage(5, (pipe.work.Work.Heartbeat) payload_);
       }
       if (payloadCase_ == 6) {
-        output.writeMessage(6, (pipe.work.Work.Task) payload_);
+        output.writeMessage(6, (routing.Pipe.FileTask) payload_);
       }
       if (payloadCase_ == 7) {
         output.writeMessage(7, (pipe.work.Work.WorkState) payload_);
@@ -2284,6 +2393,9 @@ public final class Work {
       if (payloadCase_ == 12) {
         output.writeBool(
             12, (boolean)((java.lang.Boolean) payload_));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeEnum(13, worktype_.getNumber());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2317,7 +2429,7 @@ public final class Work {
       }
       if (payloadCase_ == 6) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, (pipe.work.Work.Task) payload_);
+          .computeMessageSize(6, (routing.Pipe.FileTask) payload_);
       }
       if (payloadCase_ == 7) {
         size += com.google.protobuf.CodedOutputStream
@@ -2340,6 +2452,10 @@ public final class Work {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(
               12, (boolean)((java.lang.Boolean) payload_));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(13, worktype_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2471,6 +2587,8 @@ public final class Work {
         bitField0_ = (bitField0_ & ~0x00000001);
         secret_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
+        worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
+        bitField0_ = (bitField0_ & ~0x00000004);
         payloadCase_ = 0;
         payload_ = null;
         return this;
@@ -2513,6 +2631,10 @@ public final class Work {
           to_bitField0_ |= 0x00000002;
         }
         result.secret_ = secret_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.worktype_ = worktype_;
         if (payloadCase_ == 3) {
           if (errBuilder_ == null) {
             result.payload_ = payload_;
@@ -2531,10 +2653,10 @@ public final class Work {
           }
         }
         if (payloadCase_ == 6) {
-          if (taskBuilder_ == null) {
+          if (filetaskBuilder_ == null) {
             result.payload_ = payload_;
           } else {
-            result.payload_ = taskBuilder_.build();
+            result.payload_ = filetaskBuilder_.build();
           }
         }
         if (payloadCase_ == 7) {
@@ -2587,6 +2709,9 @@ public final class Work {
         if (other.hasSecret()) {
           setSecret(other.getSecret());
         }
+        if (other.hasWorktype()) {
+          setWorktype(other.getWorktype());
+        }
         switch (other.getPayloadCase()) {
           case ERR: {
             mergeErr(other.getErr());
@@ -2600,8 +2725,8 @@ public final class Work {
             mergeBeat(other.getBeat());
             break;
           }
-          case TASK: {
-            mergeTask(other.getTask());
+          case FILETASK: {
+            mergeFiletask(other.getFiletask());
             break;
           }
           case STATE: {
@@ -2657,8 +2782,8 @@ public final class Work {
             return false;
           }
         }
-        if (hasTask()) {
-          if (!getTask().isInitialized()) {
+        if (hasFiletask()) {
+          if (!getFiletask().isInitialized()) {
             
             return false;
           }
@@ -2856,6 +2981,41 @@ public final class Work {
       public Builder clearSecret() {
         bitField0_ = (bitField0_ & ~0x00000002);
         secret_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private pipe.work.Work.WorkMessage.Worktype worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
+      /**
+       * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+       */
+      public boolean hasWorktype() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+       */
+      public pipe.work.Work.WorkMessage.Worktype getWorktype() {
+        return worktype_;
+      }
+      /**
+       * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+       */
+      public Builder setWorktype(pipe.work.Work.WorkMessage.Worktype value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
+        worktype_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .WorkMessage.Worktype worktype = 13;</code>
+       */
+      public Builder clearWorktype() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
         onChanged();
         return this;
       }
@@ -3219,67 +3379,67 @@ public final class Work {
       }
 
       private com.google.protobuf.SingleFieldBuilder<
-          pipe.work.Work.Task, pipe.work.Work.Task.Builder, pipe.work.Work.TaskOrBuilder> taskBuilder_;
+          routing.Pipe.FileTask, routing.Pipe.FileTask.Builder, routing.Pipe.FileTaskOrBuilder> filetaskBuilder_;
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public boolean hasTask() {
+      public boolean hasFiletask() {
         return payloadCase_ == 6;
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public pipe.work.Work.Task getTask() {
-        if (taskBuilder_ == null) {
+      public routing.Pipe.FileTask getFiletask() {
+        if (filetaskBuilder_ == null) {
           if (payloadCase_ == 6) {
-            return (pipe.work.Work.Task) payload_;
+            return (routing.Pipe.FileTask) payload_;
           }
-          return pipe.work.Work.Task.getDefaultInstance();
+          return routing.Pipe.FileTask.getDefaultInstance();
         } else {
           if (payloadCase_ == 6) {
-            return taskBuilder_.getMessage();
+            return filetaskBuilder_.getMessage();
           }
-          return pipe.work.Work.Task.getDefaultInstance();
+          return routing.Pipe.FileTask.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public Builder setTask(pipe.work.Work.Task value) {
-        if (taskBuilder_ == null) {
+      public Builder setFiletask(routing.Pipe.FileTask value) {
+        if (filetaskBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           payload_ = value;
           onChanged();
         } else {
-          taskBuilder_.setMessage(value);
+          filetaskBuilder_.setMessage(value);
         }
         payloadCase_ = 6;
         return this;
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public Builder setTask(
-          pipe.work.Work.Task.Builder builderForValue) {
-        if (taskBuilder_ == null) {
+      public Builder setFiletask(
+          routing.Pipe.FileTask.Builder builderForValue) {
+        if (filetaskBuilder_ == null) {
           payload_ = builderForValue.build();
           onChanged();
         } else {
-          taskBuilder_.setMessage(builderForValue.build());
+          filetaskBuilder_.setMessage(builderForValue.build());
         }
         payloadCase_ = 6;
         return this;
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public Builder mergeTask(pipe.work.Work.Task value) {
-        if (taskBuilder_ == null) {
+      public Builder mergeFiletask(routing.Pipe.FileTask value) {
+        if (filetaskBuilder_ == null) {
           if (payloadCase_ == 6 &&
-              payload_ != pipe.work.Work.Task.getDefaultInstance()) {
-            payload_ = pipe.work.Work.Task.newBuilder((pipe.work.Work.Task) payload_)
+              payload_ != routing.Pipe.FileTask.getDefaultInstance()) {
+            payload_ = routing.Pipe.FileTask.newBuilder((routing.Pipe.FileTask) payload_)
                 .mergeFrom(value).buildPartial();
           } else {
             payload_ = value;
@@ -3287,18 +3447,18 @@ public final class Work {
           onChanged();
         } else {
           if (payloadCase_ == 6) {
-            taskBuilder_.mergeFrom(value);
+            filetaskBuilder_.mergeFrom(value);
           }
-          taskBuilder_.setMessage(value);
+          filetaskBuilder_.setMessage(value);
         }
         payloadCase_ = 6;
         return this;
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public Builder clearTask() {
-        if (taskBuilder_ == null) {
+      public Builder clearFiletask() {
+        if (filetaskBuilder_ == null) {
           if (payloadCase_ == 6) {
             payloadCase_ = 0;
             payload_ = null;
@@ -3309,48 +3469,48 @@ public final class Work {
             payloadCase_ = 0;
             payload_ = null;
           }
-          taskBuilder_.clear();
+          filetaskBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public pipe.work.Work.Task.Builder getTaskBuilder() {
-        return getTaskFieldBuilder().getBuilder();
+      public routing.Pipe.FileTask.Builder getFiletaskBuilder() {
+        return getFiletaskFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
-      public pipe.work.Work.TaskOrBuilder getTaskOrBuilder() {
-        if ((payloadCase_ == 6) && (taskBuilder_ != null)) {
-          return taskBuilder_.getMessageOrBuilder();
+      public routing.Pipe.FileTaskOrBuilder getFiletaskOrBuilder() {
+        if ((payloadCase_ == 6) && (filetaskBuilder_ != null)) {
+          return filetaskBuilder_.getMessageOrBuilder();
         } else {
           if (payloadCase_ == 6) {
-            return (pipe.work.Work.Task) payload_;
+            return (routing.Pipe.FileTask) payload_;
           }
-          return pipe.work.Work.Task.getDefaultInstance();
+          return routing.Pipe.FileTask.getDefaultInstance();
         }
       }
       /**
-       * <code>optional .Task task = 6;</code>
+       * <code>optional .FileTask filetask = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          pipe.work.Work.Task, pipe.work.Work.Task.Builder, pipe.work.Work.TaskOrBuilder> 
-          getTaskFieldBuilder() {
-        if (taskBuilder_ == null) {
+          routing.Pipe.FileTask, routing.Pipe.FileTask.Builder, routing.Pipe.FileTaskOrBuilder> 
+          getFiletaskFieldBuilder() {
+        if (filetaskBuilder_ == null) {
           if (!(payloadCase_ == 6)) {
-            payload_ = pipe.work.Work.Task.getDefaultInstance();
+            payload_ = routing.Pipe.FileTask.getDefaultInstance();
           }
-          taskBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              pipe.work.Work.Task, pipe.work.Work.Task.Builder, pipe.work.Work.TaskOrBuilder>(
-                  (pipe.work.Work.Task) payload_,
+          filetaskBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              routing.Pipe.FileTask, routing.Pipe.FileTask.Builder, routing.Pipe.FileTaskOrBuilder>(
+                  (routing.Pipe.FileTask) payload_,
                   getParentForChildren(),
                   isClean());
           payload_ = null;
         }
         payloadCase_ = 6;
-        return taskBuilder_;
+        return filetaskBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilder<
@@ -3871,18 +4031,20 @@ public final class Work {
   static {
     java.lang.String[] descriptorData = {
       "\n\nwork.proto\032\014common.proto\032\016election.pro" +
-      "to\"0\n\tWorkState\022\020\n\010enqueued\030\001 \002(\005\022\021\n\tpro" +
-      "cessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n\005state\030\001 \002(\013" +
-      "2\n.WorkState\")\n\004Task\022\021\n\tseries_id\030\001 \002(\003\022" +
-      "\016\n\006seq_id\030\002 \002(\005\"\262\002\n\013WorkMessage\022\027\n\006heade" +
-      "r\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002 \002(\003\022\027\n\003err\030" +
-      "\003 \001(\0132\010.FailureH\000\022\016\n\004ping\030\004 \001(\010H\000\022\032\n\004bea" +
-      "t\030\005 \001(\0132\n.HeartbeatH\000\022\025\n\004task\030\006 \001(\0132\005.Ta" +
-      "skH\000\022\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006lea" +
-      "der\030\010 \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessag",
-      "e\030\t \001(\0132\024.RaftElectionMessageH\000\022\021\n\007newNo" +
-      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000B\t\n\007pay" +
-      "loadB\r\n\tpipe.workH\001"
+      "to\032\npipe.proto\"0\n\tWorkState\022\020\n\010enqueued\030" +
+      "\001 \002(\005\022\021\n\tprocessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n" +
+      "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
+      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\206\003\n\013WorkMess" +
+      "age\022\027\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002" +
+      " \002(\003\022\'\n\010worktype\030\r \001(\0162\025.WorkMessage.Wor" +
+      "ktype\022\027\n\003err\030\003 \001(\0132\010.FailureH\000\022\016\n\004ping\030\004" +
+      " \001(\010H\000\022\032\n\004beat\030\005 \001(\0132\n.HeartbeatH\000\022\035\n\010fi" +
+      "letask\030\006 \001(\0132\t.FileTaskH\000\022\033\n\005state\030\007 \001(\013",
+      "2\n.WorkStateH\000\022\037\n\006leader\030\010 \001(\0132\r.LeaderS" +
+      "tatusH\000\022+\n\013raftMessage\030\t \001(\0132\024.RaftElect" +
+      "ionMessageH\000\022\021\n\007newNode\030\013 \001(\010H\000\022\025\n\013flagR" +
+      "outing\030\014 \001(\010H\000\"!\n\010Worktype\022\025\n\021REPLICATE_" +
+      "REQUEST\020\001B\t\n\007payloadB\r\n\tpipe.workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3897,6 +4059,7 @@ public final class Work {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           pipe.common.Common.getDescriptor(),
           pipe.election.Election.getDescriptor(),
+          routing.Pipe.getDescriptor(),
         }, assigner);
     internal_static_WorkState_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -3921,9 +4084,10 @@ public final class Work {
     internal_static_WorkMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_WorkMessage_descriptor,
-        new java.lang.String[] { "Header", "Secret", "Err", "Ping", "Beat", "Task", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
+        new java.lang.String[] { "Header", "Secret", "Worktype", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
     pipe.common.Common.getDescriptor();
     pipe.election.Election.getDescriptor();
+    routing.Pipe.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
