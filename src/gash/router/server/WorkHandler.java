@@ -14,7 +14,8 @@
  * under the License.
  */
 package gash.router.server;
-
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import gash.router.server.workChainHandler.FailureHandler;
 import gash.router.server.workChainHandler.HeartBeatHandler;
 import gash.router.server.workChainHandler.IWorkChainHandler;
@@ -28,8 +29,20 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gash.router.server.edges.EdgeInfo;
+import gash.router.server.edges.EdgeList;
+import gash.router.util.RaftMessageBuilder;
+import io.netty.channel.ChannelFuture;
 import pipe.common.Common.Failure;
+import pipe.common.Common.Header;
+import pipe.election.Election;
+import pipe.election.Election.LeaderStatus.LeaderQuery;
+import pipe.election.Election.LeaderStatus.LeaderState;
+import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
+import pipe.work.Work.Heartbeat;
+import pipe.work.Work.Task;
 import pipe.work.Work.WorkMessage;
+import pipe.work.Work.WorkState;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -83,6 +96,65 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		// TODO How can you implement this without if-else statements?
 		try {
 			hearBeatChainHandler.handle(msg, channel);
+			if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.VOTE_REQUEST) {
+				state.getElectionCtx().getCurrentState().VoteRequestReceived(msg);
+			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.VOTE_RESPONSE) {
+				state.getElectionCtx().getCurrentState().voteRecieved(msg);
+			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.LEADER_HEARTBEAT) {
+				//System.out.println("Rceived heart beat");
+				state.getElectionCtx().getCurrentState().getHearbeatFromLeader(msg);
+			}else if (msg.hasNewNode()) {
+				logger.info("NEW NODE TRYING TO CONNECT " + msg.getHeader().getNodeId());
+				WorkMessage wm = state.getEmon().createRoutingMsg();
+
+				ChannelFuture cf = channel.write(wm);
+				channel.flush();
+				cf.awaitUninterruptibly();
+				if (cf.isDone() && !cf.isSuccess()) {
+					logger.info("Failed to write the message to the channel ");
+				}
+			
+				SocketAddress remoteAddress = channel.remoteAddress();
+				InetSocketAddress addr = (InetSocketAddress) remoteAddress;
+
+				state.getEmon().createInboundIfNew(msg.getHeader().getNodeId(), addr.getHostName(), 5100);
+				state.getEmon().getInBoundEdgesList().getNode(msg.getHeader().getNodeId()).setChannel(channel);
+
+			}else if (msg.hasFlagRouting()) {
+				logger.info("Routing information recieved " + msg.getHeader().getNodeId());
+				//logger.info("Routing Entries: " + msg.getRoutingEntries());
+
+				System.out.println("CONNECTED TO NEW NODE---------------------------------");
+				SocketAddress remoteAddress = channel.remoteAddress();
+				InetSocketAddress addr = (InetSocketAddress) remoteAddress;
+
+				state.getEmon().createOutboundIfNew(msg.getHeader().getNodeId(), addr.getHostName(), 5100);
+
+				System.out.println(addr.getHostName());
+
+			} else if (msg.hasLeader() && msg.getLeader().getAction() == LeaderQuery.WHOISTHELEADER  && state.getElectionCtx().getTerm()>0 ) {
+				WorkMessage buildNewNodeLeaderStatusResponseMessage = RaftMessageBuilder
+						.buildTheLeaderIsMessage(state.getElectionCtx().getLeaderId(),state.getElectionCtx().getTerm());
+				
+				ChannelFuture cf = channel.write(buildNewNodeLeaderStatusResponseMessage);
+				channel.flush();
+				cf.awaitUninterruptibly();
+				if (cf.isDone() && !cf.isSuccess()) {
+					logger.info("Failed to write the message to the channel ");
+				}
+				
+				state.getEmon().getOutBoundEdgesList().getNode(msg.getHeader().getNodeId()).setChannel(channel);
+
+				// Sent the newly discovered node all the data on this node.
+
+			}else if (msg.hasLeader() && msg.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
+				state.getElectionCtx().setLeaderId(msg.getLeader().getLeaderId());
+				state.getElectionCtx().setTerm(msg.getLeader().getTerm());
+				//NodeChannelManager.amIPartOfNetwork = true;
+				//logger.info("The leader is " + state.getElectionCtx().getLeaderId());
+			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.LEADER_HB_ACK) {
+				state.getElectionCtx().getCurrentState().sendHearbeatAck(msg);
+			} 
 		} catch (Exception e) {
 			// TODO add logging
 			Failure.Builder eb = Failure.newBuilder();

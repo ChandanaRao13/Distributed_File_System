@@ -65,6 +65,15 @@ public final class Common {
      * </pre>
      */
     int getMaxHops();
+
+    /**
+     * <code>optional bool isElectionProcess = 11;</code>
+     */
+    boolean hasIsElectionProcess();
+    /**
+     * <code>optional bool isElectionProcess = 11;</code>
+     */
+    boolean getIsElectionProcess();
   }
   /**
    * Protobuf type {@code Header}
@@ -142,6 +151,11 @@ public final class Common {
             case 80: {
               bitField0_ |= 0x00000008;
               maxHops_ = input.readInt32();
+              break;
+            }
+            case 88: {
+              bitField0_ |= 0x00000010;
+              isElectionProcess_ = input.readBool();
               break;
             }
           }
@@ -262,11 +276,27 @@ public final class Common {
       return maxHops_;
     }
 
+    public static final int ISELECTIONPROCESS_FIELD_NUMBER = 11;
+    private boolean isElectionProcess_;
+    /**
+     * <code>optional bool isElectionProcess = 11;</code>
+     */
+    public boolean hasIsElectionProcess() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional bool isElectionProcess = 11;</code>
+     */
+    public boolean getIsElectionProcess() {
+      return isElectionProcess_;
+    }
+
     private void initFields() {
       nodeId_ = 0;
       time_ = 0L;
       destination_ = 0;
       maxHops_ = -1;
+      isElectionProcess_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -301,6 +331,9 @@ public final class Common {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(10, maxHops_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBool(11, isElectionProcess_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -325,6 +358,10 @@ public final class Common {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(10, maxHops_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(11, isElectionProcess_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -457,6 +494,8 @@ public final class Common {
         bitField0_ = (bitField0_ & ~0x00000004);
         maxHops_ = -1;
         bitField0_ = (bitField0_ & ~0x00000008);
+        isElectionProcess_ = false;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -501,6 +540,10 @@ public final class Common {
           to_bitField0_ |= 0x00000008;
         }
         result.maxHops_ = maxHops_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.isElectionProcess_ = isElectionProcess_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -528,6 +571,9 @@ public final class Common {
         }
         if (other.hasMaxHops()) {
           setMaxHops(other.getMaxHops());
+        }
+        if (other.hasIsElectionProcess()) {
+          setIsElectionProcess(other.getIsElectionProcess());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -724,6 +770,38 @@ public final class Common {
       public Builder clearMaxHops() {
         bitField0_ = (bitField0_ & ~0x00000008);
         maxHops_ = -1;
+        onChanged();
+        return this;
+      }
+
+      private boolean isElectionProcess_ ;
+      /**
+       * <code>optional bool isElectionProcess = 11;</code>
+       */
+      public boolean hasIsElectionProcess() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional bool isElectionProcess = 11;</code>
+       */
+      public boolean getIsElectionProcess() {
+        return isElectionProcess_;
+      }
+      /**
+       * <code>optional bool isElectionProcess = 11;</code>
+       */
+      public Builder setIsElectionProcess(boolean value) {
+        bitField0_ |= 0x00000010;
+        isElectionProcess_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool isElectionProcess = 11;</code>
+       */
+      public Builder clearIsElectionProcess() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        isElectionProcess_ = false;
         onChanged();
         return this;
       }
@@ -1398,11 +1476,11 @@ public final class Common {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\014common.proto\"R\n\006Header\022\017\n\007node_id\030\001 \002(" +
+      "\n\014common.proto\"m\n\006Header\022\017\n\007node_id\030\001 \002(" +
       "\005\022\014\n\004time\030\002 \002(\003\022\023\n\013destination\030\010 \001(\005\022\024\n\010" +
-      "max_hops\030\n \001(\005:\002-1\"6\n\007Failure\022\n\n\002id\030\001 \002(" +
-      "\005\022\016\n\006ref_id\030\002 \001(\005\022\017\n\007message\030\003 \001(\tB\017\n\013pi" +
-      "pe.commonH\001"
+      "max_hops\030\n \001(\005:\002-1\022\031\n\021isElectionProcess\030" +
+      "\013 \001(\010\"6\n\007Failure\022\n\n\002id\030\001 \002(\005\022\016\n\006ref_id\030\002" +
+      " \001(\005\022\017\n\007message\030\003 \001(\tB\017\n\013pipe.commonH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1421,7 +1499,7 @@ public final class Common {
     internal_static_Header_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_Header_descriptor,
-        new java.lang.String[] { "NodeId", "Time", "Destination", "MaxHops", });
+        new java.lang.String[] { "NodeId", "Time", "Destination", "MaxHops", "IsElectionProcess", });
     internal_static_Failure_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_Failure_fieldAccessorTable = new

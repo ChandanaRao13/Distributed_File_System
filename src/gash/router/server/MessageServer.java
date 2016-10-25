@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
+import gash.router.server.election.RaftElectionContext;
 import gash.router.server.queue.management.QueueManager;
 import gash.router.server.tasks.NoOpBalancer;
 import gash.router.server.tasks.TaskList;
@@ -64,8 +65,7 @@ public class MessageServer {
 	public void release() {
 	}
 
-	public void startServer() {
-		QueueManager.initManager();
+	public void startServer() throws InterruptedException {
 		StartWorkCommunication comm = new StartWorkCommunication(conf);
 		logger.info("Work starting");
 
@@ -74,7 +74,8 @@ public class MessageServer {
 		cthread.start();
 		
 		if (!conf.isInternalNode()) {
-			StartCommandCommunication comm2 = new StartCommandCommunication(conf);
+
+			StartCommandCommunication comm2 = new StartCommandCommunication(conf,comm);
 			logger.info("Command starting");
 
 			if (background) {
@@ -132,9 +133,10 @@ public class MessageServer {
 	 */
 	private static class StartCommandCommunication implements Runnable {
 		RoutingConf conf;
-
-		public StartCommandCommunication(RoutingConf conf) {
+		RaftElectionContext electionCtx; 
+		public StartCommandCommunication(RoutingConf conf,StartWorkCommunication work) {
 			this.conf = conf;
+			this.electionCtx = work.workElectionCtx;
 		}
 
 		public void run() {
@@ -187,6 +189,7 @@ public class MessageServer {
 	 */
 	private static class StartWorkCommunication implements Runnable {
 		ServerState state;
+		RaftElectionContext workElectionCtx;
 
 		public StartWorkCommunication(RoutingConf conf) {
 			if (conf == null)
@@ -194,14 +197,23 @@ public class MessageServer {
 
 			state = new ServerState();
 			state.setConf(conf);
+			state.setElectionCtx(workElectionCtx);
 
 			TaskList tasks = new TaskList(new NoOpBalancer());
-			state.setTasks(tasks);
+			state.setTasks(tasks);			
+			workElectionCtx = new RaftElectionContext(state);	
+			workElectionCtx.setConf(conf);
 
+			state.setElectionCtx(workElectionCtx);
 
 			EdgeMonitor emon = new EdgeMonitor(state);
 			Thread t = new Thread(emon);
 			t.start();
+			
+			workElectionCtx.init();
+			
+			Thread managerThread = new Thread(workElectionCtx);
+			managerThread.start();
 		}
 
 		public void run() {

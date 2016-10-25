@@ -1643,6 +1643,37 @@ public final class Work {
      * <code>optional .LeaderStatus leader = 8;</code>
      */
     pipe.election.Election.LeaderStatusOrBuilder getLeaderOrBuilder();
+
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    boolean hasRaftMessage();
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    pipe.election.Election.RaftElectionMessage getRaftMessage();
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    pipe.election.Election.RaftElectionMessageOrBuilder getRaftMessageOrBuilder();
+
+    /**
+     * <code>optional bool newNode = 11;</code>
+     */
+    boolean hasNewNode();
+    /**
+     * <code>optional bool newNode = 11;</code>
+     */
+    boolean getNewNode();
+
+    /**
+     * <code>optional bool flagRouting = 12;</code>
+     */
+    boolean hasFlagRouting();
+    /**
+     * <code>optional bool flagRouting = 12;</code>
+     */
+    boolean getFlagRouting();
   }
   /**
    * Protobuf type {@code WorkMessage}
@@ -1788,6 +1819,29 @@ public final class Work {
               payloadCase_ = 8;
               break;
             }
+            case 74: {
+              pipe.election.Election.RaftElectionMessage.Builder subBuilder = null;
+              if (payloadCase_ == 9) {
+                subBuilder = ((pipe.election.Election.RaftElectionMessage) payload_).toBuilder();
+              }
+              payload_ = input.readMessage(pipe.election.Election.RaftElectionMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((pipe.election.Election.RaftElectionMessage) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 9;
+              break;
+            }
+            case 88: {
+              payloadCase_ = 11;
+              payload_ = input.readBool();
+              break;
+            }
+            case 96: {
+              payloadCase_ = 12;
+              payload_ = input.readBool();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1838,6 +1892,9 @@ public final class Work {
       TASK(6),
       STATE(7),
       LEADER(8),
+      RAFTMESSAGE(9),
+      NEWNODE(11),
+      FLAGROUTING(12),
       PAYLOAD_NOT_SET(0);
       private int value = 0;
       private PayloadCase(int value) {
@@ -1851,6 +1908,9 @@ public final class Work {
           case 6: return TASK;
           case 7: return STATE;
           case 8: return LEADER;
+          case 9: return RAFTMESSAGE;
+          case 11: return NEWNODE;
+          case 12: return FLAGROUTING;
           case 0: return PAYLOAD_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -2070,6 +2130,66 @@ public final class Work {
       return pipe.election.Election.LeaderStatus.getDefaultInstance();
     }
 
+    public static final int RAFTMESSAGE_FIELD_NUMBER = 9;
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    public boolean hasRaftMessage() {
+      return payloadCase_ == 9;
+    }
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    public pipe.election.Election.RaftElectionMessage getRaftMessage() {
+      if (payloadCase_ == 9) {
+         return (pipe.election.Election.RaftElectionMessage) payload_;
+      }
+      return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+     */
+    public pipe.election.Election.RaftElectionMessageOrBuilder getRaftMessageOrBuilder() {
+      if (payloadCase_ == 9) {
+         return (pipe.election.Election.RaftElectionMessage) payload_;
+      }
+      return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+    }
+
+    public static final int NEWNODE_FIELD_NUMBER = 11;
+    /**
+     * <code>optional bool newNode = 11;</code>
+     */
+    public boolean hasNewNode() {
+      return payloadCase_ == 11;
+    }
+    /**
+     * <code>optional bool newNode = 11;</code>
+     */
+    public boolean getNewNode() {
+      if (payloadCase_ == 11) {
+        return (java.lang.Boolean) payload_;
+      }
+      return false;
+    }
+
+    public static final int FLAGROUTING_FIELD_NUMBER = 12;
+    /**
+     * <code>optional bool flagRouting = 12;</code>
+     */
+    public boolean hasFlagRouting() {
+      return payloadCase_ == 12;
+    }
+    /**
+     * <code>optional bool flagRouting = 12;</code>
+     */
+    public boolean getFlagRouting() {
+      if (payloadCase_ == 12) {
+        return (java.lang.Boolean) payload_;
+      }
+      return false;
+    }
+
     private void initFields() {
       header_ = pipe.common.Common.Header.getDefaultInstance();
       secret_ = 0L;
@@ -2116,8 +2236,8 @@ public final class Work {
           return false;
         }
       }
-      if (hasLeader()) {
-        if (!getLeader().isInitialized()) {
+      if (hasRaftMessage()) {
+        if (!getRaftMessage().isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -2153,6 +2273,17 @@ public final class Work {
       }
       if (payloadCase_ == 8) {
         output.writeMessage(8, (pipe.election.Election.LeaderStatus) payload_);
+      }
+      if (payloadCase_ == 9) {
+        output.writeMessage(9, (pipe.election.Election.RaftElectionMessage) payload_);
+      }
+      if (payloadCase_ == 11) {
+        output.writeBool(
+            11, (boolean)((java.lang.Boolean) payload_));
+      }
+      if (payloadCase_ == 12) {
+        output.writeBool(
+            12, (boolean)((java.lang.Boolean) payload_));
       }
       getUnknownFields().writeTo(output);
     }
@@ -2195,6 +2326,20 @@ public final class Work {
       if (payloadCase_ == 8) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, (pipe.election.Election.LeaderStatus) payload_);
+      }
+      if (payloadCase_ == 9) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(9, (pipe.election.Election.RaftElectionMessage) payload_);
+      }
+      if (payloadCase_ == 11) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              11, (boolean)((java.lang.Boolean) payload_));
+      }
+      if (payloadCase_ == 12) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(
+              12, (boolean)((java.lang.Boolean) payload_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2406,6 +2551,19 @@ public final class Work {
             result.payload_ = leaderBuilder_.build();
           }
         }
+        if (payloadCase_ == 9) {
+          if (raftMessageBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = raftMessageBuilder_.build();
+          }
+        }
+        if (payloadCase_ == 11) {
+          result.payload_ = payload_;
+        }
+        if (payloadCase_ == 12) {
+          result.payload_ = payload_;
+        }
         result.bitField0_ = to_bitField0_;
         result.payloadCase_ = payloadCase_;
         onBuilt();
@@ -2454,6 +2612,18 @@ public final class Work {
             mergeLeader(other.getLeader());
             break;
           }
+          case RAFTMESSAGE: {
+            mergeRaftMessage(other.getRaftMessage());
+            break;
+          }
+          case NEWNODE: {
+            setNewNode(other.getNewNode());
+            break;
+          }
+          case FLAGROUTING: {
+            setFlagRouting(other.getFlagRouting());
+            break;
+          }
           case PAYLOAD_NOT_SET: {
             break;
           }
@@ -2499,8 +2669,8 @@ public final class Work {
             return false;
           }
         }
-        if (hasLeader()) {
-          if (!getLeader().isInitialized()) {
+        if (hasRaftMessage()) {
+          if (!getRaftMessage().isInitialized()) {
             
             return false;
           }
@@ -3453,6 +3623,213 @@ public final class Work {
         return leaderBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.RaftElectionMessage, pipe.election.Election.RaftElectionMessage.Builder, pipe.election.Election.RaftElectionMessageOrBuilder> raftMessageBuilder_;
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public boolean hasRaftMessage() {
+        return payloadCase_ == 9;
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public pipe.election.Election.RaftElectionMessage getRaftMessage() {
+        if (raftMessageBuilder_ == null) {
+          if (payloadCase_ == 9) {
+            return (pipe.election.Election.RaftElectionMessage) payload_;
+          }
+          return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 9) {
+            return raftMessageBuilder_.getMessage();
+          }
+          return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public Builder setRaftMessage(pipe.election.Election.RaftElectionMessage value) {
+        if (raftMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          raftMessageBuilder_.setMessage(value);
+        }
+        payloadCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public Builder setRaftMessage(
+          pipe.election.Election.RaftElectionMessage.Builder builderForValue) {
+        if (raftMessageBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          raftMessageBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public Builder mergeRaftMessage(pipe.election.Election.RaftElectionMessage value) {
+        if (raftMessageBuilder_ == null) {
+          if (payloadCase_ == 9 &&
+              payload_ != pipe.election.Election.RaftElectionMessage.getDefaultInstance()) {
+            payload_ = pipe.election.Election.RaftElectionMessage.newBuilder((pipe.election.Election.RaftElectionMessage) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 9) {
+            raftMessageBuilder_.mergeFrom(value);
+          }
+          raftMessageBuilder_.setMessage(value);
+        }
+        payloadCase_ = 9;
+        return this;
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public Builder clearRaftMessage() {
+        if (raftMessageBuilder_ == null) {
+          if (payloadCase_ == 9) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 9) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          raftMessageBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public pipe.election.Election.RaftElectionMessage.Builder getRaftMessageBuilder() {
+        return getRaftMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      public pipe.election.Election.RaftElectionMessageOrBuilder getRaftMessageOrBuilder() {
+        if ((payloadCase_ == 9) && (raftMessageBuilder_ != null)) {
+          return raftMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 9) {
+            return (pipe.election.Election.RaftElectionMessage) payload_;
+          }
+          return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .RaftElectionMessage raftMessage = 9;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.RaftElectionMessage, pipe.election.Election.RaftElectionMessage.Builder, pipe.election.Election.RaftElectionMessageOrBuilder> 
+          getRaftMessageFieldBuilder() {
+        if (raftMessageBuilder_ == null) {
+          if (!(payloadCase_ == 9)) {
+            payload_ = pipe.election.Election.RaftElectionMessage.getDefaultInstance();
+          }
+          raftMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pipe.election.Election.RaftElectionMessage, pipe.election.Election.RaftElectionMessage.Builder, pipe.election.Election.RaftElectionMessageOrBuilder>(
+                  (pipe.election.Election.RaftElectionMessage) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 9;
+        return raftMessageBuilder_;
+      }
+
+      /**
+       * <code>optional bool newNode = 11;</code>
+       */
+      public boolean hasNewNode() {
+        return payloadCase_ == 11;
+      }
+      /**
+       * <code>optional bool newNode = 11;</code>
+       */
+      public boolean getNewNode() {
+        if (payloadCase_ == 11) {
+          return (java.lang.Boolean) payload_;
+        }
+        return false;
+      }
+      /**
+       * <code>optional bool newNode = 11;</code>
+       */
+      public Builder setNewNode(boolean value) {
+        payloadCase_ = 11;
+        payload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool newNode = 11;</code>
+       */
+      public Builder clearNewNode() {
+        if (payloadCase_ == 11) {
+          payloadCase_ = 0;
+          payload_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional bool flagRouting = 12;</code>
+       */
+      public boolean hasFlagRouting() {
+        return payloadCase_ == 12;
+      }
+      /**
+       * <code>optional bool flagRouting = 12;</code>
+       */
+      public boolean getFlagRouting() {
+        if (payloadCase_ == 12) {
+          return (java.lang.Boolean) payload_;
+        }
+        return false;
+      }
+      /**
+       * <code>optional bool flagRouting = 12;</code>
+       */
+      public Builder setFlagRouting(boolean value) {
+        payloadCase_ = 12;
+        payload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool flagRouting = 12;</code>
+       */
+      public Builder clearFlagRouting() {
+        if (payloadCase_ == 12) {
+          payloadCase_ = 0;
+          payload_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:WorkMessage)
     }
 
@@ -3497,13 +3874,15 @@ public final class Work {
       "to\"0\n\tWorkState\022\020\n\010enqueued\030\001 \002(\005\022\021\n\tpro" +
       "cessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n\005state\030\001 \002(\013" +
       "2\n.WorkState\")\n\004Task\022\021\n\tseries_id\030\001 \002(\003\022" +
-      "\016\n\006seq_id\030\002 \002(\005\"\333\001\n\013WorkMessage\022\027\n\006heade" +
+      "\016\n\006seq_id\030\002 \002(\005\"\262\002\n\013WorkMessage\022\027\n\006heade" +
       "r\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002 \002(\003\022\027\n\003err\030" +
       "\003 \001(\0132\010.FailureH\000\022\016\n\004ping\030\004 \001(\010H\000\022\032\n\004bea" +
       "t\030\005 \001(\0132\n.HeartbeatH\000\022\025\n\004task\030\006 \001(\0132\005.Ta" +
       "skH\000\022\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006lea" +
-      "der\030\010 \001(\0132\r.LeaderStatusH\000B\t\n\007payloadB\r\n",
-      "\tpipe.workH\001"
+      "der\030\010 \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessag",
+      "e\030\t \001(\0132\024.RaftElectionMessageH\000\022\021\n\007newNo" +
+      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000B\t\n\007pay" +
+      "loadB\r\n\tpipe.workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3542,7 +3921,7 @@ public final class Work {
     internal_static_WorkMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_WorkMessage_descriptor,
-        new java.lang.String[] { "Header", "Secret", "Err", "Ping", "Beat", "Task", "State", "Leader", "Payload", });
+        new java.lang.String[] { "Header", "Secret", "Err", "Ping", "Beat", "Task", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
     pipe.common.Common.getDescriptor();
     pipe.election.Election.getDescriptor();
   }

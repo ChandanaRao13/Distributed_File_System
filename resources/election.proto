@@ -3,10 +3,12 @@ option java_package = "pipe.election";
 
 // enquire about the state of the leader/election
 message LeaderStatus {
-   required LeaderQuery action = 1;
+   optional LeaderQuery action = 1;
    optional LeaderState state = 2;
    optional string leader_host= 3;
    optional int32 leader_id = 4;
+   optional int32 term = 5;
+   
    
    enum LeaderState {
       LEADERUNKNOWN = 1;
@@ -18,4 +20,26 @@ message LeaderStatus {
       WHOISTHELEADER = 1;
       THELEADERIS = 2;
    }
+}
+//Election related message
+message RaftElectionMessage {
+  required ElectionMessageType type = 1;
+  optional ElectionMessage electionMessage = 2;
+  optional int32 leader_id = 4;
+  required int32 term = 5;
+  optional LeaderStatus leader = 8;
+  
+  // type of Election message
+  enum ElectionMessageType {
+    VOTE_REQUEST = 1;
+    LEADER_HEARTBEAT = 2;
+    VOTE_RESPONSE = 3;
+    LEADER_HB_ACK = 4;
+  }
+}
+
+message ElectionMessage {
+  optional int32 candidate_id = 1;
+  optional bool vote_granted = 2;
+  optional int32 voter_id = 3;
 }
