@@ -142,6 +142,7 @@ public class CommConnection {
 			handler.addListener(listener);
 	}
 
+	
 	private void init() {
 		System.out.println("--> initializing connection to " + host + ":" + port);
 
@@ -150,7 +151,7 @@ public class CommConnection {
 
 		group = new NioEventLoopGroup();
 		try {
-			CommandInit si = new CommandInit(null, false);
+			CommInit si = new CommInit(false);
 			Bootstrap b = new Bootstrap();
 			b.group(group).channel(NioSocketChannel.class).handler(si);
 			b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
@@ -165,7 +166,7 @@ public class CommConnection {
 			ClientClosedListener ccl = new ClientClosedListener(this);
 			channel.channel().closeFuture().addListener(ccl);
 
-			System.out.println(channel.channel().localAddress() + " -> open: " + channel.channel().isOpen()
+			System.out.println("channel info:" + channel.toString()  + channel.channel().localAddress() + " -> open: " + channel.channel().isOpen()
 					+ ", write: " + channel.channel().isWritable() + ", reg: " + channel.channel().isRegistered());
 
 		} catch (Throwable ex) {

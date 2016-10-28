@@ -22,12 +22,10 @@ public class OutboundWorkWriteQueueThread extends Thread{
 		while (true) {
 			try {
 				InternalChannelNode message = manager.dequeueOutboundWorkWrite();
-				int destinationNode = message.getWorkMessage().getHeader().getDestination();
-				logger.info("Outbound write work message routing to node " + destinationNode);
+				 int destinationNode = message.getWorkMessage().getHeader().getNodeId();
+		       	logger.info("Outbound write work message routing to node " + destinationNode);
 
 				if (message.getChannel()!= null && message.getChannel().isOpen()) {
-					boolean rtn = false;
-
 					ChannelFuture cf = message.getChannel().write(message.getWorkMessage());
 					message.getChannel().flush();
 					cf.awaitUninterruptibly();
@@ -39,7 +37,6 @@ public class OutboundWorkWriteQueueThread extends Thread{
 				} else {
 					logger.info("Channel to destination node " + destinationNode + " is not writable");
 					logger.info("Checking if channel is null : "+(message.getChannel() == null));
-					//manager.returnOutboundWork(msg);
 				}
 			} catch (InterruptedException ie) {
 				break;

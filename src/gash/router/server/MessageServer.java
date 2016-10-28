@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import gash.router.container.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.election.RaftElectionContext;
+import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.QueueManager;
 import gash.router.server.replication.DataReplicationManager;
 import gash.router.server.tasks.NoOpBalancer;
@@ -69,6 +70,9 @@ public class MessageServer {
 	public void startServer() throws InterruptedException {
 		QueueManager.initManager();
 		DataReplicationManager.initDataReplicationManager();
+		MessageGenerator.initGenerator();
+		MessageGenerator.setRoutingConf(conf);
+		
 		StartWorkCommunication comm = new StartWorkCommunication(conf);
 		logger.info("Work starting");
 

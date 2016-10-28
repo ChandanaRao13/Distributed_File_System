@@ -15,12 +15,15 @@
  */
 package gash.router.app;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.protobuf.ByteString;
 
 import gash.router.client.CommConnection;
 import gash.router.client.CommListener;
@@ -65,7 +68,7 @@ public class DemoApp implements CommListener {
 
 	@Override
 	public void onMessage(CommandMessage msg) {
-		System.out.println("---> " + msg);
+		System.out.println("---> " + msg);	
 	}
 
 	/**
@@ -82,8 +85,9 @@ public class DemoApp implements CommListener {
 			DemoApp da = new DemoApp(mc);
 
 			// do stuff w/ the connection
-			//da.ping(2);
+			// da.ping(2);
 			da.chunkFile(args[0]);
+			//da.sendFileAsChunks(new File(args[0]));
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
 			Thread.sleep(10 * 1000);
@@ -93,22 +97,58 @@ public class DemoApp implements CommListener {
 			CommConnection.getInstance().release();
 		}
 	}
-	
-	private void chunkFile(String file) throws IOException {
-        String line = null;
-        try {
-        	BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
-            int chunkId = 0;
-            while((line = bufferedReader.readLine()) != null){
-            	//databaseHandler.addFile(file, line, chunkId);
-            	mc.sendFileChunks(file, line, chunkId);
-            	chunkId++;
-            }
-            
-        }
-        catch (Exception ex) {
+	@Deprecated
+	private void chunkFile(String file) throws IOException {
+		String line = null;
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(
+					file));
+
+			int chunkId = 0;
+			while ((line = bufferedReader.readLine()) != null) {
+				// databaseHandler.addFile(file, line, chunkId);
+				mc.sendFileChunks(file, line, chunkId);
+				chunkId++;
+			}
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-    }
+	}
+
+	private void sendFileAsChunks(File file) {
+		ArrayList<ByteString> chunkedFile = new ArrayList<ByteString>();
+
+		int sizeOfChunk = 10 * 10;
+		int numOfChunks = 0;
+		byte[] buffer = new byte[sizeOfChunk];
+
+		try {
+			BufferedInputStream bis = new BufferedInputStream(
+					new FileInputStream(file));
+			String name = file.getName();
+
+			int tmp = 0;
+			while ((tmp = bis.read(buffer)) > 0) {
+				try {
+					ByteString bs = ByteString.copyFrom(buffer, 0, tmp);
+					chunkedFile.add(bs);
+					numOfChunks++;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			for (int index = 0; index < chunkedFile.size(); index++) {
+				System.out.println(chunkedFile.get(index));
+				mc.sendFile(chunkedFile.get(index), name, numOfChunks,
+						index + 1); 
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println(chunkedFile.size());
+	}
 }

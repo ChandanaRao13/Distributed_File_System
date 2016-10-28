@@ -74,7 +74,4 @@ public class InternalChannelNode {
 	public void setWork(boolean isWork) {
 		this.isWork = isWork;
 	}
-
-
-	
 }

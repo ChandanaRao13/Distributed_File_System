@@ -17,8 +17,11 @@ public class QueueManager {
 	
 	protected LinkedBlockingDeque<InternalChannelNode> inboundCommandQueue;
 	protected LinkedBlockingDeque<InternalChannelNode> outboundWorkWriteQueue;
+	protected LinkedBlockingDeque<InternalChannelNode> outboundCommandQueue;
+
 	protected InboundCommandQueueThread inboundCommmanderThread;
 	protected OutboundWorkWriteQueueThread outboundWorkWriterThread;
+	protected OutboundCommandQueueThread outboundCommanderThread;
 	
 	
 	public static QueueManager initManager() {
@@ -42,6 +45,11 @@ public class QueueManager {
 		outboundWorkWriteQueue = new LinkedBlockingDeque<InternalChannelNode>();
 		outboundWorkWriterThread = new OutboundWorkWriteQueueThread(this);
 		outboundWorkWriterThread.start();
+		
+		outboundCommandQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		outboundCommanderThread = new OutboundCommandQueueThread(this);
+		outboundCommanderThread.start();
+		
 	}
 	
 	public void enqueueInboundCommmand(CommandMessage message, Channel ch) {
@@ -73,5 +81,22 @@ public class QueueManager {
 	
 	public void returnOutboundWork(InternalChannelNode channelNode) throws InterruptedException {
 		outboundWorkWriteQueue.putFirst(channelNode);
+	}
+	
+	public void enqueueOutboundCommmand(CommandMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			outboundCommandQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("message not enqueued in outbound command queue for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueOutboundCommmand() throws InterruptedException {
+			return outboundCommandQueue.take();
+	}
+
+	public void returnOutboundCommand(InternalChannelNode channelNode) throws InterruptedException {
+		outboundCommandQueue.putFirst(channelNode);
 	}
 }
