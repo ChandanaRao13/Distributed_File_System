@@ -15,6 +15,7 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.net.Connection;
 import com.rethinkdb.net.Cursor;
@@ -50,7 +51,6 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param line
 	 * @param chunkId
-	 * @return 
 	 */
 	@Deprecated
 	public static boolean addFile(String filename, String line, int chunkId) {
@@ -63,12 +63,39 @@ public class DatabaseHandler {
 							.hashMap(Constants.FILE_NAME, filename)
 							.with(Constants.FILE_CONTENT, line)
 							.with(Constants.CHUNK_ID, chunkId)).run(conn);
+			return true;
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to store file in the database");
 			System.out.println("File is not added");
 			return false;
 		}
-		return true;
+	}
+
+	/**
+	 * adds the give line into the db
+	 * 
+	 * @param filename
+	 * @param line
+	 * @param chunkId
+	 */
+	@Deprecated
+	public static boolean addFile(String filename, ByteString line, int chunkId) {
+		Connection conn = getConnection();
+		try {
+			rethinkDBInstance
+					.db(Constants.DATABASE)
+					.table(Constants.TABLE)
+					.insert(rethinkDBInstance
+							.hashMap(Constants.FILE_NAME, filename)
+							.with(Constants.FILE_CONTENT, line)
+							.with(Constants.CHUNK_ID, chunkId)).run(conn);
+			System.out.println("File saved to DB: " + filename);
+			return true;
+		} catch (Exception e) {
+			logger.error("ERROR: Unable to store file in the database");
+			System.out.println("File is not added");
+			return false;
+		}
 	}
 
 	/**
@@ -78,7 +105,7 @@ public class DatabaseHandler {
 	 * @param input
 	 * @param chunkId
 	 */
-	public static void addFile(String filename, int chunkCount, byte[] input,
+	public static boolean addFile(String filename, int chunkCount, byte[] input,
 			int chunkId) {
 		Connection connection = getConnection();
 		try {
@@ -90,9 +117,11 @@ public class DatabaseHandler {
 							.with(Constants.CHUNK_COUNT, chunkCount)
 							.with(Constants.FILE_CONTENT, input)
 							.with(Constants.CHUNK_ID, chunkId)).run(connection);
+			return true;
 		} catch (Exception e) {
 			logger.debug("ERROR: Unable to store file in the database");
 			System.out.println("File in not added");
+			return false;
 		}
 	}
 

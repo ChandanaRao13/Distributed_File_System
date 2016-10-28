@@ -15,6 +15,8 @@
  */
 package gash.router.client;
 
+import com.google.protobuf.ByteString;
+
 import pipe.common.Common.Header;
 import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
@@ -64,23 +66,24 @@ public class MessageClient {
 		}
 	}
 
-	public void sendFileChunks(String filename, String line, int chunkId){
+	@Deprecated
+	public void sendFileChunks(String filename, String line, int chunkId) {
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(999);
 		hb.setTime(System.currentTimeMillis());
 		hb.setDestination(-1);
-		
+
 		FileTask.Builder tb = FileTask.newBuilder();
 		tb.setFilename(filename);
 		tb.setChunk(line);
 		tb.setChunkNo(chunkId);
 		tb.setFileTaskType(FileTaskType.WRITE);
-		
+
 		CommandMessage.Builder rb = CommandMessage.newBuilder();
-		rb.setHeader(hb);		
+		rb.setHeader(hb);
 		rb.setFiletask(tb);
 		rb.setMessage(filename);
-		
+
 		try {
 			// direct no queue
 			// CommConnection.getInstance().write(rb.build());
@@ -91,7 +94,38 @@ public class MessageClient {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void sendFile(ByteString bs, String filename, int numOfChunks, int chunkId) {
+		// construct the message to send
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(999);
+		hb.setTime(System.currentTimeMillis());
+		hb.setDestination(-1);
+
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setChunkCounts(numOfChunks); // Num of chunks
+		tb.setChunkNo(chunkId); // chunk id
+		tb.setFileTaskType(FileTask.FileTaskType.WRITE);
+
+		tb.setFilename(filename);
+	//	tb.setChunk(bs);
+
+		CommandMessage.Builder rb = CommandMessage.newBuilder();
+		rb.setHeader(hb);
+		rb.setFiletask(tb);
+		rb.setMessage(filename);
+
+		try {
+			// direct no queue
+			// CommConnection.getInstance().write(rb.build());
+
+			// using queue
+			CommConnection.getInstance().enqueue(rb.build());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void release() {
 		CommConnection.getInstance().release();
 	}
