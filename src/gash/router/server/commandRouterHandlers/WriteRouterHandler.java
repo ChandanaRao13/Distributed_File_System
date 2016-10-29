@@ -29,7 +29,7 @@ public class WriteRouterHandler implements ICommandRouterHandlers{
 		FileTaskType taskType = fileTask.getFileTaskType();
 		
 		if(taskType == FileTaskType.WRITE){
-			if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunk(), fileTask.getChunkNo())){
+			if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunk(), fileTask.getChunkNo(), fileTask.getChunkCounts())){
 			//if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg(true);
 				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());

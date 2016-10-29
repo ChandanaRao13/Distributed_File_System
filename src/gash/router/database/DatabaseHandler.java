@@ -1,6 +1,7 @@
 package gash.router.database;
 
 import gash.router.database.datatypes.FluffyFile;
+import gash.router.server.manage.exceptions.FileChunkNotFoundException;
 import gash.router.server.manage.exceptions.FileNotFoundException;
 import gash.router.util.Constants;
 
@@ -53,7 +54,7 @@ public class DatabaseHandler {
 	 * @param chunkId
 	 */
 	@Deprecated
-	public static boolean addFile(String filename, String line, int chunkId) {
+	public static boolean addFile(String filename, String line, int chunkId, int totalChunks) {
 		Connection conn = getConnection();
 		try {
 			rethinkDBInstance
@@ -62,6 +63,7 @@ public class DatabaseHandler {
 					.insert(rethinkDBInstance
 							.hashMap(Constants.FILE_NAME, filename)
 							.with(Constants.FILE_CONTENT, line)
+							.with(Constants.CHUNK_COUNT, totalChunks)
 							.with(Constants.CHUNK_ID, chunkId)).run(conn);
 			return true;
 		} catch (Exception e) {
@@ -79,7 +81,7 @@ public class DatabaseHandler {
 	 * @param chunkId
 	 */
 	@Deprecated
-	public static boolean addFile(String filename, ByteString line, int chunkId) {
+	public static boolean addFile(String filename, ByteString line, int chunkId, int totalChunks) {
 		Connection conn = getConnection();
 		try {
 			rethinkDBInstance
@@ -87,6 +89,7 @@ public class DatabaseHandler {
 					.table(Constants.TABLE)
 					.insert(rethinkDBInstance
 							.hashMap(Constants.FILE_NAME, filename)
+							.with(Constants.CHUNK_COUNT, totalChunks)
 							.with(Constants.FILE_CONTENT, line)
 							.with(Constants.CHUNK_ID, chunkId)).run(conn);
 			System.out.println("File saved to DB: " + filename);
@@ -139,16 +142,17 @@ public class DatabaseHandler {
 		Cursor<String> data = rethinkDBInstance.db(Constants.DATABASE)
 				.table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap("filename", filename))
-				.limit(1).run(conn);
+				.limit(1).getField(Constants.CHUNK_COUNT).run(conn);
 		if (data == null)
 			throw new FileNotFoundException(filename);
 		else {
-			for (Object change : data) {
-				System.out.println(change);
-				JSONObject fileContent = (JSONObject) jsonParse.parse(new StringReader((String) change));
-				return Integer.parseInt((String) fileContent.get(Constants.CHUNK_COUNT));
+			
+			ArrayList<String> result = data.bufferedItems();
+			if(result.size() == 1) {
+				return Integer.parseInt(String.valueOf(result.get(0)));
+			} else {
+				return 0;
 			}
-			return 0;
 		}
 	}
 
@@ -217,6 +221,40 @@ public class DatabaseHandler {
 				fileContents.add(fluffyFile);
 			}
 			return fileContents;
+		}
+	}
+	
+	
+	/**
+	 * reads fileContent from given file and chunk id 
+	 * @param filename
+	 * @param chunkId
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws FileNotFoundException
+	 * @throws FileChunkNotFoundException 
+	 */
+	public static String getFileChunkContentWithChunkId(String filename, int chunkId) throws IOException, ParseException, FileNotFoundException, FileChunkNotFoundException {
+		Connection connection = getConnection();
+
+		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE)
+				.table(Constants.TABLE)
+				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename).with(Constants.CHUNK_ID, chunkId))
+				.getField(Constants.FILE_CONTENT)
+				.run(connection);
+
+		if (dataFromDB == null)
+			throw new FileChunkNotFoundException(filename, chunkId);
+		else {
+			ArrayList<String> result = dataFromDB.bufferedItems();
+			if(result.size() == 1) {
+				System.out.println("Data: " + result.get(0));
+				return result.get(0);
+			} else {
+				return "";
+			}
+			
 		}
 	}
 }

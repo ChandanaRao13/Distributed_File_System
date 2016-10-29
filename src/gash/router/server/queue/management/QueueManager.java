@@ -18,10 +18,14 @@ public class QueueManager {
 	protected LinkedBlockingDeque<InternalChannelNode> inboundCommandQueue;
 	protected LinkedBlockingDeque<InternalChannelNode> outboundWorkWriteQueue;
 	protected LinkedBlockingDeque<InternalChannelNode> outboundCommandQueue;
-
+	protected LinkedBlockingDeque<InternalChannelNode> outboundReadQueue;
+	protected LinkedBlockingDeque<InternalChannelNode> inboundReadQueue;
+	
 	protected InboundCommandQueueThread inboundCommmanderThread;
 	protected OutboundWorkWriteQueueThread outboundWorkWriterThread;
 	protected OutboundCommandQueueThread outboundCommanderThread;
+	protected OutboundReadThread outboundReadThread;
+	protected InboundReadQueueThread inboundReadThread;
 	
 	
 	public static QueueManager initManager() {
@@ -50,6 +54,13 @@ public class QueueManager {
 		outboundCommanderThread = new OutboundCommandQueueThread(this);
 		outboundCommanderThread.start();
 		
+		outboundReadQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		outboundReadThread = new OutboundReadThread(this);
+		outboundReadThread.start();
+		
+		inboundReadQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		inboundReadThread = new InboundReadQueueThread(this);
+		inboundReadThread.start();
 	}
 	
 	public void enqueueInboundCommmand(CommandMessage message, Channel ch) {
@@ -98,5 +109,44 @@ public class QueueManager {
 
 	public void returnOutboundCommand(InternalChannelNode channelNode) throws InterruptedException {
 		outboundCommandQueue.putFirst(channelNode);
+	}
+	
+	public void enqueueOutboundRead(WorkMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			outboundReadQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("message not enqueued in outbound command queue for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueOutboundRead() throws InterruptedException {
+			return outboundReadQueue.take();
+	}
+	
+	public void enqueueInboundRead(WorkMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			inboundReadQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("message not enqueued in outbound command queue for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueInboundRead() throws InterruptedException {
+			return inboundReadQueue.take();
+	}
+	
+	public void enqueueOutboundCommand(CommandMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			outboundCommandQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("message not enqueued in outbound command queue for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueOutboundCommand() throws InterruptedException {
+			return outboundCommandQueue.take();
 	}
 }

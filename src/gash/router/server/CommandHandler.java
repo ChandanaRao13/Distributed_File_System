@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
-import gash.router.database.DatabaseHandler;
 import gash.router.server.commandChainHandler.ICommandChainHandler;
 import gash.router.server.commandChainHandler.MessageChainHandler;
 import gash.router.server.commandChainHandler.PingChainHandler;
@@ -52,7 +51,6 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 		
 		pingChainHandle = new PingChainHandler();
 		messageChainHandle = new MessageChainHandler();
-		
 		messageChainHandle.setNextChainHandler(pingChainHandle);
 	}
 

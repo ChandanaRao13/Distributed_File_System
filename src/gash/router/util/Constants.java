@@ -14,4 +14,6 @@ public class Constants {
 	public static final String FILE_CONTENT = "content";
 	public static final String NO_OF_CHUNKS = "noOfChuncks";
 	public static final String CHUNK_ID = "chunckId";
+	
+	public static final Integer MaxLoadCount = 1000;
 }
