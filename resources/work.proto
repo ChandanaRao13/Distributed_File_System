@@ -27,8 +27,11 @@ message Task {
 message WorkMessage {
    required Header header = 1;
    required int64 secret = 2;
+   optional string requestId = 14;
    enum Worktype {
       REPLICATE_REQUEST = 1;
+      READ_REQUEST = 2;
+      READ_REQUEST_RESPONSE =3;
 
    }
 

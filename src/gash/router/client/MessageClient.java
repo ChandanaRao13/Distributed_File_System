@@ -15,6 +15,9 @@
  */
 package gash.router.client;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.google.protobuf.ByteString;
 
 import pipe.common.Common.Header;
@@ -67,7 +70,7 @@ public class MessageClient {
 	}
 
 	@Deprecated
-	public void sendFileChunks(String filename, String line, int chunkId) {
+	public void sendFileChunks(String filename, String line, int chunkId, int chunkCount) {
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(999);
 		hb.setTime(System.currentTimeMillis());
@@ -77,6 +80,7 @@ public class MessageClient {
 		tb.setFilename(filename);
 		tb.setChunk(line);
 		tb.setChunkNo(chunkId);
+		tb.setChunkCounts(chunkCount);
 		tb.setFileTaskType(FileTaskType.WRITE);
 
 		CommandMessage.Builder rb = CommandMessage.newBuilder();
@@ -124,6 +128,30 @@ public class MessageClient {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void sendReadFileRequest(String filename) throws UnknownHostException{
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(999);
+		hb.setTime(System.currentTimeMillis());
+		hb.setDestination(-1);
+		
+		CommandMessage.Builder rb = CommandMessage.newBuilder();
+		rb.setHeader(hb);
+		
+		FileTask.Builder task = FileTask.newBuilder();
+		task.setFilename(filename);
+		task.setFileTaskType(FileTaskType.READ);		
+		rb.setMessage(filename);
+		
+		rb.setFiletask(task.build());
+		
+		try {
+			CommConnection.getInstance().enqueue(rb.build());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void release() {

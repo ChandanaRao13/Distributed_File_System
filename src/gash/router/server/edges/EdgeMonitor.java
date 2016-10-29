@@ -21,9 +21,10 @@ package gash.router.server.edges;
 //change
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -40,13 +41,11 @@ import gash.router.discovery.NodeDiscoveryManager;
 import gash.router.server.ServerState;
 import gash.router.server.WorkInit;
 import gash.router.server.election.RaftElectionContext;
+import gash.router.server.queue.management.InternalChannelNode;
+import gash.router.server.queue.management.LoadQueueManager;
+import gash.router.server.queue.management.NodeLoad;
 import gash.router.util.RaftMessageBuilder;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import pipe.common.Common.Header;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
@@ -55,6 +54,8 @@ import pipe.work.Work.WorkState;
 public class EdgeMonitor implements EdgeListener, Runnable {
 	protected static Logger logger = LoggerFactory.getLogger("edge monitor");
 	public static ConcurrentHashMap<Integer, Channel> node2ChannelMap = new ConcurrentHashMap<Integer, Channel>();
+	public static HashSet<Integer> loadNodeSet = new HashSet<Integer>();
+	public static ConcurrentHashMap<String, InternalChannelNode> clientChannelMap = new ConcurrentHashMap<String, InternalChannelNode>();
 	private EdgeList outboundEdges;
 	private EdgeList inboundEdges;
 	private long dt = 2000;
@@ -263,6 +264,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		//wb.setStateOfLeader(StateOfLeader.LEADERKNOWN);
 		return wb.build();
 	}
+	
 	private Channel connectToChannel(String host, int port) {
 		Bootstrap b = new Bootstrap();
 		Channel ch = null;
@@ -284,7 +286,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		return ch;
 
 	}
-private Channel connectToChannel(String host, int port, ServerState state) {
+
+	private Channel connectToChannel(String host, int port, ServerState state) {
 		Bootstrap b = new Bootstrap();
 		NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup();
 		WorkInit workInit = new WorkInit(state, false);
@@ -302,6 +305,7 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 		return b.connect(host, port).syncUninterruptibly().channel();
 
 	}
+
 	public EdgeList getOutboundEdges() {
 		return outboundEdges;
 	}
@@ -340,6 +344,22 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 		// TODO ?
 	}
 	
+	public static String clientInfoMap(InternalChannelNode commandMessageNode) {
+		UUID uuid = UUID.randomUUID();
+		String clientUidString = uuid.toString();
+		clientChannelMap.put(clientUidString, commandMessageNode);
+		return clientUidString;
+	}
+	
+	public static synchronized InternalChannelNode getClientChannelFromMap(String clientId) {
+
+		if (clientChannelMap.containsKey(clientId) && clientChannelMap.get(clientId) != null) {
+			return clientChannelMap.get(clientId);
+		} else {
+			logger.info("Unable to find the channel for client id : " + clientId);
+			return null;
+		}
+	}
 	// To continuously check addition and removal of nodes to the current node
 	private class NodeMonitor implements Runnable {
 		private boolean forever = true;
@@ -364,6 +384,7 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 						Set<Integer> nodeIdSet = edgeListMapper.keySet();
 						if (nodeIdSet != null)
 							for (Integer nodeId : nodeIdSet) {
+								
 								if (nodeId != null && !node2ChannelMap.containsKey(nodeId)
 										&& edgeListMapper.containsKey(nodeId)
 										&& edgeListMapper.get(nodeId).getChannel() != null) {
@@ -372,8 +393,9 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 									if(edgeListMapper.get(nodeId).getChannel() != null ) {
 										node2ChannelMap.put(nodeId, edgeListMapper.get(nodeId).getChannel());
 									}
-									
 								}
+								
+							    addNodeLoadToQueue(nodeId);
 							}
 					}
 				}
@@ -381,6 +403,18 @@ private Channel connectToChannel(String host, int port, ServerState state) {
 				logger.error("An Error has occured ", exception);
 			}
 		}
+		
+		
+		private synchronized void addNodeLoadToQueue(Integer nodeId){
+			if(nodeId != null && !loadNodeSet.contains(nodeId.intValue())){
+				System.out.println("Adding loadNodeset: " + nodeId);
+				loadNodeSet.add(nodeId.intValue());
+				NodeLoad node = new NodeLoad(nodeId.intValue(), 0);
+				LoadQueueManager.getInstance().insertNodeLoadInfo(node);
+			} 
+		}
 
 	}
 }
+
+

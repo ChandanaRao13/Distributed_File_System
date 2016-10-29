@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.google.protobuf.ByteString;
@@ -86,7 +87,8 @@ public class DemoApp implements CommListener {
 
 			// do stuff w/ the connection
 			// da.ping(2);
-			da.chunkFile(args[0]);
+			da.sendReadFileTasks(args[0]);
+			//da.chunkFile(args[0]);
 			//da.sendFileAsChunks(new File(args[0]));
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
@@ -100,6 +102,7 @@ public class DemoApp implements CommListener {
 
 	@Deprecated
 	private void chunkFile(String file) throws IOException {
+		ArrayList<String> chunkedFile = new ArrayList<String>();
 		String line = null;
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(
@@ -108,8 +111,15 @@ public class DemoApp implements CommListener {
 			int chunkId = 0;
 			while ((line = bufferedReader.readLine()) != null) {
 				// databaseHandler.addFile(file, line, chunkId);
-				mc.sendFileChunks(file, line, chunkId);
+				chunkedFile.add(line);
+				//mc.sendFileChunks(file, line, chunkId);
 				chunkId++;
+			}
+			
+			int size = chunkedFile.size();
+			System.out.println("File chunk size: " + size);
+			for(int i =0; i < chunkedFile.size(); i++){
+				mc.sendFileChunks(file, chunkedFile.get(i), i, size );
 			}
 
 		} catch (Exception ex) {
@@ -150,5 +160,16 @@ public class DemoApp implements CommListener {
 			ex.printStackTrace();
 		}
 		System.out.println(chunkedFile.size());
+	}
+	
+	
+	public void sendReadFileTasks(String filename){
+		try {
+			mc.sendReadFileRequest(filename);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

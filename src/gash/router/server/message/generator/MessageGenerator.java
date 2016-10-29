@@ -7,11 +7,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
+
 import pipe.common.Common.Header;
 import pipe.work.Work.WorkMessage;
 import pipe.work.Work.WorkMessage.Worktype;
 import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
+import routing.Pipe.FileTask.FileTaskType;
 
 public class MessageGenerator {
 	private static RoutingConf conf;
@@ -73,6 +76,62 @@ public class MessageGenerator {
 
 		wb.setWorktype(Worktype.REPLICATE_REQUEST);
 		return wb.build();
+	}
+	
+	public WorkMessage generateReadRequestMessage(CommandMessage commandMessage, String clientID, int nodeId){
+		Header.Builder hb = Header.newBuilder();
+
+		hb.setNodeId(conf.getNodeId());
+		hb.setDestination(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setFiletask(commandMessage.getFiletask());
+		
+		wb.setSecret(1234);
+		wb.setRequestId(clientID);
+		wb.setWorktype(Worktype.READ_REQUEST);
+		return wb.build();
+	}
+	
+	public WorkMessage generateReadRequestResponseMessage(FileTask filetask, String line, int chunkId, int totalChunks, String requestId, int nodeId){
+		Header.Builder hb = Header.newBuilder();
+
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+		hb.setDestination(nodeId);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+
+		wb.setSecret(1234);
+		wb.setRequestId(requestId);
+		wb.setWorktype(Worktype.READ_REQUEST_RESPONSE);
+
+		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setChunkNo(chunkId);
+		ft.setChunk(line);
+		ft.setChunkCounts(totalChunks);
+		ft.setFileTaskType(FileTaskType.READ);
+		ft.setFilename(ft.getFilename());
+		wb.setFiletask(ft.build());
+
+		return wb.build();
+	}
+	
+	
+	public CommandMessage forwardChunkToClient(WorkMessage message){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		CommandMessage.Builder cb = CommandMessage.newBuilder();
+		cb.setHeader(hb.build());
+		cb.setFiletask(message.getFiletask());
+		cb.setMessage("Fowarded chunk success : " + message.getFiletask().getChunkNo());
+
+		return cb.build();
 	}
 }
 
