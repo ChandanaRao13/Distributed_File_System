@@ -1,0 +1,21 @@
+2016-10-28T17:32:50.993786979 0.211359s notice: Recursively removing directory /home/vaishampayan/Desktop/python/rethinkdb_data/tmp
+2016-10-28T17:32:51.036563419 0.254133s notice: Initializing directory /home/vaishampayan/Desktop/python/rethinkdb_data
+2016-10-28T17:32:51.036776940 0.254347s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/home/vaishampayan/Desktop/python/rethinkdb_data' did not already exist or is empty.)
+2016-10-28T17:32:51.037103008 0.254674s notice: Running rethinkdb 2.3.5~0xenial (GCC 5.3.1)...
+2016-10-28T17:32:51.053864708 0.271438s notice: Running on Linux 4.4.0-45-generic x86_64
+2016-10-28T17:32:51.054062738 0.271632s notice: Loading data from directory /home/vaishampayan/Desktop/python/rethinkdb_data
+2016-10-28T17:32:51.093348020 0.310918s info: Automatically using cache size of 100 MB
+2016-10-28T17:32:51.095322024 0.312892s warn: Cache size does not leave much memory for server and query overhead (available memory: 321 MB).
+2016-10-28T17:32:51.095352926 0.312922s warn: Cache size is very low and may impact performance.
+2016-10-28T17:32:51.099249184 0.316819s notice: Listening for intracluster connections on port 29015
+2016-10-28T17:32:51.109005213 0.326575s notice: Listening for client driver connections on port 28015
+2016-10-28T17:32:51.109163105 0.326732s notice: Listening for administrative HTTP connections on port 8080
+2016-10-28T17:32:51.109168531 0.326766s notice: Listening on cluster addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-10-28T17:32:51.109203147 0.326772s notice: Listening on driver addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-10-28T17:32:51.109208946 0.326778s notice: Listening on http addresses: 127.0.0.1, 127.0.1.1, ::1
+2016-10-28T17:32:51.109212253 0.326781s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2016-10-28T17:32:51.109215765 0.326785s notice: Server ready, "ubuntu_rpo" a5218055-94a0-4e2b-8964-8db3483df5ac
+2016-10-28T17:37:51.109580746 300.327150s warn: Some RethinkDB data on this server has been placed into swap memory. This may impact performance.
+2016-10-28T17:38:46.720934552 355.938507s info: Table 68f6f244-9247-4d40-b0fb-e1bfb6886ffb: Added replica on this server.
+2016-10-28T17:38:46.721018166 355.938588s info: Table 68f6f244-9247-4d40-b0fb-e1bfb6886ffb: Starting a new Raft election for term 1.
+2016-10-28T17:38:46.728697368 355.946267s info: Table 68f6f244-9247-4d40-b0fb-e1bfb6886ffb: This server is Raft leader for term 1. Latest log index is 0.
