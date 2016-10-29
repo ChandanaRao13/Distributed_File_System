@@ -29,7 +29,6 @@ import com.google.protobuf.ByteString;
 import gash.router.client.CommConnection;
 import gash.router.client.CommListener;
 import gash.router.client.MessageClient;
-import gash.router.database.DatabaseHandler;
 import routing.Pipe.CommandMessage;
 
 public class DemoApp implements CommListener {
