@@ -6,9 +6,8 @@ import "common.proto";
 
 message FileTask {  
     optional int32 chunk_no = 1;
-    optional string chunk = 2;
+    optional bytes chunk = 2;
 	required string filename = 3; 
-	optional int32 chunk_count= 6;
 	enum FileTaskType {
       READ = 1;
       WRITE = 2;

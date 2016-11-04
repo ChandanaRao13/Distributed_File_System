@@ -13,7 +13,7 @@ public class OutboundReadThread extends Thread {
 	public OutboundReadThread(QueueManager manager) {
 		super();
 		this.manager = manager;
-		if (manager.outboundReadQueue == null)
+		if (manager.outboundWorkReadQueue == null)
 			throw new RuntimeException("Manager has no outbound read queue");
 	}
 
@@ -23,18 +23,31 @@ public class OutboundReadThread extends Thread {
 		while (true) {
 			try {
 				InternalChannelNode message = manager.dequeueOutboundRead();
-				logger.info("Routing outbound read message to  node " + message.getWorkMessage().getHeader().getDestination());
+				logger.info("trying to route: ");
 				if (message.getChannel()!= null && message.getChannel().isOpen()) {
 					if(message.getChannel().isWritable()){
+						logger.info("Routing outbound read message to  node " + message.getWorkMessage().getHeader().getDestination());
 						ChannelFuture cf = message.getChannel().write(message.getWorkMessage());
 						message.getChannel().flush();
 						cf.awaitUninterruptibly();
 						if(!cf.isSuccess()){
-							manager.returnOutboundCommand(message);
+							logger.info("Unsuccessful: failed to send chunk: " + message.getWorkMessage().getFiletask().getChunkNo());
+							manager.enqueueOutboundRead(message.getWorkMessage(), message.getChannel());
+							logger.info("Adding back to read outbound queue");
+						}
+						else {
+							logger.info("cf.isSuccess() == true: " + cf.isSuccess());
 						}
 					}
+					else {
+						logger.info("isWritable: " + message.getChannel().isWritable());
+						//manager.returnOutboundWorkWriteQueue(message);
+						manager.enqueueOutboundRead(message.getWorkMessage(), message.getChannel());
+					}
 				} else {
-					manager.returnOutboundCommand(message);
+					logger.info("Adding back to read outbound queue: not of message.getChannel()!= null && message.getChannel().isOpen()");
+					//manager.returnOutboundWorkWriteQueue(message);
+					manager.enqueueOutboundRead(message.getWorkMessage(), message.getChannel());
 				}
 					
 			} catch (Exception e) {

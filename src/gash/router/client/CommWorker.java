@@ -49,7 +49,7 @@ public class CommWorker extends Thread {
 				} else {
 					System.out.println("--> channel not writable- tossing out msg!");
 
-					// conn.outbound.putFirst(msg);
+					conn.outbound.putFirst(msg);
 				}
 
 				System.out.flush();

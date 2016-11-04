@@ -12,7 +12,7 @@ public class InboundReadQueueThread extends Thread {
 	public InboundReadQueueThread(QueueManager manager) {
 		super();
 		this.manager = manager;
-		if (manager.inboundReadQueue == null)
+		if (manager.inboundWorkReadQueue == null)
 			throw new RuntimeException("Manager has no inbound read queue");
 	}
 

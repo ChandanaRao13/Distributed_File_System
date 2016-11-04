@@ -78,7 +78,7 @@ public class MessageClient {
 
 		FileTask.Builder tb = FileTask.newBuilder();
 		tb.setFilename(filename);
-		tb.setChunk(line);
+		//tb.setChunk(line);
 		tb.setChunkNo(chunkId);
 		tb.setChunkCounts(chunkCount);
 		tb.setFileTaskType(FileTaskType.WRITE);
@@ -112,7 +112,7 @@ public class MessageClient {
 		tb.setFileTaskType(FileTask.FileTaskType.WRITE);
 
 		tb.setFilename(filename);
-	//	tb.setChunk(bs);
+		tb.setChunk(bs);
 
 		CommandMessage.Builder rb = CommandMessage.newBuilder();
 		rb.setHeader(hb);
