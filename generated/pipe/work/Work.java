@@ -1551,6 +1551,20 @@ public final class Work {
     long getSecret();
 
     /**
+     * <code>optional string requestId = 14;</code>
+     */
+    boolean hasRequestId();
+    /**
+     * <code>optional string requestId = 14;</code>
+     */
+    java.lang.String getRequestId();
+    /**
+     * <code>optional string requestId = 14;</code>
+     */
+    com.google.protobuf.ByteString
+        getRequestIdBytes();
+
+    /**
      * <code>optional .WorkMessage.Worktype worktype = 13;</code>
      */
     boolean hasWorktype();
@@ -1857,9 +1871,15 @@ public final class Work {
               if (value == null) {
                 unknownFields.mergeVarintField(13, rawValue);
               } else {
-                bitField0_ |= 0x00000004;
+                bitField0_ |= 0x00000008;
                 worktype_ = value;
               }
+              break;
+            }
+            case 114: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              requestId_ = bs;
               break;
             }
           }
@@ -1910,12 +1930,28 @@ public final class Work {
        * <code>REPLICATE_REQUEST = 1;</code>
        */
       REPLICATE_REQUEST(0, 1),
+      /**
+       * <code>READ_REQUEST = 2;</code>
+       */
+      READ_REQUEST(1, 2),
+      /**
+       * <code>READ_REQUEST_RESPONSE = 3;</code>
+       */
+      READ_REQUEST_RESPONSE(2, 3),
       ;
 
       /**
        * <code>REPLICATE_REQUEST = 1;</code>
        */
       public static final int REPLICATE_REQUEST_VALUE = 1;
+      /**
+       * <code>READ_REQUEST = 2;</code>
+       */
+      public static final int READ_REQUEST_VALUE = 2;
+      /**
+       * <code>READ_REQUEST_RESPONSE = 3;</code>
+       */
+      public static final int READ_REQUEST_RESPONSE_VALUE = 3;
 
 
       public final int getNumber() { return value; }
@@ -1923,6 +1959,8 @@ public final class Work {
       public static Worktype valueOf(int value) {
         switch (value) {
           case 1: return REPLICATE_REQUEST;
+          case 2: return READ_REQUEST;
+          case 3: return READ_REQUEST_RESPONSE;
           default: return null;
         }
       }
@@ -2056,13 +2094,55 @@ public final class Work {
       return secret_;
     }
 
+    public static final int REQUESTID_FIELD_NUMBER = 14;
+    private java.lang.Object requestId_;
+    /**
+     * <code>optional string requestId = 14;</code>
+     */
+    public boolean hasRequestId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string requestId = 14;</code>
+     */
+    public java.lang.String getRequestId() {
+      java.lang.Object ref = requestId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          requestId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string requestId = 14;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRequestIdBytes() {
+      java.lang.Object ref = requestId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        requestId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     public static final int WORKTYPE_FIELD_NUMBER = 13;
     private pipe.work.Work.WorkMessage.Worktype worktype_;
     /**
      * <code>optional .WorkMessage.Worktype worktype = 13;</code>
      */
     public boolean hasWorktype() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional .WorkMessage.Worktype worktype = 13;</code>
@@ -2301,6 +2381,7 @@ public final class Work {
     private void initFields() {
       header_ = pipe.common.Common.Header.getDefaultInstance();
       secret_ = 0L;
+      requestId_ = "";
       worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
     }
     private byte memoizedIsInitialized = -1;
@@ -2394,8 +2475,11 @@ public final class Work {
         output.writeBool(
             12, (boolean)((java.lang.Boolean) payload_));
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(13, worktype_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(14, getRequestIdBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2453,9 +2537,13 @@ public final class Work {
           .computeBoolSize(
               12, (boolean)((java.lang.Boolean) payload_));
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(13, worktype_.getNumber());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(14, getRequestIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2587,8 +2675,10 @@ public final class Work {
         bitField0_ = (bitField0_ & ~0x00000001);
         secret_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
-        worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
+        requestId_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
+        bitField0_ = (bitField0_ & ~0x00000008);
         payloadCase_ = 0;
         payload_ = null;
         return this;
@@ -2633,6 +2723,10 @@ public final class Work {
         result.secret_ = secret_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
+        }
+        result.requestId_ = requestId_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
         }
         result.worktype_ = worktype_;
         if (payloadCase_ == 3) {
@@ -2708,6 +2802,11 @@ public final class Work {
         }
         if (other.hasSecret()) {
           setSecret(other.getSecret());
+        }
+        if (other.hasRequestId()) {
+          bitField0_ |= 0x00000004;
+          requestId_ = other.requestId_;
+          onChanged();
         }
         if (other.hasWorktype()) {
           setWorktype(other.getWorktype());
@@ -2985,12 +3084,88 @@ public final class Work {
         return this;
       }
 
+      private java.lang.Object requestId_ = "";
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public boolean hasRequestId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public java.lang.String getRequestId() {
+        java.lang.Object ref = requestId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            requestId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRequestIdBytes() {
+        java.lang.Object ref = requestId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          requestId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public Builder setRequestId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        requestId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public Builder clearRequestId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        requestId_ = getDefaultInstance().getRequestId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string requestId = 14;</code>
+       */
+      public Builder setRequestIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        requestId_ = value;
+        onChanged();
+        return this;
+      }
+
       private pipe.work.Work.WorkMessage.Worktype worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
       /**
        * <code>optional .WorkMessage.Worktype worktype = 13;</code>
        */
       public boolean hasWorktype() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional .WorkMessage.Worktype worktype = 13;</code>
@@ -3005,7 +3180,7 @@ public final class Work {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         worktype_ = value;
         onChanged();
         return this;
@@ -3014,7 +3189,7 @@ public final class Work {
        * <code>optional .WorkMessage.Worktype worktype = 13;</code>
        */
       public Builder clearWorktype() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
         onChanged();
         return this;
@@ -4034,17 +4209,19 @@ public final class Work {
       "to\032\npipe.proto\"0\n\tWorkState\022\020\n\010enqueued\030" +
       "\001 \002(\005\022\021\n\tprocessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n" +
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
-      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\206\003\n\013WorkMess" +
+      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\306\003\n\013WorkMess" +
       "age\022\027\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002" +
-      " \002(\003\022\'\n\010worktype\030\r \001(\0162\025.WorkMessage.Wor" +
-      "ktype\022\027\n\003err\030\003 \001(\0132\010.FailureH\000\022\016\n\004ping\030\004" +
-      " \001(\010H\000\022\032\n\004beat\030\005 \001(\0132\n.HeartbeatH\000\022\035\n\010fi" +
-      "letask\030\006 \001(\0132\t.FileTaskH\000\022\033\n\005state\030\007 \001(\013",
-      "2\n.WorkStateH\000\022\037\n\006leader\030\010 \001(\0132\r.LeaderS" +
-      "tatusH\000\022+\n\013raftMessage\030\t \001(\0132\024.RaftElect" +
-      "ionMessageH\000\022\021\n\007newNode\030\013 \001(\010H\000\022\025\n\013flagR" +
-      "outing\030\014 \001(\010H\000\"!\n\010Worktype\022\025\n\021REPLICATE_" +
-      "REQUEST\020\001B\t\n\007payloadB\r\n\tpipe.workH\001"
+      " \002(\003\022\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(" +
+      "\0162\025.WorkMessage.Worktype\022\027\n\003err\030\003 \001(\0132\010." +
+      "FailureH\000\022\016\n\004ping\030\004 \001(\010H\000\022\032\n\004beat\030\005 \001(\0132" +
+      "\n.HeartbeatH\000\022\035\n\010filetask\030\006 \001(\0132\t.FileTa",
+      "skH\000\022\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006lea" +
+      "der\030\010 \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessag" +
+      "e\030\t \001(\0132\024.RaftElectionMessageH\000\022\021\n\007newNo" +
+      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000\"N\n\010Wor" +
+      "ktype\022\025\n\021REPLICATE_REQUEST\020\001\022\020\n\014READ_REQ" +
+      "UEST\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003B\t\n\007pay" +
+      "loadB\r\n\tpipe.workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4084,7 +4261,7 @@ public final class Work {
     internal_static_WorkMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_WorkMessage_descriptor,
-        new java.lang.String[] { "Header", "Secret", "Worktype", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
+        new java.lang.String[] { "Header", "Secret", "RequestId", "Worktype", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
     pipe.common.Common.getDescriptor();
     pipe.election.Election.getDescriptor();
     routing.Pipe.getDescriptor();

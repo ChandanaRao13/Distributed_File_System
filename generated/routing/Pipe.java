@@ -22,18 +22,13 @@ public final class Pipe {
     int getChunkNo();
 
     /**
-     * <code>optional string chunk = 2;</code>
+     * <code>optional bytes chunk = 2;</code>
      */
     boolean hasChunk();
     /**
-     * <code>optional string chunk = 2;</code>
+     * <code>optional bytes chunk = 2;</code>
      */
-    java.lang.String getChunk();
-    /**
-     * <code>optional string chunk = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getChunkBytes();
+    com.google.protobuf.ByteString getChunk();
 
     /**
      * <code>required string filename = 3;</code>
@@ -57,6 +52,15 @@ public final class Pipe {
      * <code>required .FileTask.FileTaskType file_task_type = 4;</code>
      */
     routing.Pipe.FileTask.FileTaskType getFileTaskType();
+
+    /**
+     * <code>optional int32 chunk_counts = 5;</code>
+     */
+    boolean hasChunkCounts();
+    /**
+     * <code>optional int32 chunk_counts = 5;</code>
+     */
+    int getChunkCounts();
   }
   /**
    * Protobuf type {@code FileTask}
@@ -116,9 +120,8 @@ public final class Pipe {
               break;
             }
             case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              chunk_ = bs;
+              chunk_ = input.readBytes();
               break;
             }
             case 26: {
@@ -136,6 +139,11 @@ public final class Pipe {
                 bitField0_ |= 0x00000008;
                 fileTaskType_ = value;
               }
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              chunkCounts_ = input.readInt32();
               break;
             }
           }
@@ -276,45 +284,18 @@ public final class Pipe {
     }
 
     public static final int CHUNK_FIELD_NUMBER = 2;
-    private java.lang.Object chunk_;
+    private com.google.protobuf.ByteString chunk_;
     /**
-     * <code>optional string chunk = 2;</code>
+     * <code>optional bytes chunk = 2;</code>
      */
     public boolean hasChunk() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string chunk = 2;</code>
+     * <code>optional bytes chunk = 2;</code>
      */
-    public java.lang.String getChunk() {
-      java.lang.Object ref = chunk_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          chunk_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string chunk = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getChunkBytes() {
-      java.lang.Object ref = chunk_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        chunk_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.google.protobuf.ByteString getChunk() {
+      return chunk_;
     }
 
     public static final int FILENAME_FIELD_NUMBER = 3;
@@ -374,11 +355,27 @@ public final class Pipe {
       return fileTaskType_;
     }
 
+    public static final int CHUNK_COUNTS_FIELD_NUMBER = 5;
+    private int chunkCounts_;
+    /**
+     * <code>optional int32 chunk_counts = 5;</code>
+     */
+    public boolean hasChunkCounts() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional int32 chunk_counts = 5;</code>
+     */
+    public int getChunkCounts() {
+      return chunkCounts_;
+    }
+
     private void initFields() {
       chunkNo_ = 0;
-      chunk_ = "";
+      chunk_ = com.google.protobuf.ByteString.EMPTY;
       filename_ = "";
       fileTaskType_ = routing.Pipe.FileTask.FileTaskType.READ;
+      chunkCounts_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -405,13 +402,16 @@ public final class Pipe {
         output.writeInt32(1, chunkNo_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getChunkBytes());
+        output.writeBytes(2, chunk_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, getFilenameBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(4, fileTaskType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeInt32(5, chunkCounts_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -428,7 +428,7 @@ public final class Pipe {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getChunkBytes());
+          .computeBytesSize(2, chunk_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
@@ -437,6 +437,10 @@ public final class Pipe {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, fileTaskType_.getNumber());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, chunkCounts_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -557,12 +561,14 @@ public final class Pipe {
         super.clear();
         chunkNo_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        chunk_ = "";
+        chunk_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         filename_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
         fileTaskType_ = routing.Pipe.FileTask.FileTaskType.READ;
         bitField0_ = (bitField0_ & ~0x00000008);
+        chunkCounts_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -607,6 +613,10 @@ public final class Pipe {
           to_bitField0_ |= 0x00000008;
         }
         result.fileTaskType_ = fileTaskType_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.chunkCounts_ = chunkCounts_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -627,9 +637,7 @@ public final class Pipe {
           setChunkNo(other.getChunkNo());
         }
         if (other.hasChunk()) {
-          bitField0_ |= 0x00000002;
-          chunk_ = other.chunk_;
-          onChanged();
+          setChunk(other.getChunk());
         }
         if (other.hasFilename()) {
           bitField0_ |= 0x00000004;
@@ -638,6 +646,9 @@ public final class Pipe {
         }
         if (other.hasFileTaskType()) {
           setFileTaskType(other.getFileTaskType());
+        }
+        if (other.hasChunkCounts()) {
+          setChunkCounts(other.getChunkCounts());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -706,51 +717,23 @@ public final class Pipe {
         return this;
       }
 
-      private java.lang.Object chunk_ = "";
+      private com.google.protobuf.ByteString chunk_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>optional string chunk = 2;</code>
+       * <code>optional bytes chunk = 2;</code>
        */
       public boolean hasChunk() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string chunk = 2;</code>
+       * <code>optional bytes chunk = 2;</code>
        */
-      public java.lang.String getChunk() {
-        java.lang.Object ref = chunk_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            chunk_ = s;
-          }
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      public com.google.protobuf.ByteString getChunk() {
+        return chunk_;
       }
       /**
-       * <code>optional string chunk = 2;</code>
+       * <code>optional bytes chunk = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getChunkBytes() {
-        java.lang.Object ref = chunk_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          chunk_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string chunk = 2;</code>
-       */
-      public Builder setChunk(
-          java.lang.String value) {
+      public Builder setChunk(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -760,24 +743,11 @@ public final class Pipe {
         return this;
       }
       /**
-       * <code>optional string chunk = 2;</code>
+       * <code>optional bytes chunk = 2;</code>
        */
       public Builder clearChunk() {
         bitField0_ = (bitField0_ & ~0x00000002);
         chunk_ = getDefaultInstance().getChunk();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string chunk = 2;</code>
-       */
-      public Builder setChunkBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        chunk_ = value;
         onChanged();
         return this;
       }
@@ -889,6 +859,38 @@ public final class Pipe {
       public Builder clearFileTaskType() {
         bitField0_ = (bitField0_ & ~0x00000008);
         fileTaskType_ = routing.Pipe.FileTask.FileTaskType.READ;
+        onChanged();
+        return this;
+      }
+
+      private int chunkCounts_ ;
+      /**
+       * <code>optional int32 chunk_counts = 5;</code>
+       */
+      public boolean hasChunkCounts() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional int32 chunk_counts = 5;</code>
+       */
+      public int getChunkCounts() {
+        return chunkCounts_;
+      }
+      /**
+       * <code>optional int32 chunk_counts = 5;</code>
+       */
+      public Builder setChunkCounts(int value) {
+        bitField0_ |= 0x00000010;
+        chunkCounts_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 chunk_counts = 5;</code>
+       */
+      public Builder clearChunkCounts() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        chunkCounts_ = 0;
         onChanged();
         return this;
       }
@@ -2208,15 +2210,15 @@ public final class Pipe {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\npipe.proto\032\014common.proto\"\222\001\n\010FileTask\022" +
-      "\020\n\010chunk_no\030\001 \001(\005\022\r\n\005chunk\030\002 \001(\t\022\020\n\010file" +
+      "\n\npipe.proto\032\014common.proto\"\250\001\n\010FileTask\022" +
+      "\020\n\010chunk_no\030\001 \001(\005\022\r\n\005chunk\030\002 \001(\014\022\020\n\010file" +
       "name\030\003 \002(\t\022.\n\016file_task_type\030\004 \002(\0162\026.Fil" +
-      "eTask.FileTaskType\"#\n\014FileTaskType\022\010\n\004RE" +
-      "AD\020\001\022\t\n\005WRITE\020\002\"\215\001\n\016CommandMessage\022\027\n\006he" +
-      "ader\030\001 \002(\0132\007.Header\022\033\n\010filetask\030\002 \001(\0132\t." +
-      "FileTask\022\016\n\004ping\030\003 \001(\010H\000\022\021\n\007message\030\004 \001(" +
-      "\tH\000\022\027\n\003err\030\005 \001(\0132\010.FailureH\000B\t\n\007payloadB" +
-      "\013\n\007routingH\001"
+      "eTask.FileTaskType\022\024\n\014chunk_counts\030\005 \001(\005" +
+      "\"#\n\014FileTaskType\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\"\215\001" +
+      "\n\016CommandMessage\022\027\n\006header\030\001 \002(\0132\007.Heade" +
+      "r\022\033\n\010filetask\030\002 \001(\0132\t.FileTask\022\016\n\004ping\030\003" +
+      " \001(\010H\000\022\021\n\007message\030\004 \001(\tH\000\022\027\n\003err\030\005 \001(\0132\010" +
+      ".FailureH\000B\t\n\007payloadB\013\n\007routingH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2236,7 +2238,7 @@ public final class Pipe {
     internal_static_FileTask_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FileTask_descriptor,
-        new java.lang.String[] { "ChunkNo", "Chunk", "Filename", "FileTaskType", });
+        new java.lang.String[] { "ChunkNo", "Chunk", "Filename", "FileTaskType", "ChunkCounts", });
     internal_static_CommandMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_CommandMessage_fieldAccessorTable = new

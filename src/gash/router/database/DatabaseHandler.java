@@ -7,7 +7,9 @@ import gash.router.util.Constants;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -84,13 +86,14 @@ public class DatabaseHandler {
 	public static boolean addFile(String filename, ByteString line, int chunkId, int totalChunks) {
 		Connection conn = getConnection();
 		try {
+			String contentString = new String(line.toByteArray());
 			rethinkDBInstance
 					.db(Constants.DATABASE)
 					.table(Constants.TABLE)
 					.insert(rethinkDBInstance
 							.hashMap(Constants.FILE_NAME, filename)
 							.with(Constants.CHUNK_COUNT, totalChunks)
-							.with(Constants.FILE_CONTENT, line)
+							.with(Constants.FILE_CONTENT, contentString)
 							.with(Constants.CHUNK_ID, chunkId)).run(conn);
 			System.out.println("File saved to DB: " + filename);
 			return true;
@@ -112,18 +115,20 @@ public class DatabaseHandler {
 			int chunkId) {
 		Connection connection = getConnection();
 		try {
+			//String contentString = new String(input);
 			rethinkDBInstance
 					.db(Constants.DATABASE)
 					.table(Constants.TABLE)
 					.insert(rethinkDBInstance
 							.hashMap(Constants.FILE_NAME, filename)
 							.with(Constants.CHUNK_COUNT, chunkCount)
-							.with(Constants.FILE_CONTENT, input)
+							.with(Constants.FILE_CONTENT, rethinkDBInstance.binary(input))
 							.with(Constants.CHUNK_ID, chunkId)).run(connection);
 			return true;
 		} catch (Exception e) {
 			logger.debug("ERROR: Unable to store file in the database");
 			System.out.println("File in not added");
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -181,6 +186,7 @@ public class DatabaseHandler {
 				JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
 				FluffyFile fluffyFile = new FluffyFile();
 				fluffyFile.setChunkId(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_ID)));
+				//fluffyFile.setFile(((String) fileContentJSON.get(Constants.FILE_CONTENT)).getBytes());
 				fluffyFile.setFile((byte[]) fileContentJSON.get(Constants.FILE_CONTENT));
 				fluffyFile.setFilename((String) fileContentJSON.get(Constants.FILE_NAME));
 				fluffyFile.setTotalChunks(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_COUNT)));
@@ -215,6 +221,7 @@ public class DatabaseHandler {
 				JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
 				FluffyFile fluffyFile = new FluffyFile();
 				fluffyFile.setChunkId(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_ID)));
+				//fluffyFile.setFile(((String) fileContentJSON.get(Constants.FILE_CONTENT)).getBytes());
 				fluffyFile.setFile((byte[]) fileContentJSON.get(Constants.FILE_CONTENT));
 				fluffyFile.setFilename((String) fileContentJSON.get(Constants.FILE_NAME));
 				fluffyFile.setTotalChunks(Integer.parseInt((String) fileContentJSON.get(Constants.CHUNK_COUNT)));
@@ -235,25 +242,42 @@ public class DatabaseHandler {
 	 * @throws FileNotFoundException
 	 * @throws FileChunkNotFoundException 
 	 */
-	public static String getFileChunkContentWithChunkId(String filename, int chunkId) throws IOException, ParseException, FileNotFoundException, FileChunkNotFoundException {
+	public static ByteString getFileChunkContentWithChunkId(String filename, int chunkId) throws IOException, ParseException, FileNotFoundException, FileChunkNotFoundException {
 		Connection connection = getConnection();
 
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE)
 				.table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename).with(Constants.CHUNK_ID, chunkId))
-				.getField(Constants.FILE_CONTENT)
+				//.getField(Constants.FILE_CONTENT)
 				.run(connection);
 
 		if (dataFromDB == null)
 			throw new FileChunkNotFoundException(filename, chunkId);
 		else {
-			ArrayList<String> result = dataFromDB.bufferedItems();
+			//List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
+			for (Object record : dataFromDB) {
+				System.out.println("record");
+				System.out.println(record);
+				HashMap<String, Object> fileContentMap = (HashMap<String, Object>) record;
+				/*JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
+				return ByteString.copyFrom((byte[]) fileContentJSON.get(Constants.FILE_CONTENT));
+				*/
+				
+				//JSONObject fileContentJSON = (JSONObject) jsonParse.parse(new StringReader((String) record));
+				System.out.println("got the conntetn");
+				System.out.println(fileContentMap.get(Constants.FILE_CONTENT).getClass().getName());
+				//byte[] bval = new BigInteger((String) fileContentMap.get(Constants.FILE_CONTENT), 2).toByteArray();
+				return ByteString.copyFrom((byte[]) fileContentMap.get(Constants.FILE_CONTENT));
+				
+			}
+			return ByteString.copyFrom("".getBytes());
+			/*ArrayList<Byte> result = dataFromDB.bufferedItems();
 			if(result.size() == 1) {
 				System.out.println("Data: " + result.get(0));
-				return result.get(0);
+				return ByteString.copyFrom((byte[]) result.get(0));
 			} else {
-				return "";
-			}
+				return ByteString.copyFrom("".getBytes());
+			}*/
 			
 		}
 	}

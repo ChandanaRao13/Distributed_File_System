@@ -6,6 +6,8 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.protobuf.ByteString;
+
 import gash.router.database.DatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.manage.exceptions.FileChunkNotFoundException;
@@ -41,10 +43,10 @@ public class TaskHandler implements IWorkChainHandler{
 					for (int i = 1; i <= chunkCount; i++) {
 						
 						try {
-							String content = DatabaseHandler.getFileChunkContentWithChunkId(ft.getFilename(), i);
+							ByteString content = DatabaseHandler.getFileChunkContentWithChunkId(ft.getFilename(), i);
 							System.out.println("Content recieved :" + content);
 							WorkMessage msg = MessageGenerator.getInstance().generateReadRequestResponseMessage(ft, content, i, 
-									chunkCount, workMessage.getRequestId(), workMessage.getHeader().getNodeId());
+									chunkCount, workMessage.getRequestId(), workMessage.getHeader().getNodeId(), ft.getFilename());
 							QueueManager.getInstance().enqueueOutboundRead(msg, channel);
 						} catch (FileChunkNotFoundException e) {
 							e.printStackTrace();

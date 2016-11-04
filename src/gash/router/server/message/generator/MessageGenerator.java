@@ -95,7 +95,7 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
-	public WorkMessage generateReadRequestResponseMessage(FileTask filetask, String line, int chunkId, int totalChunks, String requestId, int nodeId){
+	public WorkMessage generateReadRequestResponseMessage(FileTask filetask, ByteString line, int chunkId, int totalChunks, String requestId, int nodeId, String filename){
 		Header.Builder hb = Header.newBuilder();
 
 		hb.setNodeId(conf.getNodeId());
@@ -110,11 +110,12 @@ public class MessageGenerator {
 		wb.setWorktype(Worktype.READ_REQUEST_RESPONSE);
 
 		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setFilename(filename);
 		ft.setChunkNo(chunkId);
 		ft.setChunk(line);
 		ft.setChunkCounts(totalChunks);
 		ft.setFileTaskType(FileTaskType.READ);
-		ft.setFilename(ft.getFilename());
+		//ft.setFilename(ft.getFilename());
 		wb.setFiletask(ft.build());
 
 		return wb.build();

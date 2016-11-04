@@ -32,7 +32,7 @@ public class OutboundWorkWriteQueueThread extends Thread{
 					if(cf.isSuccess()){
 						logger.info("Wrote message to the channel of node : " + destinationNode );
 					} else {
-						manager.returnOutboundWork(message);
+						manager.returnOutboundWorkWrite(message);
 					}
 				} else {
 					logger.info("Channel to destination node " + destinationNode + " is not writable");
