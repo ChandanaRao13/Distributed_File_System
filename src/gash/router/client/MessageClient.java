@@ -165,6 +165,7 @@ public class MessageClient {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private synchronized long nextId() {
 		return ++curID;
 	}
