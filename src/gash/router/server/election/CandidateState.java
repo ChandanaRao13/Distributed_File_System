@@ -50,7 +50,7 @@ public class CandidateState implements IRaftNodeState {
 			if(voteCount > (totalActiveNodes/2) ){
 				//electionCtx.timer.updateTimer();
 				electionCtx.generateTimeOut();
-				System.out.println("Leader Elected. Node Id : " + electionCtx.getConf().getNodeId()+". Out of total nodes: "+totalActiveNodes);
+				System.out.println("Yay! I Won the election! I am the Leader. My Node Id is " + electionCtx.getConf().getNodeId());
 				electionCtx.setLeaderId(electionCtx.getConf().getNodeId());
 				electionCtx.setCurrentState(electionCtx.leader);				
 				voted =false; //reset once the leader is elected
@@ -71,7 +71,8 @@ public class CandidateState implements IRaftNodeState {
 	@Override
 	public synchronized void sendVote(WorkMessage msg, boolean voteGranted) {
 		EdgeInfo ei = electionCtx.getEmon().getOutBoundEdgesList().getEdgeListMap().get(msg.getHeader().getNodeId());
-		ei.getChannel().writeAndFlush(RaftMessageBuilder.buildVoteResponseMessage(msg.getHeader().getNodeId(), voteGranted, electionCtx.getTerm())); 
+		if(ei.getChannel()!=null)
+			ei.getChannel().writeAndFlush(RaftMessageBuilder.buildVoteResponseMessage(msg.getHeader().getNodeId(), voteGranted, electionCtx.getTerm())); 
 	}
 	
 	/* setters and getters */

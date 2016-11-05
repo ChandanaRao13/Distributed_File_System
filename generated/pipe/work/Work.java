@@ -1681,22 +1681,30 @@ public final class Work {
     pipe.election.Election.RaftElectionMessageOrBuilder getRaftMessageOrBuilder();
 
     /**
-     * <code>optional bool newNode = 11;</code>
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
      */
-    boolean hasNewNode();
+    boolean hasNewNodeMessage();
     /**
-     * <code>optional bool newNode = 11;</code>
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
      */
-    boolean getNewNode();
+    pipe.election.Election.NewNodeMessage getNewNodeMessage();
+    /**
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+     */
+    pipe.election.Election.NewNodeMessageOrBuilder getNewNodeMessageOrBuilder();
 
     /**
-     * <code>optional bool flagRouting = 12;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
      */
-    boolean hasFlagRouting();
+    boolean hasAllNodeInfo();
     /**
-     * <code>optional bool flagRouting = 12;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
      */
-    boolean getFlagRouting();
+    pipe.election.Election.AllNodeInfo getAllNodeInfo();
+    /**
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+     */
+    pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder();
   }
   /**
    * Protobuf type {@code WorkMessage}
@@ -1855,14 +1863,30 @@ public final class Work {
               payloadCase_ = 9;
               break;
             }
-            case 88: {
+            case 90: {
+              pipe.election.Election.NewNodeMessage.Builder subBuilder = null;
+              if (payloadCase_ == 11) {
+                subBuilder = ((pipe.election.Election.NewNodeMessage) payload_).toBuilder();
+              }
+              payload_ = input.readMessage(pipe.election.Election.NewNodeMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((pipe.election.Election.NewNodeMessage) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
               payloadCase_ = 11;
-              payload_ = input.readBool();
               break;
             }
-            case 96: {
+            case 98: {
+              pipe.election.Election.AllNodeInfo.Builder subBuilder = null;
+              if (payloadCase_ == 12) {
+                subBuilder = ((pipe.election.Election.AllNodeInfo) payload_).toBuilder();
+              }
+              payload_ = input.readMessage(pipe.election.Election.AllNodeInfo.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((pipe.election.Election.AllNodeInfo) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
               payloadCase_ = 12;
-              payload_ = input.readBool();
               break;
             }
             case 104: {
@@ -2033,8 +2057,8 @@ public final class Work {
       STATE(7),
       LEADER(8),
       RAFTMESSAGE(9),
-      NEWNODE(11),
-      FLAGROUTING(12),
+      NEWNODEMESSAGE(11),
+      ALLNODEINFO(12),
       PAYLOAD_NOT_SET(0);
       private int value = 0;
       private PayloadCase(int value) {
@@ -2049,8 +2073,8 @@ public final class Work {
           case 7: return STATE;
           case 8: return LEADER;
           case 9: return RAFTMESSAGE;
-          case 11: return NEWNODE;
-          case 12: return FLAGROUTING;
+          case 11: return NEWNODEMESSAGE;
+          case 12: return ALLNODEINFO;
           case 0: return PAYLOAD_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -2353,38 +2377,56 @@ public final class Work {
       return pipe.election.Election.RaftElectionMessage.getDefaultInstance();
     }
 
-    public static final int NEWNODE_FIELD_NUMBER = 11;
+    public static final int NEWNODEMESSAGE_FIELD_NUMBER = 11;
     /**
-     * <code>optional bool newNode = 11;</code>
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
      */
-    public boolean hasNewNode() {
+    public boolean hasNewNodeMessage() {
       return payloadCase_ == 11;
     }
     /**
-     * <code>optional bool newNode = 11;</code>
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
      */
-    public boolean getNewNode() {
+    public pipe.election.Election.NewNodeMessage getNewNodeMessage() {
       if (payloadCase_ == 11) {
-        return (java.lang.Boolean) payload_;
+         return (pipe.election.Election.NewNodeMessage) payload_;
       }
-      return false;
+      return pipe.election.Election.NewNodeMessage.getDefaultInstance();
+    }
+    /**
+     * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+     */
+    public pipe.election.Election.NewNodeMessageOrBuilder getNewNodeMessageOrBuilder() {
+      if (payloadCase_ == 11) {
+         return (pipe.election.Election.NewNodeMessage) payload_;
+      }
+      return pipe.election.Election.NewNodeMessage.getDefaultInstance();
     }
 
-    public static final int FLAGROUTING_FIELD_NUMBER = 12;
+    public static final int ALLNODEINFO_FIELD_NUMBER = 12;
     /**
-     * <code>optional bool flagRouting = 12;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
      */
-    public boolean hasFlagRouting() {
+    public boolean hasAllNodeInfo() {
       return payloadCase_ == 12;
     }
     /**
-     * <code>optional bool flagRouting = 12;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
      */
-    public boolean getFlagRouting() {
+    public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
       if (payloadCase_ == 12) {
-        return (java.lang.Boolean) payload_;
+         return (pipe.election.Election.AllNodeInfo) payload_;
       }
-      return false;
+      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+    }
+    /**
+     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+     */
+    public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
+      if (payloadCase_ == 12) {
+         return (pipe.election.Election.AllNodeInfo) payload_;
+      }
+      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
     }
 
     private void initFields() {
@@ -2477,12 +2519,10 @@ public final class Work {
         output.writeMessage(9, (pipe.election.Election.RaftElectionMessage) payload_);
       }
       if (payloadCase_ == 11) {
-        output.writeBool(
-            11, (boolean)((java.lang.Boolean) payload_));
+        output.writeMessage(11, (pipe.election.Election.NewNodeMessage) payload_);
       }
       if (payloadCase_ == 12) {
-        output.writeBool(
-            12, (boolean)((java.lang.Boolean) payload_));
+        output.writeMessage(12, (pipe.election.Election.AllNodeInfo) payload_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(13, worktype_.getNumber());
@@ -2538,13 +2578,11 @@ public final class Work {
       }
       if (payloadCase_ == 11) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(
-              11, (boolean)((java.lang.Boolean) payload_));
+          .computeMessageSize(11, (pipe.election.Election.NewNodeMessage) payload_);
       }
       if (payloadCase_ == 12) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(
-              12, (boolean)((java.lang.Boolean) payload_));
+          .computeMessageSize(12, (pipe.election.Election.AllNodeInfo) payload_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2784,10 +2822,18 @@ public final class Work {
           }
         }
         if (payloadCase_ == 11) {
-          result.payload_ = payload_;
+          if (newNodeMessageBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = newNodeMessageBuilder_.build();
+          }
         }
         if (payloadCase_ == 12) {
-          result.payload_ = payload_;
+          if (allNodeInfoBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = allNodeInfoBuilder_.build();
+          }
         }
         result.bitField0_ = to_bitField0_;
         result.payloadCase_ = payloadCase_;
@@ -2849,12 +2895,12 @@ public final class Work {
             mergeRaftMessage(other.getRaftMessage());
             break;
           }
-          case NEWNODE: {
-            setNewNode(other.getNewNode());
+          case NEWNODEMESSAGE: {
+            mergeNewNodeMessage(other.getNewNodeMessage());
             break;
           }
-          case FLAGROUTING: {
-            setFlagRouting(other.getFlagRouting());
+          case ALLNODEINFO: {
+            mergeAllNodeInfo(other.getAllNodeInfo());
             break;
           }
           case PAYLOAD_NOT_SET: {
@@ -4102,76 +4148,274 @@ public final class Work {
         return raftMessageBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.NewNodeMessage, pipe.election.Election.NewNodeMessage.Builder, pipe.election.Election.NewNodeMessageOrBuilder> newNodeMessageBuilder_;
       /**
-       * <code>optional bool newNode = 11;</code>
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
        */
-      public boolean hasNewNode() {
+      public boolean hasNewNodeMessage() {
         return payloadCase_ == 11;
       }
       /**
-       * <code>optional bool newNode = 11;</code>
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
        */
-      public boolean getNewNode() {
-        if (payloadCase_ == 11) {
-          return (java.lang.Boolean) payload_;
+      public pipe.election.Election.NewNodeMessage getNewNodeMessage() {
+        if (newNodeMessageBuilder_ == null) {
+          if (payloadCase_ == 11) {
+            return (pipe.election.Election.NewNodeMessage) payload_;
+          }
+          return pipe.election.Election.NewNodeMessage.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 11) {
+            return newNodeMessageBuilder_.getMessage();
+          }
+          return pipe.election.Election.NewNodeMessage.getDefaultInstance();
         }
-        return false;
       }
       /**
-       * <code>optional bool newNode = 11;</code>
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
        */
-      public Builder setNewNode(boolean value) {
-        payloadCase_ = 11;
-        payload_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool newNode = 11;</code>
-       */
-      public Builder clearNewNode() {
-        if (payloadCase_ == 11) {
-          payloadCase_ = 0;
-          payload_ = null;
+      public Builder setNewNodeMessage(pipe.election.Election.NewNodeMessage value) {
+        if (newNodeMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
           onChanged();
+        } else {
+          newNodeMessageBuilder_.setMessage(value);
+        }
+        payloadCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      public Builder setNewNodeMessage(
+          pipe.election.Election.NewNodeMessage.Builder builderForValue) {
+        if (newNodeMessageBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          newNodeMessageBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      public Builder mergeNewNodeMessage(pipe.election.Election.NewNodeMessage value) {
+        if (newNodeMessageBuilder_ == null) {
+          if (payloadCase_ == 11 &&
+              payload_ != pipe.election.Election.NewNodeMessage.getDefaultInstance()) {
+            payload_ = pipe.election.Election.NewNodeMessage.newBuilder((pipe.election.Election.NewNodeMessage) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 11) {
+            newNodeMessageBuilder_.mergeFrom(value);
+          }
+          newNodeMessageBuilder_.setMessage(value);
+        }
+        payloadCase_ = 11;
+        return this;
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      public Builder clearNewNodeMessage() {
+        if (newNodeMessageBuilder_ == null) {
+          if (payloadCase_ == 11) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 11) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          newNodeMessageBuilder_.clear();
         }
         return this;
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      public pipe.election.Election.NewNodeMessage.Builder getNewNodeMessageBuilder() {
+        return getNewNodeMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      public pipe.election.Election.NewNodeMessageOrBuilder getNewNodeMessageOrBuilder() {
+        if ((payloadCase_ == 11) && (newNodeMessageBuilder_ != null)) {
+          return newNodeMessageBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 11) {
+            return (pipe.election.Election.NewNodeMessage) payload_;
+          }
+          return pipe.election.Election.NewNodeMessage.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.NewNodeMessage, pipe.election.Election.NewNodeMessage.Builder, pipe.election.Election.NewNodeMessageOrBuilder> 
+          getNewNodeMessageFieldBuilder() {
+        if (newNodeMessageBuilder_ == null) {
+          if (!(payloadCase_ == 11)) {
+            payload_ = pipe.election.Election.NewNodeMessage.getDefaultInstance();
+          }
+          newNodeMessageBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pipe.election.Election.NewNodeMessage, pipe.election.Election.NewNodeMessage.Builder, pipe.election.Election.NewNodeMessageOrBuilder>(
+                  (pipe.election.Election.NewNodeMessage) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 11;
+        return newNodeMessageBuilder_;
       }
 
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> allNodeInfoBuilder_;
       /**
-       * <code>optional bool flagRouting = 12;</code>
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
        */
-      public boolean hasFlagRouting() {
+      public boolean hasAllNodeInfo() {
         return payloadCase_ == 12;
       }
       /**
-       * <code>optional bool flagRouting = 12;</code>
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
        */
-      public boolean getFlagRouting() {
-        if (payloadCase_ == 12) {
-          return (java.lang.Boolean) payload_;
+      public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 12) {
+            return (pipe.election.Election.AllNodeInfo) payload_;
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 12) {
+            return allNodeInfoBuilder_.getMessage();
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
         }
-        return false;
       }
       /**
-       * <code>optional bool flagRouting = 12;</code>
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
        */
-      public Builder setFlagRouting(boolean value) {
-        payloadCase_ = 12;
-        payload_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool flagRouting = 12;</code>
-       */
-      public Builder clearFlagRouting() {
-        if (payloadCase_ == 12) {
-          payloadCase_ = 0;
-          payload_ = null;
+      public Builder setAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
+        if (allNodeInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
           onChanged();
+        } else {
+          allNodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      public Builder setAllNodeInfo(
+          pipe.election.Election.AllNodeInfo.Builder builderForValue) {
+        if (allNodeInfoBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          allNodeInfoBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      public Builder mergeAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 12 &&
+              payload_ != pipe.election.Election.AllNodeInfo.getDefaultInstance()) {
+            payload_ = pipe.election.Election.AllNodeInfo.newBuilder((pipe.election.Election.AllNodeInfo) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 12) {
+            allNodeInfoBuilder_.mergeFrom(value);
+          }
+          allNodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 12;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      public Builder clearAllNodeInfo() {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 12) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 12) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          allNodeInfoBuilder_.clear();
         }
         return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      public pipe.election.Election.AllNodeInfo.Builder getAllNodeInfoBuilder() {
+        return getAllNodeInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
+        if ((payloadCase_ == 12) && (allNodeInfoBuilder_ != null)) {
+          return allNodeInfoBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 12) {
+            return (pipe.election.Election.AllNodeInfo) payload_;
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> 
+          getAllNodeInfoFieldBuilder() {
+        if (allNodeInfoBuilder_ == null) {
+          if (!(payloadCase_ == 12)) {
+            payload_ = pipe.election.Election.AllNodeInfo.getDefaultInstance();
+          }
+          allNodeInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder>(
+                  (pipe.election.Election.AllNodeInfo) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 12;
+        return allNodeInfoBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:WorkMessage)
@@ -4218,7 +4462,7 @@ public final class Work {
       "to\032\npipe.proto\"0\n\tWorkState\022\020\n\010enqueued\030" +
       "\001 \002(\005\022\021\n\tprocessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n" +
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
-      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\336\003\n\013WorkMess" +
+      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\204\004\n\013WorkMess" +
       "age\022\027\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002" +
       " \002(\003\022\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(" +
       "\0162\025.WorkMessage.Worktype\022\027\n\003err\030\003 \001(\0132\010." +
@@ -4226,12 +4470,13 @@ public final class Work {
       "\n.HeartbeatH\000\022\035\n\010filetask\030\006 \001(\0132\t.FileTa",
       "skH\000\022\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006lea" +
       "der\030\010 \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessag" +
-      "e\030\t \001(\0132\024.RaftElectionMessageH\000\022\021\n\007newNo" +
-      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000\"f\n\010Wor" +
-      "ktype\022\025\n\021REPLICATE_REQUEST\020\001\022\020\n\014READ_REQ" +
-      "UEST\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003\022\026\n\022REP" +
-      "LICATE_RESPONSE\020\004B\t\n\007payloadB\r\n\tpipe.wor" +
-      "kH\001"
+      "e\030\t \001(\0132\024.RaftElectionMessageH\000\022)\n\016newNo" +
+      "deMessage\030\013 \001(\0132\017.NewNodeMessageH\000\022#\n\013al" +
+      "lNodeInfo\030\014 \001(\0132\014.AllNodeInfoH\000\"f\n\010Workt" +
+      "ype\022\025\n\021REPLICATE_REQUEST\020\001\022\020\n\014READ_REQUE" +
+      "ST\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003\022\026\n\022REPLI" +
+      "CATE_RESPONSE\020\004B\t\n\007payloadB\r\n\tpipe.workH" +
+      "\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4271,7 +4516,7 @@ public final class Work {
     internal_static_WorkMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_WorkMessage_descriptor,
-        new java.lang.String[] { "Header", "Secret", "RequestId", "Worktype", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNode", "FlagRouting", "Payload", });
+        new java.lang.String[] { "Header", "Secret", "RequestId", "Worktype", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNodeMessage", "AllNodeInfo", "Payload", });
     pipe.common.Common.getDescriptor();
     pipe.election.Election.getDescriptor();
     routing.Pipe.getDescriptor();

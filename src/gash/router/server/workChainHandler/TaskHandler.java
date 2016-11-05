@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
 import gash.router.database.DatabaseHandler;
+import gash.router.server.ServerState;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.manage.exceptions.EmptyConnectionPoolException;
 import gash.router.server.manage.exceptions.FileChunkNotFoundException;
@@ -24,11 +25,12 @@ import routing.Pipe.FileTask;
 
 public class TaskHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
+	protected ServerState state;
 	protected static Logger logger = LoggerFactory.getLogger("work");
 	@Override
-	public void setNextChain(IWorkChainHandler nextChain) {
-		// TODO Auto-generated method stub
+	public void setNextChain(IWorkChainHandler nextChain,ServerState state) {
 		this.nextChainHandler = nextChain;
+		this.state = state;
 	}
 
 	@Override

@@ -2616,6 +2616,1541 @@ public final class Election {
     // @@protoc_insertion_point(class_scope:ElectionMessage)
   }
 
+  public interface NewNodeMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NewNodeMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional int32 node_id = 1;</code>
+     */
+    boolean hasNodeId();
+    /**
+     * <code>optional int32 node_id = 1;</code>
+     */
+    int getNodeId();
+
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    boolean hasHostAddr();
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    java.lang.String getHostAddr();
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getHostAddrBytes();
+
+    /**
+     * <code>optional int32 port_no = 3;</code>
+     */
+    boolean hasPortNo();
+    /**
+     * <code>optional int32 port_no = 3;</code>
+     */
+    int getPortNo();
+
+    /**
+     * <code>optional int32 joinCluster = 4;</code>
+     */
+    boolean hasJoinCluster();
+    /**
+     * <code>optional int32 joinCluster = 4;</code>
+     */
+    int getJoinCluster();
+  }
+  /**
+   * Protobuf type {@code NewNodeMessage}
+   *
+   * <pre>
+   *message which sends node information
+   * </pre>
+   */
+  public static final class NewNodeMessage extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:NewNodeMessage)
+      NewNodeMessageOrBuilder {
+    // Use NewNodeMessage.newBuilder() to construct.
+    private NewNodeMessage(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private NewNodeMessage(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final NewNodeMessage defaultInstance;
+    public static NewNodeMessage getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public NewNodeMessage getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NewNodeMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              nodeId_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              hostAddr_ = bs;
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              portNo_ = input.readInt32();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              joinCluster_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pipe.election.Election.internal_static_NewNodeMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pipe.election.Election.internal_static_NewNodeMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pipe.election.Election.NewNodeMessage.class, pipe.election.Election.NewNodeMessage.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<NewNodeMessage> PARSER =
+        new com.google.protobuf.AbstractParser<NewNodeMessage>() {
+      public NewNodeMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NewNodeMessage(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NewNodeMessage> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NODE_ID_FIELD_NUMBER = 1;
+    private int nodeId_;
+    /**
+     * <code>optional int32 node_id = 1;</code>
+     */
+    public boolean hasNodeId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 node_id = 1;</code>
+     */
+    public int getNodeId() {
+      return nodeId_;
+    }
+
+    public static final int HOST_ADDR_FIELD_NUMBER = 2;
+    private java.lang.Object hostAddr_;
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public boolean hasHostAddr() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public java.lang.String getHostAddr() {
+      java.lang.Object ref = hostAddr_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          hostAddr_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHostAddrBytes() {
+      java.lang.Object ref = hostAddr_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        hostAddr_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_NO_FIELD_NUMBER = 3;
+    private int portNo_;
+    /**
+     * <code>optional int32 port_no = 3;</code>
+     */
+    public boolean hasPortNo() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int32 port_no = 3;</code>
+     */
+    public int getPortNo() {
+      return portNo_;
+    }
+
+    public static final int JOINCLUSTER_FIELD_NUMBER = 4;
+    private int joinCluster_;
+    /**
+     * <code>optional int32 joinCluster = 4;</code>
+     */
+    public boolean hasJoinCluster() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 joinCluster = 4;</code>
+     */
+    public int getJoinCluster() {
+      return joinCluster_;
+    }
+
+    private void initFields() {
+      nodeId_ = 0;
+      hostAddr_ = "";
+      portNo_ = 0;
+      joinCluster_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, nodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getHostAddrBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, portNo_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, joinCluster_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, nodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getHostAddrBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, portNo_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, joinCluster_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.NewNodeMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static pipe.election.Election.NewNodeMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.NewNodeMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pipe.election.Election.NewNodeMessage prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NewNodeMessage}
+     *
+     * <pre>
+     *message which sends node information
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NewNodeMessage)
+        pipe.election.Election.NewNodeMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pipe.election.Election.internal_static_NewNodeMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pipe.election.Election.internal_static_NewNodeMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pipe.election.Election.NewNodeMessage.class, pipe.election.Election.NewNodeMessage.Builder.class);
+      }
+
+      // Construct using pipe.election.Election.NewNodeMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        nodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        hostAddr_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        portNo_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        joinCluster_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pipe.election.Election.internal_static_NewNodeMessage_descriptor;
+      }
+
+      public pipe.election.Election.NewNodeMessage getDefaultInstanceForType() {
+        return pipe.election.Election.NewNodeMessage.getDefaultInstance();
+      }
+
+      public pipe.election.Election.NewNodeMessage build() {
+        pipe.election.Election.NewNodeMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public pipe.election.Election.NewNodeMessage buildPartial() {
+        pipe.election.Election.NewNodeMessage result = new pipe.election.Election.NewNodeMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.nodeId_ = nodeId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.hostAddr_ = hostAddr_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.portNo_ = portNo_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.joinCluster_ = joinCluster_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pipe.election.Election.NewNodeMessage) {
+          return mergeFrom((pipe.election.Election.NewNodeMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(pipe.election.Election.NewNodeMessage other) {
+        if (other == pipe.election.Election.NewNodeMessage.getDefaultInstance()) return this;
+        if (other.hasNodeId()) {
+          setNodeId(other.getNodeId());
+        }
+        if (other.hasHostAddr()) {
+          bitField0_ |= 0x00000002;
+          hostAddr_ = other.hostAddr_;
+          onChanged();
+        }
+        if (other.hasPortNo()) {
+          setPortNo(other.getPortNo());
+        }
+        if (other.hasJoinCluster()) {
+          setJoinCluster(other.getJoinCluster());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        pipe.election.Election.NewNodeMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pipe.election.Election.NewNodeMessage) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int nodeId_ ;
+      /**
+       * <code>optional int32 node_id = 1;</code>
+       */
+      public boolean hasNodeId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional int32 node_id = 1;</code>
+       */
+      public int getNodeId() {
+        return nodeId_;
+      }
+      /**
+       * <code>optional int32 node_id = 1;</code>
+       */
+      public Builder setNodeId(int value) {
+        bitField0_ |= 0x00000001;
+        nodeId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 node_id = 1;</code>
+       */
+      public Builder clearNodeId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        nodeId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object hostAddr_ = "";
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public boolean hasHostAddr() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public java.lang.String getHostAddr() {
+        java.lang.Object ref = hostAddr_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            hostAddr_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getHostAddrBytes() {
+        java.lang.Object ref = hostAddr_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          hostAddr_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public Builder setHostAddr(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        hostAddr_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public Builder clearHostAddr() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        hostAddr_ = getDefaultInstance().getHostAddr();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string host_addr = 2;</code>
+       */
+      public Builder setHostAddrBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        hostAddr_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int portNo_ ;
+      /**
+       * <code>optional int32 port_no = 3;</code>
+       */
+      public boolean hasPortNo() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int32 port_no = 3;</code>
+       */
+      public int getPortNo() {
+        return portNo_;
+      }
+      /**
+       * <code>optional int32 port_no = 3;</code>
+       */
+      public Builder setPortNo(int value) {
+        bitField0_ |= 0x00000004;
+        portNo_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 port_no = 3;</code>
+       */
+      public Builder clearPortNo() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        portNo_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int joinCluster_ ;
+      /**
+       * <code>optional int32 joinCluster = 4;</code>
+       */
+      public boolean hasJoinCluster() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 joinCluster = 4;</code>
+       */
+      public int getJoinCluster() {
+        return joinCluster_;
+      }
+      /**
+       * <code>optional int32 joinCluster = 4;</code>
+       */
+      public Builder setJoinCluster(int value) {
+        bitField0_ |= 0x00000008;
+        joinCluster_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 joinCluster = 4;</code>
+       */
+      public Builder clearJoinCluster() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        joinCluster_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:NewNodeMessage)
+    }
+
+    static {
+      defaultInstance = new NewNodeMessage(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:NewNodeMessage)
+  }
+
+  public interface AllNodeInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:AllNodeInfo)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    java.util.List<java.lang.Integer> getNodeIdList();
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    int getNodeIdCount();
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    int getNodeId(int index);
+
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    com.google.protobuf.ProtocolStringList
+        getHostAddrList();
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    int getHostAddrCount();
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    java.lang.String getHostAddr(int index);
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getHostAddrBytes(int index);
+
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    java.util.List<java.lang.Integer> getPortNoList();
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    int getPortNoCount();
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    int getPortNo(int index);
+  }
+  /**
+   * Protobuf type {@code AllNodeInfo}
+   *
+   * <pre>
+   *message which sends other cluster node's information to new node
+   * </pre>
+   */
+  public static final class AllNodeInfo extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:AllNodeInfo)
+      AllNodeInfoOrBuilder {
+    // Use AllNodeInfo.newBuilder() to construct.
+    private AllNodeInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private AllNodeInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final AllNodeInfo defaultInstance;
+    public static AllNodeInfo getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public AllNodeInfo getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AllNodeInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                nodeId_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              nodeId_.add(input.readInt32());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                nodeId_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                nodeId_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                hostAddr_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              hostAddr_.add(bs);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                portNo_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              portNo_.add(input.readInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                portNo_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                portNo_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          nodeId_ = java.util.Collections.unmodifiableList(nodeId_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          hostAddr_ = hostAddr_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          portNo_ = java.util.Collections.unmodifiableList(portNo_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pipe.election.Election.internal_static_AllNodeInfo_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pipe.election.Election.internal_static_AllNodeInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pipe.election.Election.AllNodeInfo.class, pipe.election.Election.AllNodeInfo.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<AllNodeInfo> PARSER =
+        new com.google.protobuf.AbstractParser<AllNodeInfo>() {
+      public AllNodeInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AllNodeInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AllNodeInfo> getParserForType() {
+      return PARSER;
+    }
+
+    public static final int NODE_ID_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Integer> nodeId_;
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getNodeIdList() {
+      return nodeId_;
+    }
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    public int getNodeIdCount() {
+      return nodeId_.size();
+    }
+    /**
+     * <code>repeated int32 node_id = 1;</code>
+     */
+    public int getNodeId(int index) {
+      return nodeId_.get(index);
+    }
+
+    public static final int HOST_ADDR_FIELD_NUMBER = 2;
+    private com.google.protobuf.LazyStringList hostAddr_;
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getHostAddrList() {
+      return hostAddr_;
+    }
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    public int getHostAddrCount() {
+      return hostAddr_.size();
+    }
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    public java.lang.String getHostAddr(int index) {
+      return hostAddr_.get(index);
+    }
+    /**
+     * <code>repeated string host_addr = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHostAddrBytes(int index) {
+      return hostAddr_.getByteString(index);
+    }
+
+    public static final int PORT_NO_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Integer> portNo_;
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getPortNoList() {
+      return portNo_;
+    }
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    public int getPortNoCount() {
+      return portNo_.size();
+    }
+    /**
+     * <code>repeated int32 port_no = 3;</code>
+     */
+    public int getPortNo(int index) {
+      return portNo_.get(index);
+    }
+
+    private void initFields() {
+      nodeId_ = java.util.Collections.emptyList();
+      hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      portNo_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < nodeId_.size(); i++) {
+        output.writeInt32(1, nodeId_.get(i));
+      }
+      for (int i = 0; i < hostAddr_.size(); i++) {
+        output.writeBytes(2, hostAddr_.getByteString(i));
+      }
+      for (int i = 0; i < portNo_.size(); i++) {
+        output.writeInt32(3, portNo_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < nodeId_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(nodeId_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getNodeIdList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < hostAddr_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(hostAddr_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getHostAddrList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < portNo_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(portNo_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getPortNoList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.AllNodeInfo parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static pipe.election.Election.AllNodeInfo parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.AllNodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pipe.election.Election.AllNodeInfo prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code AllNodeInfo}
+     *
+     * <pre>
+     *message which sends other cluster node's information to new node
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:AllNodeInfo)
+        pipe.election.Election.AllNodeInfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pipe.election.Election.internal_static_AllNodeInfo_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pipe.election.Election.internal_static_AllNodeInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pipe.election.Election.AllNodeInfo.class, pipe.election.Election.AllNodeInfo.Builder.class);
+      }
+
+      // Construct using pipe.election.Election.AllNodeInfo.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        nodeId_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        portNo_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pipe.election.Election.internal_static_AllNodeInfo_descriptor;
+      }
+
+      public pipe.election.Election.AllNodeInfo getDefaultInstanceForType() {
+        return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+      }
+
+      public pipe.election.Election.AllNodeInfo build() {
+        pipe.election.Election.AllNodeInfo result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public pipe.election.Election.AllNodeInfo buildPartial() {
+        pipe.election.Election.AllNodeInfo result = new pipe.election.Election.AllNodeInfo(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          nodeId_ = java.util.Collections.unmodifiableList(nodeId_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.nodeId_ = nodeId_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          hostAddr_ = hostAddr_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.hostAddr_ = hostAddr_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          portNo_ = java.util.Collections.unmodifiableList(portNo_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.portNo_ = portNo_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pipe.election.Election.AllNodeInfo) {
+          return mergeFrom((pipe.election.Election.AllNodeInfo)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(pipe.election.Election.AllNodeInfo other) {
+        if (other == pipe.election.Election.AllNodeInfo.getDefaultInstance()) return this;
+        if (!other.nodeId_.isEmpty()) {
+          if (nodeId_.isEmpty()) {
+            nodeId_ = other.nodeId_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureNodeIdIsMutable();
+            nodeId_.addAll(other.nodeId_);
+          }
+          onChanged();
+        }
+        if (!other.hostAddr_.isEmpty()) {
+          if (hostAddr_.isEmpty()) {
+            hostAddr_ = other.hostAddr_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureHostAddrIsMutable();
+            hostAddr_.addAll(other.hostAddr_);
+          }
+          onChanged();
+        }
+        if (!other.portNo_.isEmpty()) {
+          if (portNo_.isEmpty()) {
+            portNo_ = other.portNo_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensurePortNoIsMutable();
+            portNo_.addAll(other.portNo_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        pipe.election.Election.AllNodeInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pipe.election.Election.AllNodeInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<java.lang.Integer> nodeId_ = java.util.Collections.emptyList();
+      private void ensureNodeIdIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          nodeId_ = new java.util.ArrayList<java.lang.Integer>(nodeId_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getNodeIdList() {
+        return java.util.Collections.unmodifiableList(nodeId_);
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public int getNodeIdCount() {
+        return nodeId_.size();
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public int getNodeId(int index) {
+        return nodeId_.get(index);
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public Builder setNodeId(
+          int index, int value) {
+        ensureNodeIdIsMutable();
+        nodeId_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public Builder addNodeId(int value) {
+        ensureNodeIdIsMutable();
+        nodeId_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public Builder addAllNodeId(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureNodeIdIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, nodeId_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 node_id = 1;</code>
+       */
+      public Builder clearNodeId() {
+        nodeId_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureHostAddrIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          hostAddr_ = new com.google.protobuf.LazyStringArrayList(hostAddr_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getHostAddrList() {
+        return hostAddr_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public int getHostAddrCount() {
+        return hostAddr_.size();
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public java.lang.String getHostAddr(int index) {
+        return hostAddr_.get(index);
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getHostAddrBytes(int index) {
+        return hostAddr_.getByteString(index);
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public Builder setHostAddr(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHostAddrIsMutable();
+        hostAddr_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public Builder addHostAddr(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHostAddrIsMutable();
+        hostAddr_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public Builder addAllHostAddr(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureHostAddrIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, hostAddr_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public Builder clearHostAddr() {
+        hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string host_addr = 2;</code>
+       */
+      public Builder addHostAddrBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureHostAddrIsMutable();
+        hostAddr_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Integer> portNo_ = java.util.Collections.emptyList();
+      private void ensurePortNoIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          portNo_ = new java.util.ArrayList<java.lang.Integer>(portNo_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getPortNoList() {
+        return java.util.Collections.unmodifiableList(portNo_);
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public int getPortNoCount() {
+        return portNo_.size();
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public int getPortNo(int index) {
+        return portNo_.get(index);
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public Builder setPortNo(
+          int index, int value) {
+        ensurePortNoIsMutable();
+        portNo_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public Builder addPortNo(int value) {
+        ensurePortNoIsMutable();
+        portNo_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public Builder addAllPortNo(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensurePortNoIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, portNo_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 port_no = 3;</code>
+       */
+      public Builder clearPortNo() {
+        portNo_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:AllNodeInfo)
+    }
+
+    static {
+      defaultInstance = new AllNodeInfo(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:AllNodeInfo)
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_LeaderStatus_descriptor;
   private static
@@ -2631,6 +4166,16 @@ public final class Election {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ElectionMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NewNodeMessage_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NewNodeMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_AllNodeInfo_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_AllNodeInfo_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2656,7 +4201,11 @@ public final class Election {
       "\024\n\020LEADER_HEARTBEAT\020\002\022\021\n\rVOTE_RESPONSE\020\003" +
       "\022\021\n\rLEADER_HB_ACK\020\004\"O\n\017ElectionMessage\022\024" +
       "\n\014candidate_id\030\001 \001(\005\022\024\n\014vote_granted\030\002 \001" +
-      "(\010\022\020\n\010voter_id\030\003 \001(\005B\021\n\rpipe.electionH\001"
+      "(\010\022\020\n\010voter_id\030\003 \001(\005\"Z\n\016NewNodeMessage\022\017" +
+      "\n\007node_id\030\001 \001(\005\022\021\n\thost_addr\030\002 \001(\t\022\017\n\007po" +
+      "rt_no\030\003 \001(\005\022\023\n\013joinCluster\030\004 \001(\005\"B\n\013AllN" +
+      "odeInfo\022\017\n\007node_id\030\001 \003(\005\022\021\n\thost_addr\030\002 ",
+      "\003(\t\022\017\n\007port_no\030\003 \003(\005B\021\n\rpipe.electionH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2688,6 +4237,18 @@ public final class Election {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ElectionMessage_descriptor,
         new java.lang.String[] { "CandidateId", "VoteGranted", "VoterId", });
+    internal_static_NewNodeMessage_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_NewNodeMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NewNodeMessage_descriptor,
+        new java.lang.String[] { "NodeId", "HostAddr", "PortNo", "JoinCluster", });
+    internal_static_AllNodeInfo_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_AllNodeInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_AllNodeInfo_descriptor,
+        new java.lang.String[] { "NodeId", "HostAddr", "PortNo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

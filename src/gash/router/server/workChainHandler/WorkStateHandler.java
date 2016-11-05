@@ -3,6 +3,7 @@ package gash.router.server.workChainHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gash.router.server.ServerState;
 import io.netty.channel.Channel;
 import pipe.work.Work.WorkMessage;
 import pipe.work.Work.WorkState;
@@ -14,12 +15,14 @@ import pipe.work.Work.WorkState;
  */
 public class WorkStateHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
+	protected ServerState state;
 	protected static Logger logger = LoggerFactory.getLogger("work");
 
 	@Override
-	public void setNextChain(IWorkChainHandler nextChain) {
-		// TODO Auto-generated method stub
-		this.nextChainHandler = nextChain;
+	public void setNextChain(IWorkChainHandler nextChain,ServerState state) {
+		//this.nextChainHandler = nextChain;
+		System.out.println("No handlers");
+		//this.state = state;
 	}
 
 	@Override

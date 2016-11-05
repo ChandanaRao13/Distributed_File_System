@@ -3,6 +3,7 @@ package gash.router.server.workChainHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gash.router.server.ServerState;
 import io.netty.channel.Channel;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
@@ -14,11 +15,13 @@ import pipe.work.Work.WorkMessage;
  */
 public class HeartBeatHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
+	protected ServerState state;
 	protected static Logger logger = LoggerFactory.getLogger("work");
 	@Override
-	public void setNextChain(IWorkChainHandler nextChain) {
+	public void setNextChain(IWorkChainHandler nextChain,ServerState state) {
 		// TODO Auto-generated method stub
 		this.nextChainHandler = nextChain;
+		this.state = state;
 	}
 
 	@Override

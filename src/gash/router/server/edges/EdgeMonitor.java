@@ -47,6 +47,7 @@ import gash.router.server.queue.management.NodeLoad;
 import gash.router.util.RaftMessageBuilder;
 import io.netty.channel.ChannelFuture;
 import pipe.common.Common.Header;
+import pipe.election.Election.NewNodeMessage;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
 import pipe.work.Work.WorkState;
@@ -62,7 +63,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	private ServerState state;
 	private RaftElectionContext electionCtx;
 	private boolean forever = true;
-	private ArrayList<InetAddress> liveIps;
+	private ArrayList<InetAddress> activeIps;
+
 
 	public EdgeMonitor(ServerState state) {
 		if (state == null)
@@ -82,64 +84,48 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		}
 
 		RaftMessageBuilder.setRoutingConf(state.getConf());
-		
-		if (outboundEdges.isEmpty() && inboundEdges.isEmpty()) {
-			//NodeChannelManager.amIPartOfNetwork = false;
-			System.out.println("No routing entries..possibly a new node");
-			try {
-				liveIps = NodeDiscoveryManager.checkHosts();
-				Channel discoveryChannel = null;
 
-				for (InetAddress oneIp : liveIps) {
-					// Ignore own IP address
-					if (!oneIp.getHostAddress().equals(InetAddress.getLocalHost().getHostAddress())) {
-						System.out.println("Potential Server Node found of Network.. Trying to connect to:  "
-								+ oneIp.getHostAddress());
-						try {
+		if (state.getConf().isNewNode()) {
+			for(EdgeInfo ei : outboundEdges.getEdgeListMap().values()){
+				System.out.println("No routing entries..possibly a new node");
+				try {
+					Channel detectedChannel = null;
+					try {
+						Channel newChannel = connectToChannel(ei.getHost(), ei.getPort(), this.state);
 
-							Channel newNodeChannel = connectToChannel(oneIp.getHostAddress(), 5100, this.state);
+						if (newChannel.isOpen() && newChannel != null) {
 
-							if (newNodeChannel.isOpen() && newNodeChannel != null) {
+							System.out.println("Connected to channel : " + ei.getHost());
+							WorkMessage wm = RaftMessageBuilder.addNewNodeInfo(1);
 
-								System.out.println("Channel connected to: " + oneIp.getHostAddress());
-								WorkMessage wm = createNewNode();
-
-								ChannelFuture cf = newNodeChannel.write(wm);
-								newNodeChannel.flush();
-								cf.awaitUninterruptibly();
-								if (cf.isDone() && !cf.isSuccess()) {
-									logger.info("Failed to write the message to the channel ");
-								}
-								if (discoveryChannel == null) {
-									logger.info("Setting discovery channel for : "+oneIp.getHostAddress());
-									discoveryChannel = newNodeChannel;
-								}
+							ChannelFuture cf = newChannel.write(wm);
+							newChannel.flush();
+							cf.awaitUninterruptibly();
+							if (cf.isDone() && !cf.isSuccess()) {
+								logger.info("Failed to write the message to the channel ");
 							}
-						} catch (Exception e) {
-							System.out.println("Unable to connect to the potential client: " + oneIp.getHostAddress());
+							if (detectedChannel == null) {
+								logger.info("Setting up new channel to : "+ei.getHost());
+								detectedChannel = newChannel;
+							}
+						}
+					} catch (Exception e) {
+						System.out.println("Connection unsuccessful: " + ei.getHost());
+					}
+					if (detectedChannel != null) {
+						WorkMessage whoIsTheLeaderMessage = RaftMessageBuilder.buildWhoIsTheLeaderMessage();
+						logger.info("Trying to find the current leader in the cluster");
+						ChannelFuture cf = detectedChannel.write(whoIsTheLeaderMessage);
+						detectedChannel.flush();
+						cf.awaitUninterruptibly();
+						if (cf.isDone() && !cf.isSuccess()) {
+							logger.info("Failed to write the message to the channel ");
 						}
 					}
-
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-
-				if (discoveryChannel != null) {
-					// Send a discovery message to the first node that the new
-					// node finds
-					WorkMessage discoveryMessage = RaftMessageBuilder.buildWhoIsTheLeaderMessage();
-					logger.info("I'm a new node. I shall now try to get the data from the cluster automatically");
-					ChannelFuture cf = discoveryChannel.write(discoveryMessage);
-					discoveryChannel.flush();
-					cf.awaitUninterruptibly();
-					if (cf.isDone() && !cf.isSuccess()) {
-						logger.info("Failed to write the message to the channel ");
-					}
-					logger.debug("Writing to a node to get the leader status");
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-
 		}
 		// cannot go below 2 sec
 		if (state.getConf().getHeartbeatDt() > this.dt)
@@ -150,20 +136,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		thread.start();
 	}
 
-	private WorkMessage createNewNode() {
-
-		Header.Builder hb = Header.newBuilder();
-		hb.setNodeId(state.getConf().getNodeId());
-		hb.setDestination(-1);
-		hb.setTime(System.currentTimeMillis());
-
-		WorkMessage.Builder wb = WorkMessage.newBuilder();
-		wb.setHeader(hb.build());
-		wb.setNewNode(true);
-		wb.setSecret(1234);
-		//wb.setStateOfLeader(StateOfLeader.LEADERUNKNOWN);
-		return wb.build();
-	}
+	
 	
 	public void createInboundIfNew(int ref, String host, int port) {
 		inboundEdges.createIfNew(ref, host, port);
@@ -239,32 +212,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		}
 	}
 
-	public WorkMessage createRoutingMsg() {
-		ArrayList<String> ipList = new ArrayList<String>();
-		ArrayList<String> idList = new ArrayList<String>();
-
-		for (RoutingEntry destIp : state.getConf().getRouting()) {
-			ipList.add(destIp.getHost());
-			idList.add(destIp.getId() + "");
-		}
-		//rb.addAllNodeId(idList);
-		//rb.addAllNodeIp(ipList);
-
-		Header.Builder hb = Header.newBuilder();
-		hb.setNodeId(state.getConf().getNodeId());
-		hb.setDestination(-1);
-		hb.setTime(System.currentTimeMillis());
-
-		WorkMessage.Builder wb = WorkMessage.newBuilder();
-		wb.setHeader(hb.build());
-		wb.setSecret(1234);
-		wb.setFlagRouting(true);
-		//wb.setRoutingEntries(rb);
-		// TODO Is the leader really alive?
-		//wb.setStateOfLeader(StateOfLeader.LEADERKNOWN);
-		return wb.build();
-	}
-	
 	private Channel connectToChannel(String host, int port) {
 		Bootstrap b = new Bootstrap();
 		Channel ch = null;
@@ -343,14 +290,24 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	public synchronized void onRemove(EdgeInfo ei) {
 		// TODO ?
 	}
-	
+
+	public int getActiveChannels(){
+		int activeChannel = 0;
+		for(int node: node2ChannelMap.keySet()) {
+			//System.out.println("Node : " + node + " Channel: " + node2ChannelMap.get(node));
+			if(node2ChannelMap.get(node)!=null)
+				activeChannel++;
+		}
+		return activeChannel;
+	}
+
 	public static String clientInfoMap(InternalChannelNode commandMessageNode) {
 		UUID uuid = UUID.randomUUID();
 		String clientUidString = uuid.toString();
 		clientChannelMap.put(clientUidString, commandMessageNode);
 		return clientUidString;
 	}
-	
+
 	public static synchronized InternalChannelNode getClientChannelFromMap(String clientId) {
 
 		if (clientChannelMap.containsKey(clientId) && clientChannelMap.get(clientId) != null) {
@@ -414,6 +371,13 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			} 
 		}
 
+	}
+	public void connectToAll() {
+		for(EdgeInfo ei:this.outboundEdges.map.values()){
+			if(ei.getChannel() == null) 
+				ei.setChannel(connectToChannel(ei.getHost(), ei.getPort()));
+		}
+		
 	}
 }
 

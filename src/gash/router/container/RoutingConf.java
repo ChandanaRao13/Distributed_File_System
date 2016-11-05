@@ -38,6 +38,15 @@ public class RoutingConf {
 	private boolean internalNode = true;
 	private int heartbeatDt = 2000;
 	private List<RoutingEntry> routing;
+	private boolean newNode = false;
+
+	public boolean isNewNode() {
+		return newNode;
+	}
+
+	public void setNewNode(boolean newNode) {
+		this.newNode = newNode;
+	}
 
 	public HashMap<String, Integer> asHashMap() {
 		HashMap<String, Integer> map = new HashMap<String, Integer>();

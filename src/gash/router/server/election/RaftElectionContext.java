@@ -2,9 +2,13 @@ package gash.router.server.election;
 
 import java.nio.channels.Channel;
 import java.util.Random;
+import java.util.logging.Logger;
+
+import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
 import gash.router.server.ServerState;
+import gash.router.server.WorkHandler;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.util.RaftMessageBuilder;
@@ -17,60 +21,69 @@ public class RaftElectionContext implements Runnable {
 	IRaftNodeState leader;
 	IRaftNodeState currentState;
 	String timerName ;
-	
-	
+
+
 	private int term = 0;
 	private RoutingConf conf;
 	private EdgeMonitor emon;
 	private int leaderId;
-	
+
 	private int heartbeatdt = 3000;
 	private long timeOut = 3000;
 	private Random rand;
 	private long timerBegin = 0;
 
-	
+
 	public RaftElectionContext(ServerState state){
 		this.state =state;
 	}
 	public void init() {
-		
+
 		follower = new FollowerState();
 		follower.setElectionContext(this);
-		
+
 		candidate = new CandidateState();
 		candidate.setElectionContext(this);
-		
+
 		leader = new LeaderState();
 		leader.setElectionContext(this);
-		
+
 		rand = new Random();
 		heartbeatdt = conf.getHeartbeatDt();
 		generateTimeOut();
 		timeOut += 5000;
-		
+
 		this.currentState = follower;
-		
+
 	}
-	
+
 	protected void broadcast(WorkMessage msg){		
 		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){			
 			if(ei.isActive() && ei.getChannel()!=null){
 				ei.getChannel().writeAndFlush(msg);
 			}
 		}
+		/*
+		for(EdgeInfo ei : emon.getInBoundEdgesList().getEdgeListMap().values()){	
+			if(ei.isActive() && ei.getChannel()!=null){
+				ei.getChannel().writeAndFlush(msg);
+			}
+		}*/
 	}
 
 
 	@Override
 	public void run() {		
 		while(true){
-			timerBegin = System.currentTimeMillis();
-			currentState.doAction();
+			int activeChannel = state.getEmon().getActiveChannels();
+			if(activeChannel>=2){
+				timerBegin = System.currentTimeMillis();
+				currentState.doAction(); 
+			} 
 		}
-		
+
 	}
-	
+
 	//Timer 
 	public synchronized void generateTimeOut() {
 		int temp =  rand.nextInt(heartbeatdt)+heartbeatdt;
@@ -81,7 +94,7 @@ public class RaftElectionContext implements Runnable {
 	public synchronized void computeTime() {
 		timeOut = timeOut - (System.currentTimeMillis() - timerBegin);
 	}
-	
+
 
 	/* Getters and setter */
 	public int getTerm() {
@@ -90,14 +103,14 @@ public class RaftElectionContext implements Runnable {
 	public void setTerm(int term) {
 		this.term = term;
 	}
-	
+
 	public RoutingConf getConf() {
 		return conf;
 	}
 	public void setConf(RoutingConf conf) {
 		this.conf = conf;
 	}
-	
+
 	public EdgeMonitor getEmon() {
 		return emon;
 	}

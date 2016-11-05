@@ -39,21 +39,22 @@ public class FollowerState implements IRaftNodeState {
 		System.out.println("You are sending vote to Candidate No: " + msg.getHeader().getNodeId());
 		EdgeInfo ei = electionCtx.getEmon().getOutBoundEdgesList().getEdgeListMap().get(msg.getHeader().getNodeId());
 		WorkMessage voteResponseMessage = RaftMessageBuilder.buildVoteResponseMessage(msg.getHeader().getNodeId(), voteGranted, electionCtx.getTerm());
-		ei.getChannel().writeAndFlush(voteResponseMessage); 	
+		if(ei.getChannel()!=null)
+			ei.getChannel().writeAndFlush(voteResponseMessage); 	
 	}
-	
-	
+
+
 	@Override
 	public synchronized void voteRecieved(WorkMessage msg) {
 		return;	
 	}
-		
+
 	@Override
 	public void setElectionContext(RaftElectionContext ctx) {
 		System.out.println(ctx);
 		this.electionCtx =ctx;	
 	}
-	
+
 	@Override
 	public RaftElectionContext getElectionContext() {
 		return electionCtx;
@@ -66,18 +67,23 @@ public class FollowerState implements IRaftNodeState {
 
 	@Override
 	public void getHearbeatFromLeader(WorkMessage msg) {
+		System.out.println("Received HB");
 		if(msg.getRaftMessage().getTerm() >= electionCtx.getTerm()){
 			voted = false;
 			electionCtx.generateTimeOut();
 			electionCtx.generateTimeOut();
 			electionCtx.setTerm((int) msg.getRaftMessage().getTerm());
-			
+
 			electionCtx.setLeaderId((int) msg.getRaftMessage().getLeaderId());
 			WorkMessage heartbeatAckMessage = RaftMessageBuilder.buildLeaderHbAckMessage(msg.getRaftMessage().getLeaderId(),msg.getRaftMessage().getTerm());
 			EdgeInfo ei = electionCtx.getEmon().getOutBoundEdgesList().getEdgeListMap().get(msg.getHeader().getNodeId());
-			ei.getChannel().writeAndFlush(heartbeatAckMessage); 
-		//	electionCtx.setLastKnownBeat(System.currentTimeMillis());
-			
+			while(true){
+				if(ei.getChannel()!=null){
+					ei.getChannel().writeAndFlush(heartbeatAckMessage); 
+					break;
+				}
+				//	electionCtx.setLastKnownBeat(System.currentTimeMillis());
+			}
 		}
 		
 	}

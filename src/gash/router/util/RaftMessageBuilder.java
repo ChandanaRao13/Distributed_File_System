@@ -1,12 +1,16 @@
 package gash.router.util;
 
+import java.util.ArrayList;
+
 import gash.router.container.RoutingConf;
 import pipe.common.Common.Header;
+import pipe.election.Election.AllNodeInfo;
 import pipe.election.Election.ElectionMessage;
 import pipe.election.Election.LeaderStatus;
 import pipe.election.Election.LeaderStatus.Builder;
 import pipe.election.Election.LeaderStatus.LeaderQuery;
 import pipe.election.Election.LeaderStatus.LeaderState;
+import pipe.election.Election.NewNodeMessage;
 import pipe.election.Election.RaftElectionMessage;
 import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
 import pipe.work.Work.WorkMessage;
@@ -171,6 +175,44 @@ public class RaftMessageBuilder {
 		return workMessageBuilder.build();
 	}
 	
+	//message to add new node details to nodes in cluster
+	public static WorkMessage addNewNodeInfo(int flag) {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setDestination(-1);
+		hb.setTime(System.currentTimeMillis());
+		
+		NewNodeMessage.Builder newNodeMessage = NewNodeMessage.newBuilder();
+		newNodeMessage.setNodeId(conf.getNodeId());
+		//newNodeMessage.setHostAddr(address);
+		newNodeMessage.setPortNo(conf.getWorkPort());
+		newNodeMessage.setJoinCluster(flag);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setSecret(2);
+		wb.setNewNodeMessage(newNodeMessage);
+		return wb.build();
+		
+	}
 	
+	//message to add cluster node details to new node outbound edge
+	public static WorkMessage clusterNodeInfo(ArrayList<Integer> nodeIdList, ArrayList<String> hostList, ArrayList<Integer> portList) {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setDestination(-1);
+		hb.setTime(System.currentTimeMillis());
+		
+		AllNodeInfo.Builder allNodeInfoMessage = AllNodeInfo.newBuilder();
+		allNodeInfoMessage.addAllNodeId(nodeIdList);
+		allNodeInfoMessage.addAllHostAddr(hostList);
+		allNodeInfoMessage.addAllPortNo(portList);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setSecret(2);
+		wb.setAllNodeInfo(allNodeInfoMessage);
+		return wb.build();
+	}
 	
 }

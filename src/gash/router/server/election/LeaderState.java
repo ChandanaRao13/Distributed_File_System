@@ -42,7 +42,8 @@ public class LeaderState implements IRaftNodeState {
 	public void sendVote(WorkMessage msg, boolean voteGranted) {
 		EdgeInfo ei = electionCtx.getEmon().getOutBoundEdgesList().getEdgeListMap().get(msg.getHeader().getNodeId());
 		WorkMessage voteResponseMsg = RaftMessageBuilder.buildVoteResponseMessage(msg.getHeader().getNodeId(), voteGranted, electionCtx.getTerm());
-		ei.getChannel().writeAndFlush(voteResponseMsg); 		
+		if(ei.getChannel()!=null)
+			ei.getChannel().writeAndFlush(voteResponseMsg); 		
 	}
 	
 	@Override

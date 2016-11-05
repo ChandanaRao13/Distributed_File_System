@@ -16,9 +16,12 @@
 package gash.router.server;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+
+import gash.router.server.workChainHandler.ElectionMessageChainHandler;
 import gash.router.server.workChainHandler.FailureHandler;
 import gash.router.server.workChainHandler.HeartBeatHandler;
 import gash.router.server.workChainHandler.IWorkChainHandler;
+import gash.router.server.workChainHandler.NewNodeChainHandler;
 import gash.router.server.workChainHandler.PingHandler;
 import gash.router.server.workChainHandler.TaskHandler;
 import gash.router.server.workChainHandler.WorkStateHandler;
@@ -62,6 +65,8 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 	IWorkChainHandler failureMessageChainHandler;
 	IWorkChainHandler taskMessageChainHandler;
 	IWorkChainHandler workStateMessageChainHandler;
+	IWorkChainHandler electionMessageChainHandler;
+	IWorkChainHandler newNodeChainHandler;
 	public WorkHandler(ServerState state) {
 		if (state != null) {
 			this.state = state;
@@ -71,11 +76,15 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		this.failureMessageChainHandler = new FailureHandler();
 		this.taskMessageChainHandler = new TaskHandler();
 		this.workStateMessageChainHandler = new WorkStateHandler();
+		this.electionMessageChainHandler = new ElectionMessageChainHandler();
+		this.newNodeChainHandler = new NewNodeChainHandler();
 
-		this.hearBeatChainHandler.setNextChain(pingMessageChainHandler);
-		this.pingMessageChainHandler.setNextChain(failureMessageChainHandler);
-		this.failureMessageChainHandler.setNextChain(taskMessageChainHandler);
-		this.taskMessageChainHandler.setNextChain(workStateMessageChainHandler);
+		this.hearBeatChainHandler.setNextChain(electionMessageChainHandler,state);
+		this.electionMessageChainHandler.setNextChain(newNodeChainHandler,state);
+		this.newNodeChainHandler.setNextChain(pingMessageChainHandler,state);		
+		this.pingMessageChainHandler.setNextChain(failureMessageChainHandler,state);
+		this.failureMessageChainHandler.setNextChain(taskMessageChainHandler,state);
+		this.taskMessageChainHandler.setNextChain(workStateMessageChainHandler,state);
 	}
 
 	/**
@@ -96,65 +105,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		// TODO How can you implement this without if-else statements?
 		try {
 			hearBeatChainHandler.handle(msg, channel);
-			if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.VOTE_REQUEST) {
-				state.getElectionCtx().getCurrentState().VoteRequestReceived(msg);
-			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.VOTE_RESPONSE) {
-				state.getElectionCtx().getCurrentState().voteRecieved(msg);
-			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.LEADER_HEARTBEAT) {
-				//System.out.println("Rceived heart beat");
-				state.getElectionCtx().getCurrentState().getHearbeatFromLeader(msg);
-			}else if (msg.hasNewNode()) {
-				logger.info("NEW NODE TRYING TO CONNECT " + msg.getHeader().getNodeId());
-				WorkMessage wm = state.getEmon().createRoutingMsg();
-
-				ChannelFuture cf = channel.write(wm);
-				channel.flush();
-				cf.awaitUninterruptibly();
-				if (cf.isDone() && !cf.isSuccess()) {
-					logger.info("Failed to write the message to the channel ");
-				}
-			
-				SocketAddress remoteAddress = channel.remoteAddress();
-				InetSocketAddress addr = (InetSocketAddress) remoteAddress;
-
-				state.getEmon().createInboundIfNew(msg.getHeader().getNodeId(), addr.getHostName(), 5100);
-				state.getEmon().getInBoundEdgesList().getNode(msg.getHeader().getNodeId()).setChannel(channel);
-
-			}else if (msg.hasFlagRouting()) {
-				logger.info("Routing information recieved " + msg.getHeader().getNodeId());
-				//logger.info("Routing Entries: " + msg.getRoutingEntries());
-
-				System.out.println("CONNECTED TO NEW NODE---------------------------------");
-				SocketAddress remoteAddress = channel.remoteAddress();
-				InetSocketAddress addr = (InetSocketAddress) remoteAddress;
-
-				state.getEmon().createOutboundIfNew(msg.getHeader().getNodeId(), addr.getHostName(), 5100);
-
-				System.out.println(addr.getHostName());
-
-			} else if (msg.hasLeader() && msg.getLeader().getAction() == LeaderQuery.WHOISTHELEADER  && state.getElectionCtx().getTerm()>0 ) {
-				WorkMessage buildNewNodeLeaderStatusResponseMessage = RaftMessageBuilder
-						.buildTheLeaderIsMessage(state.getElectionCtx().getLeaderId(),state.getElectionCtx().getTerm());
-				
-				ChannelFuture cf = channel.write(buildNewNodeLeaderStatusResponseMessage);
-				channel.flush();
-				cf.awaitUninterruptibly();
-				if (cf.isDone() && !cf.isSuccess()) {
-					logger.info("Failed to write the message to the channel ");
-				}
-				
-				state.getEmon().getOutBoundEdgesList().getNode(msg.getHeader().getNodeId()).setChannel(channel);
-
-				// Sent the newly discovered node all the data on this node.
-
-			}else if (msg.hasLeader() && msg.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
-				state.getElectionCtx().setLeaderId(msg.getLeader().getLeaderId());
-				state.getElectionCtx().setTerm(msg.getLeader().getTerm());
-				//NodeChannelManager.amIPartOfNetwork = true;
-				//logger.info("The leader is " + state.getElectionCtx().getLeaderId());
-			} else if(msg.hasRaftMessage() && msg.getRaftMessage().getType() == ElectionMessageType.LEADER_HB_ACK) {
-				state.getElectionCtx().getCurrentState().sendHearbeatAck(msg);
-			} 
+			 
 		} catch (Exception e) {
 			// TODO add logging
 			Failure.Builder eb = Failure.newBuilder();

@@ -43,3 +43,19 @@ message ElectionMessage {
   optional bool vote_granted = 2;
   optional int32 voter_id = 3;
 }
+
+//message which sends node information
+message NewNodeMessage {
+	optional int32 node_id = 1;
+	optional string host_addr = 2;
+	optional int32 port_no = 3;
+	optional int32 joinCluster =4;
+}	
+
+//message which sends other cluster node's information to new node
+message AllNodeInfo {
+	repeated int32 node_id = 1;
+	repeated string host_addr = 2;
+	repeated int32 port_no = 3;
+}	
+	

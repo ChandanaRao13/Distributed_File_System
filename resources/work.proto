@@ -56,10 +56,9 @@ message WorkMessage {
       WorkState state = 7;
       LeaderStatus leader = 8;
 
-      RaftElectionMessage raftMessage =9;      
-      bool newNode = 11;
-      bool flagRouting = 12;
-
-     
+      RaftElectionMessage raftMessage =9;
+      NewNodeMessage newNodeMessage = 11; 
+      AllNodeInfo allNodeInfo = 12;      
+      
    }
 }
