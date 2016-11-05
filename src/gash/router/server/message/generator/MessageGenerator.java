@@ -134,5 +134,22 @@ public class MessageGenerator {
 
 		return cb.build();
 	}
+	
+	public WorkMessage generateReplicationAcknowledgementMessage(WorkMessage message){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setWorktype(Worktype.REPLICATE_RESPONSE);
+		wb.setSecret(1234);
+		
+		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setFilename(message.getFiletask().getFilename());
+		ft.setFileTaskType(FileTaskType.WRITE);
+		wb.setFiletask(ft.build());
+		return wb.build();
+	}
 }
 

@@ -22,7 +22,7 @@ public class OutboundWorkWriteQueueThread extends Thread{
 		while (true) {
 			try {
 				InternalChannelNode message = manager.dequeueOutboundWorkWrite();
-				 int destinationNode = message.getWorkMessage().getHeader().getNodeId();
+				int destinationNode = message.getWorkMessage().getHeader().getNodeId();
 		       	logger.info("Outbound write work message routing to node " + destinationNode);
 
 				if (message.getChannel()!= null && message.getChannel().isOpen()) {

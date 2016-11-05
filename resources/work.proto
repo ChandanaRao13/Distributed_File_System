@@ -32,6 +32,7 @@ message WorkMessage {
       REPLICATE_REQUEST = 1;
       READ_REQUEST = 2;
       READ_REQUEST_RESPONSE =3;
+      REPLICATE_RESPONSE = 4;
 
    }
 

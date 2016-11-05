@@ -1938,6 +1938,10 @@ public final class Work {
        * <code>READ_REQUEST_RESPONSE = 3;</code>
        */
       READ_REQUEST_RESPONSE(2, 3),
+      /**
+       * <code>REPLICATE_RESPONSE = 4;</code>
+       */
+      REPLICATE_RESPONSE(3, 4),
       ;
 
       /**
@@ -1952,6 +1956,10 @@ public final class Work {
        * <code>READ_REQUEST_RESPONSE = 3;</code>
        */
       public static final int READ_REQUEST_RESPONSE_VALUE = 3;
+      /**
+       * <code>REPLICATE_RESPONSE = 4;</code>
+       */
+      public static final int REPLICATE_RESPONSE_VALUE = 4;
 
 
       public final int getNumber() { return value; }
@@ -1961,6 +1969,7 @@ public final class Work {
           case 1: return REPLICATE_REQUEST;
           case 2: return READ_REQUEST;
           case 3: return READ_REQUEST_RESPONSE;
+          case 4: return REPLICATE_RESPONSE;
           default: return null;
         }
       }
@@ -4209,7 +4218,7 @@ public final class Work {
       "to\032\npipe.proto\"0\n\tWorkState\022\020\n\010enqueued\030" +
       "\001 \002(\005\022\021\n\tprocessed\030\002 \002(\005\"&\n\tHeartbeat\022\031\n" +
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
-      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\306\003\n\013WorkMess" +
+      "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"\336\003\n\013WorkMess" +
       "age\022\027\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002" +
       " \002(\003\022\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(" +
       "\0162\025.WorkMessage.Worktype\022\027\n\003err\030\003 \001(\0132\010." +
@@ -4218,10 +4227,11 @@ public final class Work {
       "skH\000\022\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006lea" +
       "der\030\010 \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessag" +
       "e\030\t \001(\0132\024.RaftElectionMessageH\000\022\021\n\007newNo" +
-      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000\"N\n\010Wor" +
+      "de\030\013 \001(\010H\000\022\025\n\013flagRouting\030\014 \001(\010H\000\"f\n\010Wor" +
       "ktype\022\025\n\021REPLICATE_REQUEST\020\001\022\020\n\014READ_REQ" +
-      "UEST\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003B\t\n\007pay" +
-      "loadB\r\n\tpipe.workH\001"
+      "UEST\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003\022\026\n\022REP" +
+      "LICATE_RESPONSE\020\004B\t\n\007payloadB\r\n\tpipe.wor" +
+      "kH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

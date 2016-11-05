@@ -35,7 +35,7 @@ public class TaskHandler implements IWorkChainHandler{
 	public void handle(WorkMessage workMessage, Channel channel) {
 		// TODO Auto-generated method stub
 		if(workMessage.hasFiletask()) {
-			logger.info("Recieved replicate work message");
+			//logger.info("Recieved replicate work message");
 			if(workMessage.getWorktype() == Worktype.READ_REQUEST){
 				logger.info("Received message to read a file");
 				FileTask ft = workMessage.getFiletask();
@@ -69,7 +69,15 @@ public class TaskHandler implements IWorkChainHandler{
 				CommandMessage outputMsg = MessageGenerator.getInstance().forwardChunkToClient(workMessage);
 				QueueManager.getInstance().enqueueOutboundCommand(outputMsg, clientChannel);
 				
-			}
+			} else if(workMessage.getWorktype() == Worktype.REPLICATE_REQUEST){
+				logger.info("Recieved replicate work message");
+				QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
+
+			} else if(workMessage.getWorktype() == Worktype.REPLICATE_RESPONSE){
+				logger.info("Recieved replication successful message");
+				//logger.info("Data Replication successful for filename: " + workMessage.getFiletask().getFilename() + " for chunk id" + 
+							//workMessage.getFiletask().getChunkNo());
+			} 
 		} else {
 			this.nextChainHandler.handle(workMessage, channel);
 		}

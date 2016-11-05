@@ -154,9 +154,9 @@ public class DemoApp implements CommListener {
 
 			// do stuff w/ the connection
 			// da.ping(2);
-			da.sendReadFileTasks(args[0]);
+			//da.sendReadFileTasks(args[0]);
 			//da.chunkFile(args[0]);
-			//da.sendFileAsChunks(new File(args[0]));
+			da.sendFileAsChunks(new File(args[0]));
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
 			Thread.sleep(6000 * 1000);

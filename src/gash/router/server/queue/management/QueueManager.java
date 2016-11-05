@@ -31,9 +31,11 @@ public class QueueManager {
 	 * Write Work Queues
 	 */
 	protected LinkedBlockingDeque<InternalChannelNode> outboundWorkWriteQueue;
-
+	protected LinkedBlockingDeque<InternalChannelNode> inboundWorkWriteQueue;
+	
 	protected InboundCommandQueueThread inboundCommmanderThread;
 	protected OutboundWorkWriteQueueThread outboundWorkWriterThread;
+	protected InboundWorkWriteQueueThread inboundWorkWriterThread;
 	protected OutboundCommandQueueThread outboundCommanderThread;
 	protected OutboundReadThread outboundReadThread;
 	protected InboundReadQueueThread inboundReadThread;
@@ -72,6 +74,10 @@ public class QueueManager {
 		inboundWorkReadQueue = new LinkedBlockingDeque<InternalChannelNode>();
 		inboundReadThread = new InboundReadQueueThread(this);
 		inboundReadThread.start();
+		
+		inboundWorkWriteQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		inboundWorkWriterThread = new InboundWorkWriteQueueThread(this);
+		inboundWorkWriterThread.start();
 	}
 	
 	public void enqueueInboundCommmand(CommandMessage message, Channel ch) {
@@ -163,5 +169,18 @@ public class QueueManager {
 	
 	public InternalChannelNode dequeueOutboundCommand() throws InterruptedException {
 			return outboundCommandQueue.take();
+	}
+	
+	public void enqueueInboundWorkWrite(WorkMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			inboundWorkWriteQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("message not enqueued in inbound work write queue for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueInboundWorkWrite() throws InterruptedException {
+			return inboundWorkWriteQueue.take();
 	}
 }
