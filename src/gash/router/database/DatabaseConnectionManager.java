@@ -50,7 +50,7 @@ public class DatabaseConnectionManager {
 			Connection connection = createConnection();
 			connectionsPool.add(connection);
 		}
-		logger.info("DatabaseConnectionManager: Setup " + connectionPoolSize + " number of rethinkDB Connections");
+		logger.info("DatabaseConnectionManager: Successfully setup " + connectionPoolSize + " rethinkDB database Connections");
 	}
 
 	public static Connection getConnection() throws EmptyConnectionPoolException {
