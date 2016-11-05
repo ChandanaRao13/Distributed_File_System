@@ -22,9 +22,11 @@ package gash.router.server.edges;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -36,8 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf.RoutingEntry;
-import gash.router.discovery.NodeDiscoveryManager;
-//import gash.router.server.NodeChannelManager;
 import gash.router.server.ServerState;
 import gash.router.server.WorkInit;
 import gash.router.server.election.RaftElectionContext;
@@ -47,7 +47,6 @@ import gash.router.server.queue.management.NodeLoad;
 import gash.router.util.RaftMessageBuilder;
 import io.netty.channel.ChannelFuture;
 import pipe.common.Common.Header;
-import pipe.election.Election.NewNodeMessage;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
 import pipe.work.Work.WorkState;
@@ -57,6 +56,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	public static ConcurrentHashMap<Integer, Channel> node2ChannelMap = new ConcurrentHashMap<Integer, Channel>();
 	public static HashSet<Integer> loadNodeSet = new HashSet<Integer>();
 	public static ConcurrentHashMap<String, InternalChannelNode> clientChannelMap = new ConcurrentHashMap<String, InternalChannelNode>();
+	private static Queue<Integer> workStealQueue = new LinkedBlockingQueue<Integer>();
 	private EdgeList outboundEdges;
 	private EdgeList inboundEdges;
 	private long dt = 2000;
@@ -75,7 +75,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		this.inboundEdges = new EdgeList();
 		this.state = state;
 		this.state.setEmon(this);
-
 		if (state.getConf().getRouting() != null) {
 			for (RoutingEntry e : state.getConf().getRouting()) {
 				System.out.println("Node id " + e.getId() + " Host " + e.getHost());
@@ -317,6 +316,24 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			return null;
 		}
 	}
+	
+	public static Channel fetchChannelToStealReadWork() {
+		Channel channel = null;
+		//logger.info("work Steal Queue is empty: " + workStealQueue.isEmpty());
+
+		if(!workStealQueue.isEmpty()) {
+			// TO DO - need to see if the node is leader. if yes enqueue it.
+			Integer nodeId = workStealQueue.remove();
+			/*if(nodeId.intValue() == 5) {
+				workStealQueue.add(nodeId);
+				return null;
+			}*/
+			channel = node2ChannelMap.get(nodeId);
+			workStealQueue.add(nodeId);
+		}
+		return channel;
+	}
+
 	// To continuously check addition and removal of nodes to the current node
 	private class NodeMonitor implements Runnable {
 		private boolean forever = true;
@@ -345,10 +362,14 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 								if (nodeId != null && !node2ChannelMap.containsKey(nodeId)
 										&& edgeListMapper.containsKey(nodeId)
 										&& edgeListMapper.get(nodeId).getChannel() != null) {
-									logger.info("Added node " + nodeId + " " + edgeListMapper.get(nodeId).getHost()
-											+ " to channel map. ");
 									if(edgeListMapper.get(nodeId).getChannel() != null ) {
+										logger.info("Added node " + nodeId + " " + edgeListMapper.get(nodeId).getHost()
+												+ " to channel map. ");
 										node2ChannelMap.put(nodeId, edgeListMapper.get(nodeId).getChannel());
+										if(!workStealQueue.contains(nodeId)) {
+											logger.info("Adding node to the stealing queue: " + nodeId);
+											workStealQueue.add(nodeId);
+										}
 									}
 								}
 								

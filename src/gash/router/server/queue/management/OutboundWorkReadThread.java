@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class OutboundReadThread extends Thread {
+public class OutboundWorkReadThread extends Thread {
 	private QueueManager manager;
-	protected static Logger logger = LoggerFactory.getLogger(OutboundReadThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(OutboundWorkReadThread.class);
 
-	public OutboundReadThread(QueueManager manager) {
+	public OutboundWorkReadThread(QueueManager manager) {
 		super();
 		this.manager = manager;
 		if (manager.outboundWorkReadQueue == null)
@@ -23,10 +23,10 @@ public class OutboundReadThread extends Thread {
 		while (true) {
 			try {
 				InternalChannelNode message = manager.dequeueOutboundRead();
-				logger.info("trying to route: ");
+				if(message != null){
 				if (message.getChannel()!= null && message.getChannel().isOpen()) {
 					if(message.getChannel().isWritable()){
-						logger.info("Routing outbound read message to  node " + message.getWorkMessage().getHeader().getDestination());
+				//		logger.info("Routing outbound read message ");
 						ChannelFuture cf = message.getChannel().write(message.getWorkMessage());
 						message.getChannel().flush();
 						cf.awaitUninterruptibly();
@@ -36,7 +36,7 @@ public class OutboundReadThread extends Thread {
 							logger.info("Adding back to read outbound queue");
 						}
 						else {
-							logger.info("cf.isSuccess() == true: " + cf.isSuccess());
+						//	logger.info("cf.isSuccess() == true: " + cf.isSuccess());
 						}
 					}
 					else {
@@ -45,10 +45,11 @@ public class OutboundReadThread extends Thread {
 						manager.enqueueOutboundRead(message.getWorkMessage(), message.getChannel());
 					}
 				} else {
-					logger.info("Adding back to read outbound queue: not of message.getChannel()!= null && message.getChannel().isOpen()");
+					//logger.info("Adding back to read outbound queue: not of message.getChannel()!= null && message.getChannel().isOpen()");
 					//manager.returnOutboundWorkWriteQueue(message);
 					manager.enqueueOutboundRead(message.getWorkMessage(), message.getChannel());
 				}
+			}
 					
 			} catch (Exception e) {
 				logger.error("Exception thrown in client communcation", e);

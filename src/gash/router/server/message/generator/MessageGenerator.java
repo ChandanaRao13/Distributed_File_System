@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
 import pipe.common.Common.Header;
+import pipe.work.Work.READ_STEAL;
+import pipe.work.Work.Steal;
 import pipe.work.Work.WorkMessage;
 import pipe.work.Work.WorkMessage.Worktype;
 import routing.Pipe.CommandMessage;
@@ -94,7 +96,28 @@ public class MessageGenerator {
 		wb.setWorktype(Worktype.READ_REQUEST);
 		return wb.build();
 	}
-	
+
+	public WorkMessage generateReadRequestMessage(CommandMessage commandMessage, String clientID, int nodeId, int chunkId){
+		Header.Builder hb = Header.newBuilder();
+
+		hb.setNodeId(conf.getNodeId());
+		hb.setDestination(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		FileTask.Builder fb = FileTask.newBuilder();
+		fb.setFilename(commandMessage.getFiletask().getFilename());
+		fb.setChunkNo(chunkId);
+		fb.setFileTaskType(FileTaskType.READ);
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setFiletask(fb.build());
+		
+		wb.setSecret(1234);
+		wb.setRequestId(clientID);
+		wb.setWorktype(Worktype.READ_REQUEST);
+		return wb.build();
+	}
+
 	public WorkMessage generateReadRequestResponseMessage(FileTask filetask, ByteString line, int chunkId, int totalChunks, String requestId, int nodeId, String filename){
 		Header.Builder hb = Header.newBuilder();
 
@@ -149,6 +172,63 @@ public class MessageGenerator {
 		ft.setFilename(message.getFiletask().getFilename());
 		ft.setFileTaskType(FileTaskType.WRITE);
 		wb.setFiletask(ft.build());
+		return wb.build();
+	}
+
+	public WorkMessage generateWorkReadStealMessage() {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		Steal.Builder sb = Steal.newBuilder();
+		sb.setReadSteal(READ_STEAL.READ_STEAL_REQUEST);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setSteal(sb.build());
+		wb.setSecret(1234);
+		return wb.build();
+	}
+
+	public WorkMessage generateWorkReadStealResponseMsg(WorkMessage workMessage) {
+		WorkMessage.Builder wb = WorkMessage.newBuilder(workMessage);
+		Steal.Builder sb = Steal.newBuilder();
+		sb.setReadSteal(READ_STEAL.READ_STEAL_RESPONSE);
+		wb.setSteal(sb.build());
+		System.out.println("SEnding chunkId: " + workMessage.getFiletask().getChunkNo());
+/*		Header.Builder hb = Header.newBuilder();
+		//System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getDestination());
+		try {
+			System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getNodeId());
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		hb.setNodeId(workMessage.getHeader().getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		Steal.Builder sb = Steal.newBuilder();
+		sb.setReadSteal(READ_STEAL.READ_STEAL_RESPONSE);
+
+		//System.out.println("SEnding filename: " + workMessage.getFiletask().getFilename());
+		System.out.println("SEnding chunkId: " + workMessage.getFiletask().getChunkNo());
+		//System.out.println("SEnding chunkCount: " + workMessage.getFiletask().getChunkCounts());
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		FileTask.Builder ft  = FileTask.newBuilder();
+		ft.setFilename(workMessage.getFiletask().getFilename());
+		ft.setChunkNo(workMessage.getFiletask().getChunkNo());
+		
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setFiletask(ft.build());
+		wb.setHeader(hb.build());
+		wb.setSteal(sb.build());
+		wb.setSecret(1234);*/
 		return wb.build();
 	}
 }

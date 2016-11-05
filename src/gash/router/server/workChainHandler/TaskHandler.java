@@ -26,7 +26,7 @@ import routing.Pipe.FileTask;
 public class TaskHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger("work");
+	protected static Logger logger = LoggerFactory.getLogger(TaskHandler.class);
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain,ServerState state) {
 		this.nextChainHandler = nextChain;
@@ -39,29 +39,7 @@ public class TaskHandler implements IWorkChainHandler{
 		if(workMessage.hasFiletask()) {
 			//logger.info("Recieved replicate work message");
 			if(workMessage.getWorktype() == Worktype.READ_REQUEST){
-				logger.info("Received message to read a file");
-				FileTask ft = workMessage.getFiletask();
-				try {
-					int chunkCount = DatabaseHandler.getFilesChunkCount(ft.getFilename());
-					for (int i = 1; i <= chunkCount; i++) {
-						
-						try {
-							ByteString content = DatabaseHandler.getFileChunkContentWithChunkId(ft.getFilename(), i);
-							System.out.println("Content recieved :" + content);
-							WorkMessage msg = MessageGenerator.getInstance().generateReadRequestResponseMessage(ft, content, i, 
-									chunkCount, workMessage.getRequestId(), workMessage.getHeader().getNodeId(), ft.getFilename());
-							QueueManager.getInstance().enqueueOutboundRead(msg, channel);
-						} catch (FileChunkNotFoundException e) {
-							e.printStackTrace();
-						}
-						
-					}
-				}catch (FileNotFoundException | IOException | ParseException e) {
-					e.printStackTrace();
-				} catch (EmptyConnectionPoolException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				QueueManager.getInstance().enqueueInboundRead(workMessage, channel);
 			} else if (workMessage.getWorktype() == Worktype.READ_REQUEST_RESPONSE){
 				logger.info("Response from slave node for client read request");	
 
@@ -81,7 +59,7 @@ public class TaskHandler implements IWorkChainHandler{
 							//workMessage.getFiletask().getChunkNo());
 			} 
 		} else {
-			this.nextChainHandler.handle(workMessage, channel);
+			//this.nextChainHandler.handle(workMessage, channel);
 		}
 	}
 }

@@ -18,7 +18,7 @@ import pipe.work.Work.WorkMessage;
 public class NewNodeChainHandler implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger("New Node Handler");
+	protected static Logger logger = LoggerFactory.getLogger(NewNodeChainHandler.class);
 
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain, ServerState state) {

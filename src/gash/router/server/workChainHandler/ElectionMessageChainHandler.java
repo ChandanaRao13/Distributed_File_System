@@ -14,7 +14,7 @@ import pipe.work.Work.WorkMessage;
 public class ElectionMessageChainHandler implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger("Leader Election Handler");
+	protected static Logger logger = LoggerFactory.getLogger(ElectionMessageChainHandler.class);
 
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain, ServerState state) {

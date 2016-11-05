@@ -24,7 +24,7 @@ import gash.router.server.workChainHandler.IWorkChainHandler;
 import gash.router.server.workChainHandler.NewNodeChainHandler;
 import gash.router.server.workChainHandler.PingHandler;
 import gash.router.server.workChainHandler.TaskHandler;
-import gash.router.server.workChainHandler.WorkStateHandler;
+import gash.router.server.workChainHandler.WorkStealHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -64,18 +64,20 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 	IWorkChainHandler pingMessageChainHandler;
 	IWorkChainHandler failureMessageChainHandler;
 	IWorkChainHandler taskMessageChainHandler;
-	IWorkChainHandler workStateMessageChainHandler;
+	IWorkChainHandler workStealMessageChainHandler;
 	IWorkChainHandler electionMessageChainHandler;
 	IWorkChainHandler newNodeChainHandler;
 	public WorkHandler(ServerState state) {
 		if (state != null) {
 			this.state = state;
+		} else {
+			return;
 		}
 		this.hearBeatChainHandler = new HeartBeatHandler();
 		this.pingMessageChainHandler = new PingHandler();
 		this.failureMessageChainHandler = new FailureHandler();
 		this.taskMessageChainHandler = new TaskHandler();
-		this.workStateMessageChainHandler = new WorkStateHandler();
+		this.workStealMessageChainHandler = new WorkStealHandler();
 		this.electionMessageChainHandler = new ElectionMessageChainHandler();
 		this.newNodeChainHandler = new NewNodeChainHandler();
 
@@ -83,8 +85,8 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		this.electionMessageChainHandler.setNextChain(newNodeChainHandler,state);
 		this.newNodeChainHandler.setNextChain(pingMessageChainHandler,state);		
 		this.pingMessageChainHandler.setNextChain(failureMessageChainHandler,state);
-		this.failureMessageChainHandler.setNextChain(taskMessageChainHandler,state);
-		this.taskMessageChainHandler.setNextChain(workStateMessageChainHandler,state);
+		this.failureMessageChainHandler.setNextChain(workStealMessageChainHandler, state);
+		this.workStealMessageChainHandler.setNextChain(taskMessageChainHandler, state);
 	}
 
 	/**

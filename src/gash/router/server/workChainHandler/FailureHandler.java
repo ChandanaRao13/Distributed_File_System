@@ -16,7 +16,7 @@ import pipe.work.Work.WorkMessage;
 public class FailureHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger("work");
+	protected static Logger logger = LoggerFactory.getLogger(FailureHandler.class);
 
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain, ServerState state) {
