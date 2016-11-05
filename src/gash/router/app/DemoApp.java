@@ -161,7 +161,7 @@ public class DemoApp implements CommListener {
 			//da.sendFileAsChunks(new File(args[0]));
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
-			Thread.sleep(100 * 1000);
+			Thread.sleep(6000 * 1000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -238,8 +238,8 @@ public class DemoApp implements CommListener {
 			mc.sendReadFileRequest(filename);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
+			System.out.println("Unable to send read file task: " + e.getMessage());
 			e.printStackTrace();
 		}
-
 	}
 }

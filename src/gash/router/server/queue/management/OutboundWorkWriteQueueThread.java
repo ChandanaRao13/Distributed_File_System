@@ -37,6 +37,7 @@ public class OutboundWorkWriteQueueThread extends Thread{
 				} else {
 					logger.info("Channel to destination node " + destinationNode + " is not writable");
 					logger.info("Checking if channel is null : "+(message.getChannel() == null));
+					manager.returnOutboundWorkWrite(message);
 				}
 			} catch (InterruptedException ie) {
 				break;
