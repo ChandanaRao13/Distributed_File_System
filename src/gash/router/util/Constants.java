@@ -16,4 +16,6 @@ public class Constants {
 	public static final String CHUNK_ID = "chunckId";
 	
 	public static final Integer MaxLoadCount = 1000;
+
+	public static final Integer RETHINK_DB_CONNECTION_POOL_SIZE = 100;
 }

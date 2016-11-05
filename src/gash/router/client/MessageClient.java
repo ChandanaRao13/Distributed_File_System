@@ -15,7 +15,6 @@
  */
 package gash.router.client;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import com.google.protobuf.ByteString;
