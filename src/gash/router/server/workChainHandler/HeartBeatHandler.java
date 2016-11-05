@@ -16,7 +16,7 @@ import pipe.work.Work.WorkMessage;
 public class HeartBeatHandler implements IWorkChainHandler{
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger("work");
+	protected static Logger logger = LoggerFactory.getLogger(HeartBeatHandler.class);
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain,ServerState state) {
 		// TODO Auto-generated method stub
@@ -30,7 +30,7 @@ public class HeartBeatHandler implements IWorkChainHandler{
 		if(workMessage.hasBeat()) {
 			Heartbeat heartBeat = workMessage.getBeat();
 			logger.debug("heartbeat from " + workMessage.getHeader().getNodeId());
-		}
+		} 
 		nextChainHandler.handle(workMessage, channel);
 	}
 

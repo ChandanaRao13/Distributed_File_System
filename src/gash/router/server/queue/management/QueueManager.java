@@ -37,7 +37,7 @@ public class QueueManager {
 	protected OutboundWorkWriteQueueThread outboundWorkWriterThread;
 	protected InboundWorkWriteQueueThread inboundWorkWriterThread;
 	protected OutboundCommandQueueThread outboundCommanderThread;
-	protected OutboundReadThread outboundReadThread;
+	protected OutboundWorkReadThread outboundReadThread;
 	protected InboundReadQueueThread inboundReadThread;
 	
 	
@@ -68,7 +68,7 @@ public class QueueManager {
 		outboundCommanderThread.start();
 		
 		outboundWorkReadQueue = new LinkedBlockingDeque<InternalChannelNode>();
-		outboundReadThread = new OutboundReadThread(this);
+		outboundReadThread = new OutboundWorkReadThread(this);
 		outboundReadThread.start();
 		
 		inboundWorkReadQueue = new LinkedBlockingDeque<InternalChannelNode>();
@@ -142,7 +142,9 @@ public class QueueManager {
 	}
 	
 	public InternalChannelNode dequeueOutboundRead() throws InterruptedException {
-			return outboundWorkReadQueue.take();
+		if(outboundWorkReadQueue.size() == 0)
+			return null;
+		return outboundWorkReadQueue.take();
 	}
 	
 	public void enqueueInboundRead(WorkMessage message, Channel ch) {
@@ -155,7 +157,9 @@ public class QueueManager {
 	}
 	
 	public InternalChannelNode dequeueInboundRead() throws InterruptedException {
-			return inboundWorkReadQueue.take();
+		if(inboundWorkReadQueue.size() == 0)
+			return null;
+		return inboundWorkReadQueue.take();
 	}
 	
 	public void enqueueOutboundCommand(CommandMessage message, Channel ch) {
