@@ -10,6 +10,7 @@ import com.google.protobuf.ByteString;
 
 import gash.router.database.DatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;
+import gash.router.server.manage.exceptions.EmptyConnectionPoolException;
 import gash.router.server.manage.exceptions.FileChunkNotFoundException;
 import gash.router.server.manage.exceptions.FileNotFoundException;
 import gash.router.server.message.generator.MessageGenerator;
@@ -55,6 +56,9 @@ public class TaskHandler implements IWorkChainHandler{
 					}
 				}catch (FileNotFoundException | IOException | ParseException e) {
 					e.printStackTrace();
+				} catch (EmptyConnectionPoolException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			} else if (workMessage.getWorktype() == Worktype.READ_REQUEST_RESPONSE){
 				logger.info("Response from slave node for client read request");	

@@ -24,12 +24,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import com.google.protobuf.ByteString;
-import com.rethinkdb.gen.ast.Map;
 
 import gash.router.client.CommConnection;
 import gash.router.client.CommListener;
