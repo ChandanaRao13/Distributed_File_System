@@ -148,7 +148,9 @@ public class MessageClient {
 		
 		try {
 			CommConnection.getInstance().enqueue(rb.build());
+			System.out.println("Sent Read Message");
 		} catch (Exception e) {
+			System.out.println("Unable to send read file task: " + e.getMessage());
 			e.printStackTrace();
 		}
 		

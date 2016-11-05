@@ -30,11 +30,17 @@ public class OutboundCommandQueueThread extends Thread {
 						message.getChannel().flush();
 						cf.awaitUninterruptibly();
 						if(!cf.isSuccess()){
-							manager.returnOutboundCommand(message);
+							manager.enqueueAtFrontOutboundCommand(message);
+						}
+						else {
+							logger.info("Successfully send the command message to client ");
 						}
 					}
+					else {
+						manager.enqueueAtFrontOutboundCommand(message);
+					}
 				} else {
-					manager.returnOutboundCommand(message);
+					manager.enqueueAtFrontOutboundCommand(message);
 				}
 					
 			} catch (Exception e) {

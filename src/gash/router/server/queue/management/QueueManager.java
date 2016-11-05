@@ -122,7 +122,7 @@ public class QueueManager {
 			return outboundCommandQueue.take();
 	}
 
-	public void returnOutboundCommand(InternalChannelNode channelNode) throws InterruptedException {
+	public void enqueueAtFrontOutboundCommand(InternalChannelNode channelNode) throws InterruptedException {
 		outboundCommandQueue.putFirst(channelNode);
 	}
 	
