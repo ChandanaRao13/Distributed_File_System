@@ -12,7 +12,7 @@
 
 #project_base="/Users/gash/workspace/messaging/core-netty/python"
 
-project_base="/home/vaishampayan/Desktop/python"
+project_base="/home/vaishampayan/temp2/Distributed_File_System"
 
 #rm ${project_base}/src/*
 
