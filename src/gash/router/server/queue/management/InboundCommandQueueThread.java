@@ -1,5 +1,6 @@
 package gash.router.server.queue.management;
 
+import gash.router.server.commandRouterHandlers.DeleteRouterHandler;
 import gash.router.server.commandRouterHandlers.ReadRouterHandler;
 import gash.router.server.commandRouterHandlers.WriteRouterHandler;
 
@@ -12,6 +13,7 @@ public class InboundCommandQueueThread extends Thread {
 	private QueueManager manager;
 	private WriteRouterHandler writerRouter;
 	private ReadRouterHandler readRouter;
+	private DeleteRouterHandler deleteRouter;
 	protected static Logger logger = LoggerFactory.getLogger(InboundCommandQueueThread.class);
 
 	public InboundCommandQueueThread(QueueManager manager) {
@@ -22,8 +24,9 @@ public class InboundCommandQueueThread extends Thread {
 		
 		writerRouter = new WriteRouterHandler();
 		readRouter = new ReadRouterHandler();
-		
+		deleteRouter = new DeleteRouterHandler();
 		readRouter.setNextChainHandler(writerRouter);
+		writerRouter.setNextChainHandler(deleteRouter);
 	}
 
 	@Override

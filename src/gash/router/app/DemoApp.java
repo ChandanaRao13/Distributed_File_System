@@ -71,7 +71,7 @@ public class DemoApp implements CommListener {
 	}
 	@Override
 	public void onMessage(CommandMessage msg) {
-	//	System.out.println("---> " + msg);	
+		System.out.println("---> " + msg);	
 	//	ByteString content = msg.getFiletask().getChunk();
 	//	System.out.println(new String(content.toByteArray()));
 		
@@ -154,9 +154,10 @@ public class DemoApp implements CommListener {
 
 			// do stuff w/ the connection
 			// da.ping(2);
-			da.sendReadFileTasks(args[0]);
+			//da.sendReadFileTasks(args[0]);
 			//da.chunkFile(args[0]);
 			//da.sendFileAsChunks(new File(args[0]));
+			da.sendDeleteFileTasks(args[0]);
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
 			Thread.sleep(6000 * 1000);
@@ -237,6 +238,17 @@ public class DemoApp implements CommListener {
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Unable to send read file task: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void sendDeleteFileTasks(String filename){
+		try {
+			mc.sendDeleteFileRequest(filename);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Unable to send delete file task: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}

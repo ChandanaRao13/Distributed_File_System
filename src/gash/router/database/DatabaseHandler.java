@@ -249,4 +249,53 @@ public class DatabaseHandler {
 			return ByteString.copyFrom("".getBytes());
 		}
 	}
+	
+	
+	
+	public static boolean isFileAvailable(String filename) throws EmptyConnectionPoolException{
+		Connection connection = databaseConnectionManager.getConnection();
+
+		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).run(connection);
+		databaseConnectionManager.releaseConnection(connection);
+		if (dataFromDB == null)
+			System.out.println("Database error");
+		else{
+			int count  = 0;
+			for (Object record : dataFromDB) {
+				count ++;
+			}
+			
+			if(count != 0){
+				return true;
+			}
+		}
+		return false;	
+	}
+	
+	/**
+	 * generic method to delete the file from the database
+	 * 
+	 * @param filename
+	 * @param input
+	 * @param chunkId
+	 * @throws EmptyConnectionPoolException 
+	 * @throws Exception
+	 */
+	public static boolean deleteFile(String filename) throws EmptyConnectionPoolException {
+		Connection connection = databaseConnectionManager.getConnection();
+		try {
+			HashMap<String, Object> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+					.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).delete().run(connection);
+			databaseConnectionManager.releaseConnection(connection);
+			return true;
+		} catch (Exception e) {
+			logger.debug("ERROR: Unable to delete file in the database");
+			System.out.println("File in not deleted");
+			e.printStackTrace();
+			return false;
+		} finally {
+			databaseConnectionManager.releaseConnection(connection);
+		}
+	}
 }

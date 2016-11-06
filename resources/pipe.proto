@@ -11,6 +11,7 @@ message FileTask {
 	enum FileTaskType {
       READ = 1;
       WRITE = 2;
+      DELETE = 3;
     }
     required FileTaskType file_task_type = 4;
     optional int32 chunk_counts = 5;

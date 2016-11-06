@@ -155,6 +155,32 @@ public class MessageClient {
 		
 	}
 
+	public void sendDeleteFileRequest(String filename) throws UnknownHostException{
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(999);
+		hb.setTime(System.currentTimeMillis());
+		hb.setDestination(-1);
+		
+		CommandMessage.Builder rb = CommandMessage.newBuilder();
+		rb.setHeader(hb);
+		
+		FileTask.Builder task = FileTask.newBuilder();
+		task.setFilename(filename);
+		task.setFileTaskType(FileTaskType.DELETE);		
+		rb.setMessage(filename);
+		
+		rb.setFiletask(task.build());
+		
+		try {
+			CommConnection.getInstance().enqueue(rb.build());
+			System.out.println("Sent Delete Message");
+		} catch (Exception e) {
+			System.out.println("Unable to send delete file task: " + e.getMessage());
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void release() {
 		CommConnection.getInstance().release();
 	}
