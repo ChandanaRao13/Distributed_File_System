@@ -7,14 +7,15 @@ import "common.proto";
 message FileTask {  
     optional int32 chunk_no = 1;
     optional bytes chunk = 2;
-	required string filename = 3; 
-	enum FileTaskType {
+  required string filename = 3; 
+  enum FileTaskType {
       READ = 1;
       WRITE = 2;
       DELETE = 3;
     }
     required FileTaskType file_task_type = 4;
     optional int32 chunk_counts = 5;
+    required string sender = 6;
 }
 
 message CommandMessage {
@@ -23,6 +24,8 @@ message CommandMessage {
    optional FileTask filetask = 2;
     oneof payload {
       // a client (external) sanity check for testing
+      bytes file = 6;
+
       bool ping = 3;
 
       string message = 4;
