@@ -2,6 +2,7 @@ package gash.router.server.queue.management;
 
 import gash.router.database.DatabaseHandler;
 import gash.router.server.message.generator.MessageGenerator;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
 import org.slf4j.Logger;
@@ -31,24 +32,25 @@ public class InboundWorkWriteQueueThread extends Thread{
 				
 				if(internalNode != null){
 					WorkMessage workMessage = internalNode.getWorkMessage();
+					Channel channel = internalNode.getChannel();
 					FileTask ft= workMessage.getFiletask();
 					if(workMessage.getWorktype() == Worktype.REPLICATE_REQUEST){
-					//	if(DatabaseHandler.addFile(ft.getFilename(), ft.getChunkCounts(), ft.getChunk().toByteArray(), ft.getChunkNo())){
+						if(DatabaseHandler.addFile(ft.getFilename(), ft.getChunkCounts(), ft.getChunk().toByteArray(), ft.getChunkNo())){
 
 							WorkMessage workResponseMessage = MessageGenerator.getInstance().generateReplicationAcknowledgementMessage(workMessage);
-							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, internalNode.getChannel());
-				/*		} else {
+							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, channel);
+						} else {
 							logger.info("Data is not replicated in the slave node, enqueuing the message back into the queue");
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
-						} */
+						} 
 					} else if (workMessage.getWorktype() == Worktype.DELETE_REQUEST){
-					//	if(DatabaseHandler.deleteFile(ft.getFilename())){
+						if(DatabaseHandler.deleteFile(ft.getFilename())){
 							WorkMessage workResponseMessage = MessageGenerator.getInstance().generateDeletionAcknowledgementMessage(workMessage);
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, internalNode.getChannel());
-					/*	} else {
+						} else {
 							logger.info("Data is not replicated in the slave node, enqueuing the message back into the queue");
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
-						} 		*/				
+						} 					
 					}
 				}
 				//int destinationNode = message.getWorkMessage().getHeader().getNodeId();
