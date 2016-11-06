@@ -13,6 +13,6 @@
 	<classpathentry kind="lib" path="lib/rethinkdb-driver-2.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/riak-client-2.0.7-jar-with-dependencies.jar"/>
 	<classpathentry kind="lib" path="lib/org.json.jar"/>
-	<classpathentry kind="lib" path="/Users/Madhu/Documents/Courses/275_Enterprise_Software_Components /ProjectFluffy/Project_Simulation/protobuf-java-2.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/protobuf-java-2.5.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
