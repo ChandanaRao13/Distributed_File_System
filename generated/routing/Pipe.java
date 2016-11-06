@@ -63,15 +63,15 @@ public final class Pipe {
     int getChunkCounts();
 
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     boolean hasSender();
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     java.lang.String getSender();
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     com.google.protobuf.ByteString
         getSenderBytes();
@@ -402,13 +402,13 @@ public final class Pipe {
     public static final int SENDER_FIELD_NUMBER = 6;
     private java.lang.Object sender_;
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     public boolean hasSender() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     public java.lang.String getSender() {
       java.lang.Object ref = sender_;
@@ -425,7 +425,7 @@ public final class Pipe {
       }
     }
     /**
-     * <code>required string sender = 6;</code>
+     * <code>optional string sender = 6;</code>
      */
     public com.google.protobuf.ByteString
         getSenderBytes() {
@@ -460,10 +460,6 @@ public final class Pipe {
         return false;
       }
       if (!hasFileTaskType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSender()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -757,10 +753,6 @@ public final class Pipe {
           
           return false;
         }
-        if (!hasSender()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -995,13 +987,13 @@ public final class Pipe {
 
       private java.lang.Object sender_ = "";
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public boolean hasSender() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public java.lang.String getSender() {
         java.lang.Object ref = sender_;
@@ -1018,7 +1010,7 @@ public final class Pipe {
         }
       }
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public com.google.protobuf.ByteString
           getSenderBytes() {
@@ -1034,7 +1026,7 @@ public final class Pipe {
         }
       }
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public Builder setSender(
           java.lang.String value) {
@@ -1047,7 +1039,7 @@ public final class Pipe {
         return this;
       }
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public Builder clearSender() {
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -1056,7 +1048,7 @@ public final class Pipe {
         return this;
       }
       /**
-       * <code>required string sender = 6;</code>
+       * <code>optional string sender = 6;</code>
        */
       public Builder setSenderBytes(
           com.google.protobuf.ByteString value) {
@@ -2476,7 +2468,7 @@ public final class Pipe {
       "\020\n\010chunk_no\030\001 \001(\005\022\r\n\005chunk\030\002 \001(\014\022\020\n\010file" +
       "name\030\003 \002(\t\022.\n\016file_task_type\030\004 \002(\0162\026.Fil" +
       "eTask.FileTaskType\022\024\n\014chunk_counts\030\005 \001(\005" +
-      "\022\016\n\006sender\030\006 \002(\t\"/\n\014FileTaskType\022\010\n\004READ" +
+      "\022\016\n\006sender\030\006 \001(\t\"/\n\014FileTaskType\022\010\n\004READ" +
       "\020\001\022\t\n\005WRITE\020\002\022\n\n\006DELETE\020\003\"\235\001\n\016CommandMes" +
       "sage\022\027\n\006header\030\001 \002(\0132\007.Header\022\033\n\010filetas" +
       "k\030\002 \001(\0132\t.FileTask\022\016\n\004file\030\006 \001(\014H\000\022\016\n\004pi" +
