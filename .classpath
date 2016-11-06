@@ -11,6 +11,6 @@
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/rethinkdb-driver-2.3.3.jar"/>
-	<classpathentry kind="lib" path="lib/protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="lib" path="/home/vaishampayan/temp2/Distributed_File_System/lib/protobuf-java-2.6.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

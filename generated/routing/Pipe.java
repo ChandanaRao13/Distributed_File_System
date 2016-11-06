@@ -61,6 +61,20 @@ public final class Pipe {
      * <code>optional int32 chunk_counts = 5;</code>
      */
     int getChunkCounts();
+
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    boolean hasSender();
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    java.lang.String getSender();
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getSenderBytes();
   }
   /**
    * Protobuf type {@code FileTask}
@@ -144,6 +158,12 @@ public final class Pipe {
             case 40: {
               bitField0_ |= 0x00000010;
               chunkCounts_ = input.readInt32();
+              break;
+            }
+            case 50: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000020;
+              sender_ = bs;
               break;
             }
           }
@@ -379,12 +399,55 @@ public final class Pipe {
       return chunkCounts_;
     }
 
+    public static final int SENDER_FIELD_NUMBER = 6;
+    private java.lang.Object sender_;
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    public boolean hasSender() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    public java.lang.String getSender() {
+      java.lang.Object ref = sender_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          sender_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string sender = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSenderBytes() {
+      java.lang.Object ref = sender_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        sender_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       chunkNo_ = 0;
       chunk_ = com.google.protobuf.ByteString.EMPTY;
       filename_ = "";
       fileTaskType_ = routing.Pipe.FileTask.FileTaskType.READ;
       chunkCounts_ = 0;
+      sender_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -397,6 +460,10 @@ public final class Pipe {
         return false;
       }
       if (!hasFileTaskType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasSender()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -421,6 +488,9 @@ public final class Pipe {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeInt32(5, chunkCounts_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBytes(6, getSenderBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -450,6 +520,10 @@ public final class Pipe {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, chunkCounts_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getSenderBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -578,6 +652,8 @@ public final class Pipe {
         bitField0_ = (bitField0_ & ~0x00000008);
         chunkCounts_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
+        sender_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -626,6 +702,10 @@ public final class Pipe {
           to_bitField0_ |= 0x00000010;
         }
         result.chunkCounts_ = chunkCounts_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.sender_ = sender_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -659,6 +739,11 @@ public final class Pipe {
         if (other.hasChunkCounts()) {
           setChunkCounts(other.getChunkCounts());
         }
+        if (other.hasSender()) {
+          bitField0_ |= 0x00000020;
+          sender_ = other.sender_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -669,6 +754,10 @@ public final class Pipe {
           return false;
         }
         if (!hasFileTaskType()) {
+          
+          return false;
+        }
+        if (!hasSender()) {
           
           return false;
         }
@@ -904,6 +993,82 @@ public final class Pipe {
         return this;
       }
 
+      private java.lang.Object sender_ = "";
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public boolean hasSender() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public java.lang.String getSender() {
+        java.lang.Object ref = sender_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            sender_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSenderBytes() {
+        java.lang.Object ref = sender_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sender_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public Builder setSender(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        sender_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public Builder clearSender() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        sender_ = getDefaultInstance().getSender();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string sender = 6;</code>
+       */
+      public Builder setSenderBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        sender_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:FileTask)
     }
 
@@ -946,19 +1111,28 @@ public final class Pipe {
     routing.Pipe.FileTaskOrBuilder getFiletaskOrBuilder();
 
     /**
-     * <code>optional bool ping = 3;</code>
+     * <code>optional bytes file = 6;</code>
      *
      * <pre>
      * a client (external) sanity check for testing
      * </pre>
      */
-    boolean hasPing();
+    boolean hasFile();
     /**
-     * <code>optional bool ping = 3;</code>
+     * <code>optional bytes file = 6;</code>
      *
      * <pre>
      * a client (external) sanity check for testing
      * </pre>
+     */
+    com.google.protobuf.ByteString getFile();
+
+    /**
+     * <code>optional bool ping = 3;</code>
+     */
+    boolean hasPing();
+    /**
+     * <code>optional bool ping = 3;</code>
      */
     boolean getPing();
 
@@ -1091,6 +1265,11 @@ public final class Pipe {
               payloadCase_ = 5;
               break;
             }
+            case 50: {
+              payloadCase_ = 6;
+              payload_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1135,6 +1314,7 @@ public final class Pipe {
     private java.lang.Object payload_;
     public enum PayloadCase
         implements com.google.protobuf.Internal.EnumLite {
+      FILE(6),
       PING(3),
       MESSAGE(4),
       ERR(5),
@@ -1145,6 +1325,7 @@ public final class Pipe {
       }
       public static PayloadCase valueOf(int value) {
         switch (value) {
+          case 6: return FILE;
           case 3: return PING;
           case 4: return MESSAGE;
           case 5: return ERR;
@@ -1206,23 +1387,40 @@ public final class Pipe {
       return filetask_;
     }
 
-    public static final int PING_FIELD_NUMBER = 3;
+    public static final int FILE_FIELD_NUMBER = 6;
     /**
-     * <code>optional bool ping = 3;</code>
+     * <code>optional bytes file = 6;</code>
      *
      * <pre>
      * a client (external) sanity check for testing
      * </pre>
+     */
+    public boolean hasFile() {
+      return payloadCase_ == 6;
+    }
+    /**
+     * <code>optional bytes file = 6;</code>
+     *
+     * <pre>
+     * a client (external) sanity check for testing
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getFile() {
+      if (payloadCase_ == 6) {
+        return (com.google.protobuf.ByteString) payload_;
+      }
+      return com.google.protobuf.ByteString.EMPTY;
+    }
+
+    public static final int PING_FIELD_NUMBER = 3;
+    /**
+     * <code>optional bool ping = 3;</code>
      */
     public boolean hasPing() {
       return payloadCase_ == 3;
     }
     /**
      * <code>optional bool ping = 3;</code>
-     *
-     * <pre>
-     * a client (external) sanity check for testing
-     * </pre>
      */
     public boolean getPing() {
       if (payloadCase_ == 3) {
@@ -1359,6 +1557,10 @@ public final class Pipe {
       if (payloadCase_ == 5) {
         output.writeMessage(5, (pipe.common.Common.Failure) payload_);
       }
+      if (payloadCase_ == 6) {
+        output.writeBytes(
+            6, (com.google.protobuf.ByteString)((com.google.protobuf.ByteString) payload_));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -1388,6 +1590,11 @@ public final class Pipe {
       if (payloadCase_ == 5) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, (pipe.common.Common.Failure) payload_);
+      }
+      if (payloadCase_ == 6) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(
+              6, (com.google.protobuf.ByteString)((com.google.protobuf.ByteString) payload_));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1566,6 +1773,9 @@ public final class Pipe {
         } else {
           result.filetask_ = filetaskBuilder_.build();
         }
+        if (payloadCase_ == 6) {
+          result.payload_ = payload_;
+        }
         if (payloadCase_ == 3) {
           result.payload_ = payload_;
         }
@@ -1603,6 +1813,10 @@ public final class Pipe {
           mergeFiletask(other.getFiletask());
         }
         switch (other.getPayloadCase()) {
+          case FILE: {
+            setFile(other.getFile());
+            break;
+          }
           case PING: {
             setPing(other.getPing());
             break;
@@ -1916,21 +2130,68 @@ public final class Pipe {
       }
 
       /**
-       * <code>optional bool ping = 3;</code>
+       * <code>optional bytes file = 6;</code>
        *
        * <pre>
        * a client (external) sanity check for testing
        * </pre>
+       */
+      public boolean hasFile() {
+        return payloadCase_ == 6;
+      }
+      /**
+       * <code>optional bytes file = 6;</code>
+       *
+       * <pre>
+       * a client (external) sanity check for testing
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getFile() {
+        if (payloadCase_ == 6) {
+          return (com.google.protobuf.ByteString) payload_;
+        }
+        return com.google.protobuf.ByteString.EMPTY;
+      }
+      /**
+       * <code>optional bytes file = 6;</code>
+       *
+       * <pre>
+       * a client (external) sanity check for testing
+       * </pre>
+       */
+      public Builder setFile(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  payloadCase_ = 6;
+        payload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes file = 6;</code>
+       *
+       * <pre>
+       * a client (external) sanity check for testing
+       * </pre>
+       */
+      public Builder clearFile() {
+        if (payloadCase_ == 6) {
+          payloadCase_ = 0;
+          payload_ = null;
+          onChanged();
+        }
+        return this;
+      }
+
+      /**
+       * <code>optional bool ping = 3;</code>
        */
       public boolean hasPing() {
         return payloadCase_ == 3;
       }
       /**
        * <code>optional bool ping = 3;</code>
-       *
-       * <pre>
-       * a client (external) sanity check for testing
-       * </pre>
        */
       public boolean getPing() {
         if (payloadCase_ == 3) {
@@ -1940,10 +2201,6 @@ public final class Pipe {
       }
       /**
        * <code>optional bool ping = 3;</code>
-       *
-       * <pre>
-       * a client (external) sanity check for testing
-       * </pre>
        */
       public Builder setPing(boolean value) {
         payloadCase_ = 3;
@@ -1953,10 +2210,6 @@ public final class Pipe {
       }
       /**
        * <code>optional bool ping = 3;</code>
-       *
-       * <pre>
-       * a client (external) sanity check for testing
-       * </pre>
        */
       public Builder clearPing() {
         if (payloadCase_ == 3) {
@@ -2219,16 +2472,16 @@ public final class Pipe {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\npipe.proto\032\014common.proto\"\264\001\n\010FileTask\022" +
+      "\n\npipe.proto\032\014common.proto\"\304\001\n\010FileTask\022" +
       "\020\n\010chunk_no\030\001 \001(\005\022\r\n\005chunk\030\002 \001(\014\022\020\n\010file" +
       "name\030\003 \002(\t\022.\n\016file_task_type\030\004 \002(\0162\026.Fil" +
       "eTask.FileTaskType\022\024\n\014chunk_counts\030\005 \001(\005" +
-      "\"/\n\014FileTaskType\022\010\n\004READ\020\001\022\t\n\005WRITE\020\002\022\n\n" +
-      "\006DELETE\020\003\"\215\001\n\016CommandMessage\022\027\n\006header\030\001" +
-      " \002(\0132\007.Header\022\033\n\010filetask\030\002 \001(\0132\t.FileTa" +
-      "sk\022\016\n\004ping\030\003 \001(\010H\000\022\021\n\007message\030\004 \001(\tH\000\022\027\n" +
-      "\003err\030\005 \001(\0132\010.FailureH\000B\t\n\007payloadB\013\n\007rou" +
-      "tingH\001"
+      "\022\016\n\006sender\030\006 \002(\t\"/\n\014FileTaskType\022\010\n\004READ" +
+      "\020\001\022\t\n\005WRITE\020\002\022\n\n\006DELETE\020\003\"\235\001\n\016CommandMes" +
+      "sage\022\027\n\006header\030\001 \002(\0132\007.Header\022\033\n\010filetas" +
+      "k\030\002 \001(\0132\t.FileTask\022\016\n\004file\030\006 \001(\014H\000\022\016\n\004pi" +
+      "ng\030\003 \001(\010H\000\022\021\n\007message\030\004 \001(\tH\000\022\027\n\003err\030\005 \001" +
+      "(\0132\010.FailureH\000B\t\n\007payloadB\013\n\007routingH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2248,13 +2501,13 @@ public final class Pipe {
     internal_static_FileTask_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_FileTask_descriptor,
-        new java.lang.String[] { "ChunkNo", "Chunk", "Filename", "FileTaskType", "ChunkCounts", });
+        new java.lang.String[] { "ChunkNo", "Chunk", "Filename", "FileTaskType", "ChunkCounts", "Sender", });
     internal_static_CommandMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_CommandMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_CommandMessage_descriptor,
-        new java.lang.String[] { "Header", "Filetask", "Ping", "Message", "Err", "Payload", });
+        new java.lang.String[] { "Header", "Filetask", "File", "Ping", "Message", "Err", "Payload", });
     pipe.common.Common.getDescriptor();
   }
 

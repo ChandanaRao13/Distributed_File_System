@@ -1,13 +1,14 @@
-import	socket
-import	struct
-import	time
+import  socket
+import  struct
+import  time
 import common_pb2
-import	pipe_pb2
-import	pbd
+import  pipe_pb2
+import  pbd
 from protobuf_to_dict import protobuf_to_dict
 from asyncore import read
 from Logger import Logger
 from ClientServerMessageBuilder import ClientServerMessageBuilder
+from termcolor import colored
 
 class FluffyClient:
     def __init__(self, host, portNumber):
@@ -27,15 +28,27 @@ class FluffyClient:
     def getName(self):
         return self.name
 
+    def print_success(self, msg):
+        print (colored(msg, 'green'))
+
+    def print_error(self, msg):
+        print (colored(msg, 'red'))
+
+    def print_warning(self, msg):
+        print (colored(msg, 'orange'))
+
+    def print_info(self, msg):
+        print (colored(msg, 'blue'))
+
     def openConnection(self):
         self.socket.connect((self.host, self.portNumber))
         self.logger.logInfoMessage("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
-        print("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
+        self.print_success("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
 
     def closeConnection(self):
         connectionStopMsg = self.clientServerMessageBuilder.buildGeneralMessage(self.nodeId, self.time, self.name + " is closing the session!!!")
         self.logger.logInfoMessage("Client: Client closed the connection with the server: " + connectionStopMsg)
-        print("Client: Client closed the connection with the server: " + connectionStopMsg)
+        self.print_info("Client: Client closed the connection with the server: " + self.name + " is closing the session!!!")
         self.socket.send(connectionStopMsg)
         self.socket.close()
         self.socket = None
@@ -44,73 +57,72 @@ class FluffyClient:
         newConnectionInfoMsg = self.clientServerMessageBuilder.buildGeneralMessage(self.nodeId, self.time, self.name + " is connected to the server")
         self.socket.send(newConnectionInfoMsg)
         self.logger.logInfoMessage("Client: Client is connected with the server: " + newConnectionInfoMsg)
-        print("Client: Client is connected with the server: " + newConnectionInfoMsg)
+        self.print_info("Client: Client is connected with the server: " + newConnectionInfoMsg)
 
     def sendMessageToServer(self, message):
-        if len(message) > 1024:
-            print('Client: message exceeds 1024 size')
+        if len(message) > 1024 * 1024:
+            print('Client: message exceeds 1MB size')
             return
         msgToServer = self.clientServerMessageBuilder.buildGeneralMessage(self.nodeId, self.time, self.name + " says: " + message)
         self.socket.send(msgToServer)
         self.logger.logInfoMessage("Client: Client is sending a message to server: " + msgToServer)
-        print("Client: Client is sending a message to server: " + msgToServer)
+        self.print_info("Client: Client is sending a message to server: " + msgToServer)
 
     def chunkFileInto1MB(self, file):
         oneMBfileChunks = []
         fileReadSize = 1024 * 1024
         with open(file, "rb") as file:
-            dataRead = "data"
-            while dataRead != '':
-                dataRead = file.read(fileReadSize)
+            dataRead = file.read(fileReadSize)
+            while dataRead != '' and dataRead != None and len(dataRead) > 0:
                 oneMBfileChunks.append(dataRead)
+                dataRead = file.read(fileReadSize)
             return oneMBfileChunks
 
     def _sendCommandMessage(self, commandMessage):
         messageLength = struct.pack('>L', len(commandMessage))
         self.socket.sendall(messageLength + commandMessage)
         self.logger.logInfoMessage("Client: Client is sending data to server: " + messageLength + commandMessage)
-        print("Client: Client is sending data to server: " + messageLength + commandMessage)
 
     def _recvCommandMessage(self):
-        lenOfReceivedMsg = self.receiveMessageFromServer(self.socket, 4)
-        messageReceived = self.receiveMessageFromServer(self.socket, lenOfReceivedMsg)
-        readCommandMessage = pipe_pb2.CommandMessage()
-        readCommandMessage.ParseFromString(messageReceived)
-        self.logger.logInfoMessage("Client: Client received message from server: " + readCommandMessage)
-        print("Client: Client received message from server: " + readCommandMessage)
-        # self.socket.close
-        return readCommandMessage
+        len_buf = self.receiveMessageFromServer(self.socket, 4)
+        msg_in_len = struct.unpack('>L', len_buf)[0]
+        msg_in = self.receiveMessageFromServer(self.socket, msg_in_len)
+        r = pipe_pb2.CommandMessage()
+        r.ParseFromString(msg_in)
+        return r
 
     def sendFileToServer(self, filename, chunkCount, chunkId, fileChunk):
         newCommandMsg = self.clientServerMessageBuilder.buildWriteCommandMessage(self.nodeId, self.time, self.myIp, filename, chunkCount, chunkId, fileChunk)
         self._sendCommandMessage(newCommandMsg)
         return self._recvCommandMessage()
 
-    def getFileFromServer(self, filename):
+    def getFileFromServer(self, filepath, filename):
         newReadCommandMessage = self.clientServerMessageBuilder.buildReadCommandMessage(self.nodeId, self.time, self.myIp, filename)
         self._sendCommandMessage(newReadCommandMessage)
-        return self._recvCommandMessage()
-
-    def receiveMessageFromServer(self, socket, waitFor):
-        socket.setblocking(0)
-        fileContents = []
-        fileSize = 8192
-        data = ''
-        startTime = time.time()
-        while 1:
-            if data and time.time() - startTime > waitFor:
-                break
-            elif time.time() - startTime > (waitFor * 2):
-                break
-        try:
-            data = socket.recv(fileSize)
-            if data:
-                fileContents.append(data)
-                begin = time.time()
-            else:
-                time.sleep(0.1)
-        except:
+        self.fileResponseMap = {}
+        msg = self._recvCommandMessage()
+        self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
+        chunkCounts = msg.filetask.chunk_counts
+        chunkCounts = chunkCounts - 1
+        for x in range(chunkCounts):
+            msg = self._recvCommandMessage()
+            self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
             pass
-            self.logger.logInfoMessage("Client: file contents received: " + str(fileContents))
-            print("Client: file contents received: " + str(fileContents))
-            return ''.join(fileContents)
+
+        with open(filepath + "/" + "new" + msg.filetask.filename, "w") as file:
+            for x in range(chunkCounts + 1):
+                file.write(self.fileResponseMap[x + 1])
+            file.close()
+            pass
+        return "created file at: " + filepath + " with name: " + filename
+
+    def receiveMessageFromServer(self, socket, n):
+        buf = ''
+        while n > 0:
+            data = socket.recv(n)
+            if data == '':
+                raise RuntimeError('data not received!')
+            buf += data
+            n -= len(data)
+        self.logger.logInfoMessage("Client: file contents received: " + str(buf))
+        return buf

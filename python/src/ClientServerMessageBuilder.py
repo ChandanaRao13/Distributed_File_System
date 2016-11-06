@@ -1,5 +1,5 @@
 from Logger import Logger
-import	pipe_pb2
+import  pipe_pb2
 
 class ClientServerMessageBuilder:
     def __init__(self):
@@ -18,10 +18,12 @@ class ClientServerMessageBuilder:
         newCommandMsg = pipe_pb2.CommandMessage()
         newCommandMsg.header.node_id = nodeId
         newCommandMsg.header.time = time
+
+        newCommandMsg.message = filename
         newCommandMsg.filetask.file_task_type = pipe_pb2.FileTask.FileTaskType.Value("READ")
         newCommandMsg.filetask.sender = myIp
         newCommandMsg.filetask.filename = filename
-        newCommandMsg.message = filename
+
         newCommandMsgString = newCommandMsg.SerializeToString()
         self.logger.logInfoMessage("Client: Created a new read work message: " + newCommandMsgString)
         return newCommandMsgString
@@ -30,6 +32,7 @@ class ClientServerMessageBuilder:
         newCommandMsg = pipe_pb2.CommandMessage()
         newCommandMsg.header.node_id = nodeId
         newCommandMsg.header.time = time
+
         newCommandMsg.message = filename
         newCommandMsg.filetask.file_task_type = pipe_pb2.FileTask.FileTaskType.Value("WRITE")
         newCommandMsg.filetask.sender = myIp
@@ -37,6 +40,7 @@ class ClientServerMessageBuilder:
         newCommandMsg.filetask.chunk_no = chunkId
         newCommandMsg.filetask.chunk_counts = chunkCount
         newCommandMsg.filetask.chunk = fileChunk
+
         newCommandMsgString = newCommandMsg.SerializeToString()
         self.logger.logInfoMessage("Client: Created a new read write message: " + newCommandMsgString)
         return newCommandMsgString
