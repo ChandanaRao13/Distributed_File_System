@@ -34,6 +34,7 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 		if(taskType == FileTaskType.READ){
 			int chunkCount = DatabaseHandler.getFilesChunkCount(request.getCommandMessage().getFiletask().getFilename());
 			String clientId = EdgeMonitor.clientInfoMap(request);
+			request.setChunkCount(chunkCount);
 			NodeLoad node = LoadQueueManager.getInstance().getMininumNodeLoadInfo(chunkCount);
 			// convert the read request to work messages of total number of chunks
 			for(int index = 0; index < chunkCount; index++) {

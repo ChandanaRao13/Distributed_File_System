@@ -72,7 +72,18 @@ public class InboundReadQueueThread extends Thread {
 							//It is same node which got request from client 
 							InternalChannelNode clientInfo = EdgeMonitor.getClientChannelFromMap(workMessage.getRequestId());
 							Channel clientChannel =  clientInfo.getChannel();
-
+							
+							clientInfo.decrementChunkCount();
+							if(clientInfo.getChunkCount() == 0){
+								logger.info("Removing client info from the client channel Map");
+								try {
+									EdgeMonitor.removeClientChannelInfoFromMap(workMessage.getRequestId());
+								} catch (Exception e) {
+									logger.info("Client channel is not removed successfully from the client channel Map");
+									e.printStackTrace();
+								}
+							}
+							
 							CommandMessage outputMsg = MessageGenerator.getInstance().forwardChunkToClient(msg);
 							QueueManager.getInstance().enqueueOutboundCommand(outputMsg, clientChannel);
 						}

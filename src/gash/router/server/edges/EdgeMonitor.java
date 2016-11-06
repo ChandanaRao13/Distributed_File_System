@@ -55,7 +55,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	protected static Logger logger = LoggerFactory.getLogger("edge monitor");
 	public static ConcurrentHashMap<Integer, Channel> node2ChannelMap = new ConcurrentHashMap<Integer, Channel>();
 	public static HashSet<Integer> loadNodeSet = new HashSet<Integer>();
-	public static ConcurrentHashMap<String, InternalChannelNode> clientChannelMap = new ConcurrentHashMap<String, InternalChannelNode>();
+	public static ConcurrentHashMap<String, InternalChannelNode> clientChannelMapInfo = new ConcurrentHashMap<String, InternalChannelNode>();
 	private static Queue<Integer> workStealQueue = new LinkedBlockingQueue<Integer>();
 	private EdgeList outboundEdges;
 	private EdgeList inboundEdges;
@@ -303,20 +303,28 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	public static String clientInfoMap(InternalChannelNode commandMessageNode) {
 		UUID uuid = UUID.randomUUID();
 		String clientUidString = uuid.toString();
-		clientChannelMap.put(clientUidString, commandMessageNode);
+		clientChannelMapInfo.put(clientUidString, commandMessageNode);
 		return clientUidString;
 	}
 
 	public static synchronized InternalChannelNode getClientChannelFromMap(String clientId) {
 
-		if (clientChannelMap.containsKey(clientId) && clientChannelMap.get(clientId) != null) {
-			return clientChannelMap.get(clientId);
+		if (clientChannelMapInfo.containsKey(clientId) && clientChannelMapInfo.get(clientId) != null) {
+			return clientChannelMapInfo.get(clientId);
 		} else {
 			logger.info("Unable to find the channel for client id : " + clientId);
 			return null;
 		}
 	}
-	
+
+	public static synchronized void removeClientChannelInfoFromMap(String clientId) throws Exception {
+		if (clientChannelMapInfo.containsKey(clientId) && clientChannelMapInfo.get(clientId) != null) {
+			clientChannelMapInfo.remove(clientId);
+		} else {
+			logger.error("Unable to fetch channel for client with id " + clientId);
+		}
+	}
+
 	public static Channel fetchChannelToStealReadWork() {
 		Channel channel = null;
 		//logger.info("work Steal Queue is empty: " + workStealQueue.isEmpty());

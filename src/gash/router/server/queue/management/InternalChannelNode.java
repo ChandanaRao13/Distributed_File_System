@@ -10,6 +10,8 @@ public class InternalChannelNode {
 	private WorkMessage workMessage;
 	private Channel channel;
 	private boolean isWork;
+	private int chunkCount =0; 
+	
 	
 	public InternalChannelNode(CommandMessage commandMessage, Channel channel){
 		this.commandMessage = commandMessage; 
@@ -73,5 +75,28 @@ public class InternalChannelNode {
 	 */
 	public void setWork(boolean isWork) {
 		this.isWork = isWork;
+	}
+	
+	/**
+	 * @return the chunkCount
+	 */
+	public int getChunkCount() {
+		return chunkCount;
+	}
+
+	/**
+	 * @param chunkCount the chunkCount to set
+	 */
+	public void setChunkCount(int chunkCount) {
+		this.chunkCount = chunkCount;
+	}
+	
+	
+	public void decrementChunkCount(){
+		if(chunkCount <= 0){
+			return ;
+		} else {
+			chunkCount--;
+		}
 	}
 }
