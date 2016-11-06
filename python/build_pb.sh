@@ -12,7 +12,7 @@
 
 #project_base="/Users/gash/workspace/messaging/core-netty/python"
 
-project_base="/home/vaishampayan/temp2/Distributed_File_System"
+project_base="$( cd .. "(cd "$( dirname "${BASH_SOURCE[0]}" )")" && pwd )"
 
 #rm ${project_base}/src/*
 
