@@ -47,4 +47,18 @@ public class DataReplicationManager {
 
 		}
 	}
+	
+	public void broadcastDeletion(CommandMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateDeletionRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
 }

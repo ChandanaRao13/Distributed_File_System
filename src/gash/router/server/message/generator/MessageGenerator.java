@@ -45,20 +45,16 @@ public class MessageGenerator {
 		MessageGenerator.conf = routingConf;
 	}
 	
-	public CommandMessage generateClientResponseMsg(boolean isSuccess){
+	public CommandMessage generateClientResponseMsg(String msg){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());
 		hb.setTime(System.currentTimeMillis());
 
 		CommandMessage.Builder rb = CommandMessage.newBuilder();
 		rb.setHeader(hb);
-		if(isSuccess)
-			rb.setMessage("File is stored in the database");
-		else
-			rb.setMessage("File is not stored in the database, please retry");
+		rb.setMessage(msg);
 
 		return rb.build();
-
 	}
 	
 	public WorkMessage generateReplicationRequestMsg(CommandMessage message, Integer nodeId){
@@ -80,6 +76,23 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
+	
+	public WorkMessage generateDeletionRequestMsg(CommandMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.DELETE_REQUEST);
+		return wb.build();
+	}
+
 	public WorkMessage generateReadRequestMessage(CommandMessage commandMessage, String clientID, int nodeId){
 		Header.Builder hb = Header.newBuilder();
 
@@ -175,6 +188,23 @@ public class MessageGenerator {
 		return wb.build();
 	}
 
+	public WorkMessage generateDeletionAcknowledgementMessage(WorkMessage message){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setWorktype(Worktype.DELETE_RESPONSE);
+		wb.setSecret(1234);
+		
+		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setFilename(message.getFiletask().getFilename());
+		ft.setFileTaskType(FileTaskType.WRITE);
+		wb.setFiletask(ft.build());
+		return wb.build();
+	}
+	
 	public WorkMessage generateWorkReadStealMessage() {
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());

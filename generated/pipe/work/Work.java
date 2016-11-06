@@ -2649,6 +2649,14 @@ public final class Work {
        * <code>REPLICATE_RESPONSE = 4;</code>
        */
       REPLICATE_RESPONSE(3, 4),
+      /**
+       * <code>DELETE_REQUEST = 5;</code>
+       */
+      DELETE_REQUEST(4, 5),
+      /**
+       * <code>DELETE_RESPONSE = 6;</code>
+       */
+      DELETE_RESPONSE(5, 6),
       ;
 
       /**
@@ -2667,6 +2675,14 @@ public final class Work {
        * <code>REPLICATE_RESPONSE = 4;</code>
        */
       public static final int REPLICATE_RESPONSE_VALUE = 4;
+      /**
+       * <code>DELETE_REQUEST = 5;</code>
+       */
+      public static final int DELETE_REQUEST_VALUE = 5;
+      /**
+       * <code>DELETE_RESPONSE = 6;</code>
+       */
+      public static final int DELETE_RESPONSE_VALUE = 6;
 
 
       public final int getNumber() { return value; }
@@ -2677,6 +2693,8 @@ public final class Work {
           case 2: return READ_REQUEST;
           case 3: return READ_REQUEST_RESPONSE;
           case 4: return REPLICATE_RESPONSE;
+          case 5: return DELETE_REQUEST;
+          case 6: return DELETE_RESPONSE;
           default: return null;
         }
       }
@@ -5315,7 +5333,7 @@ public final class Work {
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
       "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"I\n\005Steal\022\036\n\t" +
       "readSteal\030\001 \001(\0162\013.READ_STEAL\022 \n\nwriteSte" +
-      "al\030\003 \001(\0162\014.WRITE_STEAL\"\233\004\n\013WorkMessage\022\027" +
+      "al\030\003 \001(\0162\014.WRITE_STEAL\"\305\004\n\013WorkMessage\022\027" +
       "\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002 \002(\003\022" +
       "\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(\0162\025.W" +
       "orkMessage.Worktype\022\025\n\005steal\030\n \001(\0132\006.Ste",
@@ -5326,13 +5344,14 @@ public final class Work {
       "usH\000\022+\n\013raftMessage\030\t \001(\0132\024.RaftElection" +
       "MessageH\000\022)\n\016newNodeMessage\030\013 \001(\0132\017.NewN" +
       "odeMessageH\000\022#\n\013allNodeInfo\030\014 \001(\0132\014.AllN" +
-      "odeInfoH\000\"f\n\010Worktype\022\025\n\021REPLICATE_REQUE" +
-      "ST\020\001\022\020\n\014READ_REQUEST\020\002\022\031\n\025READ_REQUEST_R" +
-      "ESPONSE\020\003\022\026\n\022REPLICATE_RESPONSE\020\004B\t\n\007pay",
-      "load*=\n\nREAD_STEAL\022\026\n\022READ_STEAL_REQUEST" +
-      "\020\001\022\027\n\023READ_STEAL_RESPONSE\020\002*@\n\013WRITE_STE" +
-      "AL\022\027\n\023WRITE_STEAL_REQUEST\020\001\022\030\n\024WRITE_STE" +
-      "AL_RESPONSE\020\002B\r\n\tpipe.workH\001"
+      "odeInfoH\000\"\217\001\n\010Worktype\022\025\n\021REPLICATE_REQU" +
+      "EST\020\001\022\020\n\014READ_REQUEST\020\002\022\031\n\025READ_REQUEST_" +
+      "RESPONSE\020\003\022\026\n\022REPLICATE_RESPONSE\020\004\022\022\n\016DE",
+      "LETE_REQUEST\020\005\022\023\n\017DELETE_RESPONSE\020\006B\t\n\007p" +
+      "ayload*=\n\nREAD_STEAL\022\026\n\022READ_STEAL_REQUE" +
+      "ST\020\001\022\027\n\023READ_STEAL_RESPONSE\020\002*@\n\013WRITE_S" +
+      "TEAL\022\027\n\023WRITE_STEAL_REQUEST\020\001\022\030\n\024WRITE_S" +
+      "TEAL_RESPONSE\020\002B\r\n\tpipe.workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
