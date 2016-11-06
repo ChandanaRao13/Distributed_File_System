@@ -15,14 +15,14 @@ message FileTask {
     }
     required FileTaskType file_task_type = 4;
     optional int32 chunk_counts = 5;
-    required string sender = 6;
+    optional string sender = 6;
 }
 
 message CommandMessage {
    required Header header = 1;
 
    optional FileTask filetask = 2;
-    oneof payload {
+   oneof payload {
       // a client (external) sanity check for testing
       bytes file = 6;
 

@@ -121,6 +121,7 @@ public class MessageGenerator {
 		fb.setFilename(commandMessage.getFiletask().getFilename());
 		fb.setChunkNo(chunkId);
 		fb.setFileTaskType(FileTaskType.READ);
+		fb.setSender(commandMessage.getFiletask().getSender());
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb.build());
 		wb.setFiletask(fb.build());
@@ -151,6 +152,7 @@ public class MessageGenerator {
 		ft.setChunk(line);
 		ft.setChunkCounts(totalChunks);
 		ft.setFileTaskType(FileTaskType.READ);
+		ft.setSender(filetask.getSender());
 		//ft.setFilename(ft.getFilename());
 		wb.setFiletask(ft.build());
 
@@ -184,6 +186,7 @@ public class MessageGenerator {
 		FileTask.Builder ft = FileTask.newBuilder();
 		ft.setFilename(message.getFiletask().getFilename());
 		ft.setFileTaskType(FileTaskType.WRITE);
+		ft.setSender(message.getFiletask().getSender());
 		wb.setFiletask(ft.build());
 		return wb.build();
 	}
@@ -201,6 +204,7 @@ public class MessageGenerator {
 		FileTask.Builder ft = FileTask.newBuilder();
 		ft.setFilename(message.getFiletask().getFilename());
 		ft.setFileTaskType(FileTaskType.WRITE);
+		ft.setSender(message.getFiletask().getSender());
 		wb.setFiletask(ft.build());
 		return wb.build();
 	}

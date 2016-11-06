@@ -71,7 +71,7 @@ public class DemoApp implements CommListener {
 	}
 	@Override
 	public void onMessage(CommandMessage msg) {
-		System.out.println("---> " + msg);	
+	//	System.out.println("---> " + msg);	
 	//	ByteString content = msg.getFiletask().getChunk();
 	//	System.out.println(new String(content.toByteArray()));
 		

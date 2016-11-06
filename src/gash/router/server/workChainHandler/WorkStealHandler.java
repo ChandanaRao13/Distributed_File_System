@@ -32,7 +32,7 @@ public class WorkStealHandler implements IWorkChainHandler{
 			if(steal.hasReadSteal()) {
 				//logger.info("Got Steal message");
 				if(steal.getReadSteal() == READ_STEAL.READ_STEAL_REQUEST) {
-					logger.info("Received Read Steal read request message from node: " + workMessage.getHeader().getNodeId());
+					//logger.info("Received Read Steal read request message from node: " + workMessage.getHeader().getNodeId());
 					InternalChannelNode internalNode;
 					try {
 						internalNode = QueueManager.getInstance().dequeueInboundRead();
@@ -49,7 +49,7 @@ public class WorkStealHandler implements IWorkChainHandler{
 					}
 				}
 				else if (steal.getReadSteal() == READ_STEAL.READ_STEAL_RESPONSE) {
-					logger.info("Received Read Steal response message from node: " + workMessage.getHeader().getNodeId());
+					//logger.info("Received Read Steal response message from node: " + workMessage.getHeader().getNodeId());
 					QueueManager.getInstance().enqueueInboundRead(workMessage, channel);
 				}
 			}

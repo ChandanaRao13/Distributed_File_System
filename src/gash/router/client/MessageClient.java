@@ -109,7 +109,7 @@ public class MessageClient {
 		tb.setChunkCounts(numOfChunks); // Num of chunks
 		tb.setChunkNo(chunkId); // chunk id
 		tb.setFileTaskType(FileTask.FileTaskType.WRITE);
-
+		tb.setSender("127.0.0.1");
 		tb.setFilename(filename);
 		tb.setChunk(bs);
 
@@ -142,7 +142,7 @@ public class MessageClient {
 		task.setFilename(filename);
 		task.setFileTaskType(FileTaskType.READ);		
 		rb.setMessage(filename);
-		
+		task.setSender("127.0.0.1");
 		rb.setFiletask(task.build());
 		
 		try {
@@ -168,6 +168,7 @@ public class MessageClient {
 		task.setFilename(filename);
 		task.setFileTaskType(FileTaskType.DELETE);		
 		rb.setMessage(filename);
+		task.setSender("127.0.0.1");
 		
 		rb.setFiletask(task.build());
 		
