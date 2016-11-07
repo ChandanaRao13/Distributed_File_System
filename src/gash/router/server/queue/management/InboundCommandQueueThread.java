@@ -2,6 +2,7 @@ package gash.router.server.queue.management;
 
 import gash.router.server.commandRouterHandlers.DeleteRouterHandler;
 import gash.router.server.commandRouterHandlers.ReadRouterHandler;
+import gash.router.server.commandRouterHandlers.UpdateRouterHandler;
 import gash.router.server.commandRouterHandlers.WriteRouterHandler;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ public class InboundCommandQueueThread extends Thread {
 	private WriteRouterHandler writerRouter;
 	private ReadRouterHandler readRouter;
 	private DeleteRouterHandler deleteRouter;
+	private UpdateRouterHandler updateRouter;
 	protected static Logger logger = LoggerFactory.getLogger(InboundCommandQueueThread.class);
 
 	public InboundCommandQueueThread(QueueManager manager) {
@@ -25,8 +27,10 @@ public class InboundCommandQueueThread extends Thread {
 		writerRouter = new WriteRouterHandler();
 		readRouter = new ReadRouterHandler();
 		deleteRouter = new DeleteRouterHandler();
+		updateRouter = new UpdateRouterHandler();
 		readRouter.setNextChainHandler(writerRouter);
 		writerRouter.setNextChainHandler(deleteRouter);
+		deleteRouter.setNextChainHandler(updateRouter);
 	}
 
 	@Override

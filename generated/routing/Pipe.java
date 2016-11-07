@@ -222,6 +222,10 @@ public final class Pipe {
        * <code>DELETE = 3;</code>
        */
       DELETE(2, 3),
+      /**
+       * <code>UPDATE = 4;</code>
+       */
+      UPDATE(3, 4),
       ;
 
       /**
@@ -236,6 +240,10 @@ public final class Pipe {
        * <code>DELETE = 3;</code>
        */
       public static final int DELETE_VALUE = 3;
+      /**
+       * <code>UPDATE = 4;</code>
+       */
+      public static final int UPDATE_VALUE = 4;
 
 
       public final int getNumber() { return value; }
@@ -245,6 +253,7 @@ public final class Pipe {
           case 1: return READ;
           case 2: return WRITE;
           case 3: return DELETE;
+          case 4: return UPDATE;
           default: return null;
         }
       }
@@ -2464,16 +2473,17 @@ public final class Pipe {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\npipe.proto\032\014common.proto\"\304\001\n\010FileTask\022" +
+      "\n\npipe.proto\032\014common.proto\"\320\001\n\010FileTask\022" +
       "\020\n\010chunk_no\030\001 \001(\005\022\r\n\005chunk\030\002 \001(\014\022\020\n\010file" +
       "name\030\003 \002(\t\022.\n\016file_task_type\030\004 \002(\0162\026.Fil" +
       "eTask.FileTaskType\022\024\n\014chunk_counts\030\005 \001(\005" +
-      "\022\016\n\006sender\030\006 \001(\t\"/\n\014FileTaskType\022\010\n\004READ" +
-      "\020\001\022\t\n\005WRITE\020\002\022\n\n\006DELETE\020\003\"\235\001\n\016CommandMes" +
-      "sage\022\027\n\006header\030\001 \002(\0132\007.Header\022\033\n\010filetas" +
-      "k\030\002 \001(\0132\t.FileTask\022\016\n\004file\030\006 \001(\014H\000\022\016\n\004pi" +
-      "ng\030\003 \001(\010H\000\022\021\n\007message\030\004 \001(\tH\000\022\027\n\003err\030\005 \001" +
-      "(\0132\010.FailureH\000B\t\n\007payloadB\013\n\007routingH\001"
+      "\022\016\n\006sender\030\006 \001(\t\";\n\014FileTaskType\022\010\n\004READ" +
+      "\020\001\022\t\n\005WRITE\020\002\022\n\n\006DELETE\020\003\022\n\n\006UPDATE\020\004\"\235\001" +
+      "\n\016CommandMessage\022\027\n\006header\030\001 \002(\0132\007.Heade" +
+      "r\022\033\n\010filetask\030\002 \001(\0132\t.FileTask\022\016\n\004file\030\006" +
+      " \001(\014H\000\022\016\n\004ping\030\003 \001(\010H\000\022\021\n\007message\030\004 \001(\tH" +
+      "\000\022\027\n\003err\030\005 \001(\0132\010.FailureH\000B\t\n\007payloadB\013\n",
+      "\007routingH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

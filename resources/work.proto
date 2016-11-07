@@ -49,7 +49,10 @@ message WorkMessage {
         REPLICATE_RESPONSE = 4;
         DELETE_REQUEST= 5;
         DELETE_RESPONSE = 6;
-
+        UPDATE_REPLICATE_REQUEST = 7;
+        UPDATE_DELETE_REQUEST = 8;
+        UPDATE_REPLICATE_RESPONSE = 9;
+        UPDATE_DELETE_RESPONSE = 10;
     }
     optional Worktype worktype = 13;
     

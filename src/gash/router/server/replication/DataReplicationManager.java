@@ -15,11 +15,9 @@ import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
 
 public class DataReplicationManager {
-
 	protected static Logger logger = LoggerFactory.getLogger("DataReplicationManager");
-
 	protected static AtomicReference<DataReplicationManager> instance = new AtomicReference<DataReplicationManager>();
-
+	public static ConcurrentHashMap<String, UpdateFileInfo> fileUpdateTracker = new ConcurrentHashMap<String, UpdateFileInfo>();
 	public static DataReplicationManager initDataReplicationManager() {
 		instance.compareAndSet(null, new DataReplicationManager());
 		System.out.println(" --- Initializing Data Replication Manager --- ");
@@ -61,4 +59,33 @@ public class DataReplicationManager {
 
 		}
 	}
+	
+	public void broadcastUpdateReplication(CommandMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateReplicationRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
+	
+	public void broadcastUpdateDeletion(CommandMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateDeletionRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
+	
 }

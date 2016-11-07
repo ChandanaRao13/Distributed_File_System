@@ -49,7 +49,7 @@ public class DeleteRouterHandler implements ICommandRouterHandlers {
 				logger.error("File requested to delete is not available in the database");
 			}
 		} else {
-			logger.error("Handles only client read and write requests ");
+			nextInChain.handleFileTask(request);
 		}
 		
 	}

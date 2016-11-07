@@ -129,6 +129,37 @@ public class MessageClient {
 		}
 	}
 
+	public void updateFile(ByteString bs, String filename, int numOfChunks, int chunkId) {
+		// construct the message to send
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(999);
+		hb.setTime(System.currentTimeMillis());
+		hb.setDestination(-1);
+
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setChunkCounts(numOfChunks); // Num of chunks
+		tb.setChunkNo(chunkId); // chunk id
+		tb.setFileTaskType(FileTask.FileTaskType.UPDATE);
+		tb.setSender("127.0.0.1");
+		tb.setFilename(filename);
+		tb.setChunk(bs);
+
+		CommandMessage.Builder rb = CommandMessage.newBuilder();
+		rb.setHeader(hb);
+		rb.setFiletask(tb);
+		rb.setMessage(filename);
+
+		try {
+			// direct no queue
+			// CommConnection.getInstance().write(rb.build());
+
+			// using queue
+			CommConnection.getInstance().enqueue(rb.build());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void sendReadFileRequest(String filename) throws UnknownHostException{
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(999);

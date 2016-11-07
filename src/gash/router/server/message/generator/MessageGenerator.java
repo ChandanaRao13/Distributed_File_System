@@ -76,6 +76,24 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
+	public WorkMessage generateUpdateReplicationRequestMsg(CommandMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
+		tb.setChunk(message.getFiletask().getChunk());
+		tb.setChunkNo(message.getFiletask().getChunkNo());
+
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.UPDATE_REPLICATE_REQUEST);
+		return wb.build();
+	}
 	
 	public WorkMessage generateDeletionRequestMsg(CommandMessage message, Integer nodeId){
 		Header.Builder hb = Header.newBuilder();
@@ -90,6 +108,22 @@ public class MessageGenerator {
 		wb.setFiletask(tb);
 
 		wb.setWorktype(Worktype.DELETE_REQUEST);
+		return wb.build();
+	}
+	
+	public WorkMessage generateUpdateDeletionRequestMsg(CommandMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.UPDATE_DELETE_REQUEST);
 		return wb.build();
 	}
 
@@ -199,6 +233,42 @@ public class MessageGenerator {
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb.build());
 		wb.setWorktype(Worktype.DELETE_RESPONSE);
+		wb.setSecret(1234);
+		
+		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setFilename(message.getFiletask().getFilename());
+		ft.setFileTaskType(FileTaskType.WRITE);
+		ft.setSender(message.getFiletask().getSender());
+		wb.setFiletask(ft.build());
+		return wb.build();
+	}
+	
+	public WorkMessage generateUpdateDeletionAcknowledgementMessage(WorkMessage message){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setWorktype(Worktype.UPDATE_DELETE_RESPONSE);
+		wb.setSecret(1234);
+		
+		FileTask.Builder ft = FileTask.newBuilder();
+		ft.setFilename(message.getFiletask().getFilename());
+		ft.setFileTaskType(FileTaskType.WRITE);
+		ft.setSender(message.getFiletask().getSender());
+		wb.setFiletask(ft.build());
+		return wb.build();
+	}
+
+	public WorkMessage generateUpdateReplicationAcknowledgementMessage(WorkMessage message){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setWorktype(Worktype.UPDATE_REPLICATE_RESPONSE);
 		wb.setSecret(1234);
 		
 		FileTask.Builder ft = FileTask.newBuilder();
