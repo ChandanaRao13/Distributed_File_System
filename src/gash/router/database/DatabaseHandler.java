@@ -176,8 +176,8 @@ public class DatabaseHandler {
 		databaseConnectionManager.releaseConnection(connection);
 
 		if (dataFromDB != null) {
-			List<String> result = dataFromDB.toList();
-			if(result.size() != 0){
+			int result = dataFromDB.bufferedSize();
+			if(result != 0){
 				List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 				for (Object record : dataFromDB) {
 					FluffyFile fluffyFile = new FluffyFile();
@@ -222,8 +222,8 @@ public class DatabaseHandler {
 		databaseConnectionManager.releaseConnection(connection);
 		List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 		if (dataFromDB != null) {
-			List<String> result = dataFromDB.toList();
-			if(result.size() != 0){
+			int result = dataFromDB.bufferedSize();
+			if(result != 0){
 				for (Object record : dataFromDB) {
 					FluffyFile fluffyFile = new FluffyFile();
 					HashMap<String, Object> fileContentMap = (HashMap<String, Object>) record;
@@ -272,8 +272,8 @@ public class DatabaseHandler {
 		databaseConnectionManager.releaseConnection(connection);
 		if (dataFromDB != null) {
 			List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
-			List<String> result = dataFromDB.toList();
-			if(result.size() != 0){
+			int result = dataFromDB.bufferedSize();
+			if(result != 0){
 				for (Object record : dataFromDB) {
 					System.out.println(record);
 					HashMap<String, Object> fileContentMap = (HashMap<String, Object>) record;
