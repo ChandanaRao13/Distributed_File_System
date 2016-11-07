@@ -44,7 +44,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, channel);
 						} else {
 							logger.info("Data is not replicated in the slave node, enqueuing the message back into the queue");
-							QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+							QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
 						} 
 					} else if (workMessage.getWorktype() == Worktype.DELETE_REQUEST){
 						if(DatabaseHandler.deleteFile(ft.getFilename())){
@@ -52,7 +52,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, internalNode.getChannel());
 						} else {
 							logger.info("Data is not replicated in the slave node, enqueuing the message back into the queue");
-							QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+							QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
 						} 					
 					} else if (workMessage.getWorktype() == Worktype.UPDATE_DELETE_REQUEST){
 						String filename = workMessage.getFiletask().getFilename();
@@ -67,7 +67,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 								QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, channel);
 							} else {
 								logger.info("Data of the updated file is not deleted in the slave node, enqueuing the message back into the queue");
-								QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);				
+								QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);				
 							} 
 						} 
 					} else if (workMessage.getWorktype() == Worktype.UPDATE_REPLICATE_REQUEST){
@@ -75,7 +75,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 						FileTask fileTask = workMessage.getFiletask();
 						if(!DataReplicationManager.fileUpdateTracker.containsKey(filename)){
 							logger.info("Update replication cannot be performed before recieving delete request.... enqueuing the message back into the queue");
-							QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);		
+							QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);		
 						} else {
 							UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
 							
@@ -87,7 +87,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 									
 								} else {
 									logger.info("Update replication is not successful.... enqueuing the message back into the queue");
-									QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);	
+									QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);	
 								}
 							
 							if(fileInfo.getChunksProcessed() != 0) {
