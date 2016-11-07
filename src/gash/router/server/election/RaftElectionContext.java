@@ -50,6 +50,7 @@ public class RaftElectionContext implements Runnable {
 		leader.setElectionContext(this);
 
 		rand = new Random();
+		
 		heartbeatdt = conf.getHeartbeatDt();
 		generateTimeOut();
 		timeOut += 5000;
