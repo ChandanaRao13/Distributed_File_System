@@ -158,6 +158,9 @@ public class NewNodeChainHandlerV2 implements IWorkChainHandler {
 
 			}
 			else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.I_AM_THE_LEADER){
+				
+				System.out.println("My friend is the leader: ");
+				
 				//Add to you OB edges
 				//once channel gets created in Emon .. send I_am_new_node msg to Leader
 				int nodeId = workMessage.getNewNodeMessage().getNodeInfo().getNodeId();
@@ -168,17 +171,19 @@ public class NewNodeChainHandlerV2 implements IWorkChainHandler {
 
 				int portNo = workMessage.getNewNodeMessage().getNodeInfo().getPortNo();
 
-				Channel ch = connectToChannel(host,portNo,state);
-
-				state.getEmon().createOutboundIfNew(nodeId,host,portNo);				
-				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setChannel(ch);
-				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setActive(true);
+				System.out.println("my friend i.e leader: " + nodeId + " host: " + host + " port: " + portNo);
 
 				WorkMessage amNewNodeMsg = MessageGenerator.getInstance().generateIamNewNodeMsg();
-				if(ch != null && ch.isOpen())
-					ch.writeAndFlush(amNewNodeMsg);
+				if(channel != null && channel.isOpen()) {
+					channel.writeAndFlush(amNewNodeMsg);
+					System.out.println("send message to friend for replicatioon");
+				}
 				else 
 					System.out.println("Leader Channel got closed:while sending i am new node");
+				
+				state.getEmon().createOutboundIfNew(nodeId,host,portNo);				
+				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setChannel(channel);
+				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setActive(true);
 			}
 			else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.LEADER_INFO){
 				//Add to you OB edges
