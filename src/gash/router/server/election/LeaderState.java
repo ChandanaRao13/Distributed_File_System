@@ -12,6 +12,7 @@ public class LeaderState implements IRaftNodeState {
 	public void doAction() {
 		try{
 			WorkMessage leaderHeartBeatMsg = RaftMessageBuilder.buildLeaderResponseMessage(electionCtx.getConf().getNodeId(), electionCtx.getTerm());
+			electionCtx.setLeaderId(electionCtx.getConf().getNodeId());
 			electionCtx.broadcast(leaderHeartBeatMsg);	
 			//System.out.println("Sending heartbeat");
 			Thread.sleep(electionCtx.getConf().getHeartbeatDt()/4);

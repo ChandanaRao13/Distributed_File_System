@@ -374,6 +374,27 @@ public class MessageGenerator {
 
 	}
 
+	public WorkMessage generateIamTheLeader(int myId, int myPort) {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		NodeInfo.Builder leaderNodeInfo = NodeInfo.newBuilder();
+		leaderNodeInfo.setNodeId(myId);
+		leaderNodeInfo.setPortNo(myPort);
+
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.I_AM_THE_LEADER);
+		newNodeMsg.setNodeInfo(leaderNodeInfo);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setSecret(1234);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+
 	public WorkMessage generateIamNewNodeMsg() {
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());

@@ -69,7 +69,7 @@ public class FollowerState implements IRaftNodeState {
 
 	@Override
 	public void getHearbeatFromLeader(WorkMessage msg) {
-		//System.out.println("Received HB");
+		System.out.println("Received HB: " + msg.getHeader().getNodeId());
 		if(msg.getRaftMessage().getTerm() >= electionCtx.getTerm()){
 			voted = false;
 			electionCtx.generateTimeOut();

@@ -41,6 +41,10 @@ public final class Election {
      * <code>HEY_THERE = 7;</code>
      */
     HEY_THERE(6, 7),
+    /**
+     * <code>I_AM_THE_LEADER = 8;</code>
+     */
+    I_AM_THE_LEADER(7, 8),
     ;
 
     /**
@@ -71,6 +75,10 @@ public final class Election {
      * <code>HEY_THERE = 7;</code>
      */
     public static final int HEY_THERE_VALUE = 7;
+    /**
+     * <code>I_AM_THE_LEADER = 8;</code>
+     */
+    public static final int I_AM_THE_LEADER_VALUE = 8;
 
 
     public final int getNumber() { return value; }
@@ -84,6 +92,7 @@ public final class Election {
         case 5: return LEADER_INFO;
         case 6: return ALL_NODE_INFO;
         case 7: return HEY_THERE;
+        case 8: return I_AM_THE_LEADER;
         default: return null;
       }
     }
@@ -5066,11 +5075,11 @@ public final class Election {
       "fo\030\006 \001(\0132\t.NodeInfoH\000B\t\n\007payload\"?\n\010Node",
       "Info\022\017\n\007node_id\030\001 \002(\005\022\021\n\thost_addr\030\002 \001(\t" +
       "\022\017\n\007port_no\030\003 \002(\005\"+\n\013AllNodeInfo\022\034\n\tnode" +
-      "sInfo\030\001 \003(\0132\t.NodeInfo*\204\001\n\016NewNodeMsgTyp" +
+      "sInfo\030\001 \003(\0132\t.NodeInfo*\231\001\n\016NewNodeMsgTyp" +
       "e\022\013\n\007MY_INFO\020\001\022\r\n\tI_AM_DONE\020\002\022\021\n\rI_AM_NE" +
       "W_NODE\020\003\022\020\n\014ARE_YOU_DONE\020\004\022\017\n\013LEADER_INF" +
-      "O\020\005\022\021\n\rALL_NODE_INFO\020\006\022\r\n\tHEY_THERE\020\007B\021\n" +
-      "\rpipe.electionH\001"
+      "O\020\005\022\021\n\rALL_NODE_INFO\020\006\022\r\n\tHEY_THERE\020\007\022\023\n" +
+      "\017I_AM_THE_LEADER\020\010B\021\n\rpipe.electionH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

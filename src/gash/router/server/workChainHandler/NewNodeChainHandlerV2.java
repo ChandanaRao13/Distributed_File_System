@@ -59,14 +59,27 @@ public class NewNodeChainHandlerV2 implements IWorkChainHandler {
 			System.out.println("Entered New Node chain handler");
 			if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.MY_INFO){
 				System.out.println("Entered New Node chain handler:::MY_INFO");
-				EdgeInfo edgeInfo = state.getEmon().getOutBoundEdgesList().getNode(state.getElectionCtx().getLeaderId());
-				String leaderHost = edgeInfo.getHost(); //get from EMON
-				int leaderPort = edgeInfo.getPort(); // get from EMON
-				WorkMessage leaderInfoMsg = MessageGenerator.getInstance().generateLeaderInfoMsg(state.getElectionCtx().getLeaderId(), leaderHost, leaderPort);
-				if(channel != null && channel.isOpen())
-					channel.writeAndFlush(leaderInfoMsg);
-				else 
-					System.out.println("New Node Channel got closed:while sending are you leader Info");
+				int leaderId = state.getElectionCtx().getLeaderId();
+				int myId = state.getConf().getNodeId();
+				int myPort = state.getConf().getWorkPort();
+				if(leaderId == myId) {
+					WorkMessage leaderInfoMsg = MessageGenerator.getInstance().generateIamTheLeader(myId, myPort);
+					if(channel != null && channel.isOpen())
+						channel.writeAndFlush(leaderInfoMsg);
+					else 
+						System.out.println("New Node Channel got closed:while sending are you leader Info, i.e my info");
+				}
+				else {
+					EdgeInfo edgeInfo = state.getEmon().getOutBoundEdgesList().getNode(state.getElectionCtx().getLeaderId());
+					String leaderHost = edgeInfo.getHost(); //get from EMON
+					int leaderPort = edgeInfo.getPort(); // get from EMON
+					System.out.println("Leader is: " + leaderHost + " port: " + leaderPort);
+					WorkMessage leaderInfoMsg = MessageGenerator.getInstance().generateLeaderInfoMsg(state.getElectionCtx().getLeaderId(), leaderHost, leaderPort);
+					if(channel != null && channel.isOpen())
+						channel.writeAndFlush(leaderInfoMsg);
+					else 
+						System.out.println("New Node Channel got closed:while sending are you leader Info");
+				}
 
 			} else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.I_AM_DONE){
 				// I am a leader as I have got a new Node message from new Node saying that it has completed 
@@ -143,7 +156,31 @@ public class NewNodeChainHandlerV2 implements IWorkChainHandler {
 					}
 				}
 
-			}else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.LEADER_INFO){
+			}
+			else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.I_AM_THE_LEADER){
+				//Add to you OB edges
+				//once channel gets created in Emon .. send I_am_new_node msg to Leader
+				int nodeId = workMessage.getNewNodeMessage().getNodeInfo().getNodeId();
+
+				SocketAddress remoteAddress = channel.remoteAddress();
+				InetSocketAddress addr = (InetSocketAddress) remoteAddress;
+				String host = addr.getAddress().toString();
+
+				int portNo = workMessage.getNewNodeMessage().getNodeInfo().getPortNo();
+
+				Channel ch = connectToChannel(host,portNo,state);
+
+				state.getEmon().createOutboundIfNew(nodeId,host,portNo);				
+				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setChannel(ch);
+				state.getEmon().getOutBoundEdgesList().getNode(nodeId).setActive(true);
+
+				WorkMessage amNewNodeMsg = MessageGenerator.getInstance().generateIamNewNodeMsg();
+				if(ch != null && ch.isOpen())
+					ch.writeAndFlush(amNewNodeMsg);
+				else 
+					System.out.println("Leader Channel got closed:while sending i am new node");
+			}
+			else if(workMessage.getNewNodeMessage().getMsgType() == NewNodeMsgType.LEADER_INFO){
 				//Add to you OB edges
 				//once channel gets created in Emon .. send I_am_new_node msg to Leader
 				int nodeId = workMessage.getNewNodeMessage().getNodeInfo().getNodeId();

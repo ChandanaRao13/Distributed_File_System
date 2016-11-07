@@ -60,8 +60,8 @@ public class RaftElectionContext implements Runnable {
 
 	protected void broadcast(WorkMessage msg){		
 		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){	
-			System.out.println("Sending HB::"+ei.getRef());
 			if(ei.isActive() && ei.getChannel()!=null){
+				System.out.println("Sending HB::"+ei.getRef());
 				ei.getChannel().writeAndFlush(msg);
 			}
 		}

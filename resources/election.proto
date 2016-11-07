@@ -52,6 +52,7 @@ enum NewNodeMsgType {
 	LEADER_INFO = 5;
 	ALL_NODE_INFO = 6;
 	HEY_THERE = 7;
+	I_AM_THE_LEADER = 8;
 }
 
 //message which sends node information
