@@ -1,7 +1,6 @@
 package gash.router.server.message.generator;
 
-import gash.router.container.RoutingConf;
-
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
@@ -9,7 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 
+import gash.router.container.RoutingConf;
+import gash.router.database.datatypes.FluffyFile;
 import pipe.common.Common.Header;
+import pipe.election.Election.AllNodeInfo;
+import pipe.election.Election.NewNodeMessage;
+import pipe.election.Election.NewNodeMsgType;
+import pipe.election.Election.NodeInfo;
 import pipe.work.Work.READ_STEAL;
 import pipe.work.Work.Steal;
 import pipe.work.Work.WorkMessage;
@@ -40,11 +45,11 @@ public class MessageGenerator {
 		}
 		return messageGenerator;
 	}
-	
+
 	public static void setRoutingConf(RoutingConf routingConf) {
 		MessageGenerator.conf = routingConf;
 	}
-	
+
 	public CommandMessage generateClientResponseMsg(String msg){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());
@@ -56,7 +61,7 @@ public class MessageGenerator {
 
 		return rb.build();
 	}
-	
+
 	public WorkMessage generateReplicationRequestMsg(CommandMessage message, Integer nodeId){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(nodeId);
@@ -65,7 +70,7 @@ public class MessageGenerator {
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb);
 		wb.setSecret(1234);
-		
+
 		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
 		tb.setChunk(message.getFiletask().getChunk());
 		tb.setChunkNo(message.getFiletask().getChunkNo());
@@ -103,7 +108,7 @@ public class MessageGenerator {
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb);
 		wb.setSecret(1234);
-		
+
 		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
 		wb.setFiletask(tb);
 
@@ -137,7 +142,7 @@ public class MessageGenerator {
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb.build());
 		wb.setFiletask(commandMessage.getFiletask());
-		
+
 		wb.setSecret(1234);
 		wb.setRequestId(clientID);
 		wb.setWorktype(Worktype.READ_REQUEST);
@@ -159,7 +164,7 @@ public class MessageGenerator {
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setHeader(hb.build());
 		wb.setFiletask(fb.build());
-		
+
 		wb.setSecret(1234);
 		wb.setRequestId(clientID);
 		wb.setWorktype(Worktype.READ_REQUEST);
@@ -192,8 +197,8 @@ public class MessageGenerator {
 
 		return wb.build();
 	}
-	
-	
+
+
 	public CommandMessage forwardChunkToClient(WorkMessage message){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());
@@ -206,7 +211,7 @@ public class MessageGenerator {
 
 		return cb.build();
 	}
-	
+
 	public WorkMessage generateReplicationAcknowledgementMessage(WorkMessage message){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(conf.getNodeId());
@@ -216,7 +221,7 @@ public class MessageGenerator {
 		wb.setHeader(hb.build());
 		wb.setWorktype(Worktype.REPLICATE_RESPONSE);
 		wb.setSecret(1234);
-		
+
 		FileTask.Builder ft = FileTask.newBuilder();
 		ft.setFilename(message.getFiletask().getFilename());
 		ft.setFileTaskType(FileTaskType.WRITE);
@@ -234,7 +239,7 @@ public class MessageGenerator {
 		wb.setHeader(hb.build());
 		wb.setWorktype(Worktype.DELETE_RESPONSE);
 		wb.setSecret(1234);
-		
+
 		FileTask.Builder ft = FileTask.newBuilder();
 		ft.setFilename(message.getFiletask().getFilename());
 		ft.setFileTaskType(FileTaskType.WRITE);
@@ -300,7 +305,7 @@ public class MessageGenerator {
 		sb.setReadSteal(READ_STEAL.READ_STEAL_RESPONSE);
 		wb.setSteal(sb.build());
 		System.out.println("SEnding chunkId: " + workMessage.getFiletask().getChunkNo());
-/*		Header.Builder hb = Header.newBuilder();
+		/*		Header.Builder hb = Header.newBuilder();
 		//System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getDestination());
 		try {
 			System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getNodeId());
@@ -327,7 +332,7 @@ public class MessageGenerator {
 		FileTask.Builder ft  = FileTask.newBuilder();
 		ft.setFilename(workMessage.getFiletask().getFilename());
 		ft.setChunkNo(workMessage.getFiletask().getChunkNo());
-		
+
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
 		wb.setFiletask(ft.build());
 		wb.setHeader(hb.build());
@@ -335,5 +340,204 @@ public class MessageGenerator {
 		wb.setSecret(1234);*/
 		return wb.build();
 	}
+
+	
+	/**************************Starting of new node MessageGenrator function*************************/
+	
+	/**
+	 * 
+	 * @param leaderNodeId
+	 * @param leaderHost
+	 * @param leaderPort
+	 * @return
+	 */
+	public WorkMessage generateLeaderInfoMsg(int leaderNodeId,String leaderHost, int leaderPort) {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		NodeInfo.Builder leaderNodeInfo = NodeInfo.newBuilder();
+		leaderNodeInfo.setNodeId(leaderNodeId);
+		leaderNodeInfo.setPortNo(leaderPort);
+		leaderNodeInfo.setHostAddr(leaderHost);	
+
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.LEADER_INFO);
+		newNodeMsg.setNodeInfo(leaderNodeInfo);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setSecret(1234);
+		wb.setNewNode(true);
+		return wb.build();
+
+	}
+
+	public WorkMessage generateIamNewNodeMsg() {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(conf.getNodeId());
+		myInfo.setPortNo(conf.getWorkPort());
+
+
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.I_AM_NEW_NODE);
+		newNodeMsg.setNodeInfo(myInfo);
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setSecret(1234);
+		wb.setNewNode(true);
+		
+		return wb.build();
+	}
+
+	// message that is sent to New node to replicate data
+	public WorkMessage generateReplicationRequestMsg(Integer nodeId,FluffyFile file){
+
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setChunk(ByteString.copyFrom(file.getFile()));
+		tb.setChunkNo(file.getChunkId());
+		tb.setChunkCounts(file.getTotalChunks());
+		tb.setFileTaskType(FileTaskType.WRITE);
+		tb.setFilename(file.getFilename());
+
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.REPLICATE_REQUEST);
+		return wb.build();
+	}
+	
+	public WorkMessage generateNewNodeAreYouDoneMsg() {
+		
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(conf.getNodeId());
+		myInfo.setPortNo(conf.getWorkPort());
+		
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.ARE_YOU_DONE);
+		newNodeMsg.setNodeInfo(myInfo);
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+	
+	public WorkMessage generateAmDoneMessage() {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(conf.getNodeId());
+		myInfo.setPortNo(conf.getWorkPort());
+		
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.I_AM_DONE);
+		newNodeMsg.setNodeInfo(myInfo);
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+	
+	public NodeInfo generateNodeInfoObject(Integer nodeId, String hostAddress, Integer portNo) {
+		
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(nodeId);
+		myInfo.setHostAddr(hostAddress);
+		myInfo.setPortNo(portNo);
+		
+		return myInfo.build();
+	}
+	
+	public WorkMessage generateAllNodeInfoMsg(ArrayList<NodeInfo> nodesList) {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		AllNodeInfo.Builder allNodeInfo = AllNodeInfo.newBuilder();
+		allNodeInfo.addAllNodesInfo(nodesList);
+		
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.ALL_NODE_INFO);
+		newNodeMsg.setAllNodeInfo(allNodeInfo);
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+
+	public WorkMessage generateHeyThereMessage() {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(conf.getNodeId());
+		myInfo.setPortNo(conf.getWorkPort());
+		
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.HEY_THERE);
+		newNodeMsg.setNodeInfo(myInfo);
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+	
+
+	public WorkMessage generateNewNodeInitiationMsg() {
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(conf.getNodeId());
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		NodeInfo.Builder myInfo = NodeInfo.newBuilder();
+		myInfo.setNodeId(conf.getNodeId());
+		myInfo.setPortNo(conf.getWorkPort());
+		//myInfo.setHostAddr("127.0.0.1");
+		
+		NewNodeMessage.Builder newNodeMsg = NewNodeMessage.newBuilder();
+		newNodeMsg.setMsgType(NewNodeMsgType.MY_INFO);
+		newNodeMsg.setNodeInfo(myInfo);
+		wb.setNewNodeMessage(newNodeMsg);
+		wb.setNewNode(true);
+		return wb.build();
+	}
+	/**************************Ending of new node MessageGenrator function*************************/
+
 }
 

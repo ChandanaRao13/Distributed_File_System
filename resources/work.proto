@@ -57,6 +57,7 @@ message WorkMessage {
     optional Worktype worktype = 13;
     
     optional Steal steal = 10;
+    optional bool newNode =15;
     /**
      * The actions (request or response) is
      * implicit through which data structure is in the payload.
@@ -76,8 +77,5 @@ message WorkMessage {
 
         RaftElectionMessage raftMessage = 9;
         NewNodeMessage newNodeMessage = 11; 
-        AllNodeInfo allNodeInfo = 12;   
-
-
-    }
+       }
 }

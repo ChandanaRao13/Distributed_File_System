@@ -41,6 +41,7 @@ import gash.router.container.RoutingConf.RoutingEntry;
 import gash.router.server.ServerState;
 import gash.router.server.WorkInit;
 import gash.router.server.election.RaftElectionContext;
+import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
 import gash.router.server.queue.management.LoadQueueManager;
 import gash.router.server.queue.management.NodeLoad;
@@ -85,6 +86,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		RaftMessageBuilder.setRoutingConf(state.getConf());
 
 		if (state.getConf().isNewNode()) {
+			electionCtx.setAmReady(false);
+		System.out.println("I am a new node:: sending a message to friend");
 			for(EdgeInfo ei : outboundEdges.getEdgeListMap().values()){
 				System.out.println("No routing entries..possibly a new node");
 				try {
@@ -95,7 +98,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 						if (newChannel.isOpen() && newChannel != null) {
 
 							System.out.println("Connected to channel : " + ei.getHost());
-							WorkMessage wm = RaftMessageBuilder.addNewNodeInfo(1);
+							WorkMessage wm = MessageGenerator.getInstance().generateNewNodeInitiationMsg();
 
 							ChannelFuture cf = newChannel.write(wm);
 							newChannel.flush();
@@ -109,6 +112,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 							}
 						}
 					} catch (Exception e) {
+						System.out.println("Connection unsuccessful: " + e.getMessage());
 						System.out.println("Connection unsuccessful: " + ei.getHost());
 					}
 					if (detectedChannel != null) {
@@ -195,6 +199,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 						}
 					}
 				}
+				if(!state.getConf().isNewNode())
 				for (EdgeInfo ei : this.outboundEdges.map.values()) {
 					if (ei.isActive() && ei.getChannel() != null) {
 						if(electionCtx.getTerm()== 0){

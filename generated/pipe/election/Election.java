@@ -8,6 +8,133 @@ public final class Election {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
+  /**
+   * Protobuf enum {@code NewNodeMsgType}
+   */
+  public enum NewNodeMsgType
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>MY_INFO = 1;</code>
+     */
+    MY_INFO(0, 1),
+    /**
+     * <code>I_AM_DONE = 2;</code>
+     */
+    I_AM_DONE(1, 2),
+    /**
+     * <code>I_AM_NEW_NODE = 3;</code>
+     */
+    I_AM_NEW_NODE(2, 3),
+    /**
+     * <code>ARE_YOU_DONE = 4;</code>
+     */
+    ARE_YOU_DONE(3, 4),
+    /**
+     * <code>LEADER_INFO = 5;</code>
+     */
+    LEADER_INFO(4, 5),
+    /**
+     * <code>ALL_NODE_INFO = 6;</code>
+     */
+    ALL_NODE_INFO(5, 6),
+    /**
+     * <code>HEY_THERE = 7;</code>
+     */
+    HEY_THERE(6, 7),
+    ;
+
+    /**
+     * <code>MY_INFO = 1;</code>
+     */
+    public static final int MY_INFO_VALUE = 1;
+    /**
+     * <code>I_AM_DONE = 2;</code>
+     */
+    public static final int I_AM_DONE_VALUE = 2;
+    /**
+     * <code>I_AM_NEW_NODE = 3;</code>
+     */
+    public static final int I_AM_NEW_NODE_VALUE = 3;
+    /**
+     * <code>ARE_YOU_DONE = 4;</code>
+     */
+    public static final int ARE_YOU_DONE_VALUE = 4;
+    /**
+     * <code>LEADER_INFO = 5;</code>
+     */
+    public static final int LEADER_INFO_VALUE = 5;
+    /**
+     * <code>ALL_NODE_INFO = 6;</code>
+     */
+    public static final int ALL_NODE_INFO_VALUE = 6;
+    /**
+     * <code>HEY_THERE = 7;</code>
+     */
+    public static final int HEY_THERE_VALUE = 7;
+
+
+    public final int getNumber() { return value; }
+
+    public static NewNodeMsgType valueOf(int value) {
+      switch (value) {
+        case 1: return MY_INFO;
+        case 2: return I_AM_DONE;
+        case 3: return I_AM_NEW_NODE;
+        case 4: return ARE_YOU_DONE;
+        case 5: return LEADER_INFO;
+        case 6: return ALL_NODE_INFO;
+        case 7: return HEY_THERE;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<NewNodeMsgType>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<NewNodeMsgType>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<NewNodeMsgType>() {
+            public NewNodeMsgType findValueByNumber(int number) {
+              return NewNodeMsgType.valueOf(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return pipe.election.Election.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final NewNodeMsgType[] VALUES = values();
+
+    public static NewNodeMsgType valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int index;
+    private final int value;
+
+    private NewNodeMsgType(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:NewNodeMsgType)
+  }
+
   public interface LeaderStatusOrBuilder extends
       // @@protoc_insertion_point(interface_extends:LeaderStatus)
       com.google.protobuf.MessageOrBuilder {
@@ -1022,11 +1149,11 @@ public final class Election {
     pipe.election.Election.ElectionMessageOrBuilder getElectionMessageOrBuilder();
 
     /**
-     * <code>optional int32 leader_id = 4;</code>
+     * <code>optional int32 leader_id = 9;</code>
      */
     boolean hasLeaderId();
     /**
-     * <code>optional int32 leader_id = 4;</code>
+     * <code>optional int32 leader_id = 9;</code>
      */
     int getLeaderId();
 
@@ -1132,11 +1259,6 @@ public final class Election {
               bitField0_ |= 0x00000002;
               break;
             }
-            case 32: {
-              bitField0_ |= 0x00000004;
-              leaderId_ = input.readInt32();
-              break;
-            }
             case 40: {
               bitField0_ |= 0x00000008;
               term_ = input.readInt32();
@@ -1153,6 +1275,11 @@ public final class Election {
                 leader_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000010;
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000004;
+              leaderId_ = input.readInt32();
               break;
             }
           }
@@ -1335,16 +1462,16 @@ public final class Election {
       return electionMessage_;
     }
 
-    public static final int LEADER_ID_FIELD_NUMBER = 4;
+    public static final int LEADER_ID_FIELD_NUMBER = 9;
     private int leaderId_;
     /**
-     * <code>optional int32 leader_id = 4;</code>
+     * <code>optional int32 leader_id = 9;</code>
      */
     public boolean hasLeaderId() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional int32 leader_id = 4;</code>
+     * <code>optional int32 leader_id = 9;</code>
      */
     public int getLeaderId() {
       return leaderId_;
@@ -1420,14 +1547,14 @@ public final class Election {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(2, electionMessage_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(4, leaderId_);
-      }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(5, term_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeMessage(8, leader_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(9, leaderId_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1446,10 +1573,6 @@ public final class Election {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, electionMessage_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, leaderId_);
-      }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(5, term_);
@@ -1457,6 +1580,10 @@ public final class Election {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, leader_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(9, leaderId_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1874,19 +2001,19 @@ public final class Election {
 
       private int leaderId_ ;
       /**
-       * <code>optional int32 leader_id = 4;</code>
+       * <code>optional int32 leader_id = 9;</code>
        */
       public boolean hasLeaderId() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional int32 leader_id = 4;</code>
+       * <code>optional int32 leader_id = 9;</code>
        */
       public int getLeaderId() {
         return leaderId_;
       }
       /**
-       * <code>optional int32 leader_id = 4;</code>
+       * <code>optional int32 leader_id = 9;</code>
        */
       public Builder setLeaderId(int value) {
         bitField0_ |= 0x00000004;
@@ -1895,7 +2022,7 @@ public final class Election {
         return this;
       }
       /**
-       * <code>optional int32 leader_id = 4;</code>
+       * <code>optional int32 leader_id = 9;</code>
        */
       public Builder clearLeaderId() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -2621,45 +2748,39 @@ public final class Election {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>optional int32 node_id = 1;</code>
+     * <code>required .NewNodeMsgType msgType = 1;</code>
      */
-    boolean hasNodeId();
+    boolean hasMsgType();
     /**
-     * <code>optional int32 node_id = 1;</code>
+     * <code>required .NewNodeMsgType msgType = 1;</code>
      */
-    int getNodeId();
+    pipe.election.Election.NewNodeMsgType getMsgType();
 
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    boolean hasHostAddr();
+    boolean hasAllNodeInfo();
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    java.lang.String getHostAddr();
+    pipe.election.Election.AllNodeInfo getAllNodeInfo();
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    com.google.protobuf.ByteString
-        getHostAddrBytes();
+    pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder();
 
     /**
-     * <code>optional int32 port_no = 3;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    boolean hasPortNo();
+    boolean hasNodeInfo();
     /**
-     * <code>optional int32 port_no = 3;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    int getPortNo();
-
+    pipe.election.Election.NodeInfo getNodeInfo();
     /**
-     * <code>optional int32 joinCluster = 4;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    boolean hasJoinCluster();
-    /**
-     * <code>optional int32 joinCluster = 4;</code>
-     */
-    int getJoinCluster();
+    pipe.election.Election.NodeInfoOrBuilder getNodeInfoOrBuilder();
   }
   /**
    * Protobuf type {@code NewNodeMessage}
@@ -2718,24 +2839,40 @@ public final class Election {
               break;
             }
             case 8: {
-              bitField0_ |= 0x00000001;
-              nodeId_ = input.readInt32();
+              int rawValue = input.readEnum();
+              pipe.election.Election.NewNodeMsgType value = pipe.election.Election.NewNodeMsgType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                msgType_ = value;
+              }
               break;
             }
-            case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              bitField0_ |= 0x00000002;
-              hostAddr_ = bs;
+            case 42: {
+              pipe.election.Election.AllNodeInfo.Builder subBuilder = null;
+              if (payloadCase_ == 5) {
+                subBuilder = ((pipe.election.Election.AllNodeInfo) payload_).toBuilder();
+              }
+              payload_ = input.readMessage(pipe.election.Election.AllNodeInfo.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((pipe.election.Election.AllNodeInfo) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 5;
               break;
             }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              portNo_ = input.readInt32();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              joinCluster_ = input.readInt32();
+            case 50: {
+              pipe.election.Election.NodeInfo.Builder subBuilder = null;
+              if (payloadCase_ == 6) {
+                subBuilder = ((pipe.election.Election.NodeInfo) payload_).toBuilder();
+              }
+              payload_ = input.readMessage(pipe.election.Election.NodeInfo.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((pipe.election.Election.NodeInfo) payload_);
+                payload_ = subBuilder.buildPartial();
+              }
+              payloadCase_ = 6;
               break;
             }
           }
@@ -2778,98 +2915,106 @@ public final class Election {
     }
 
     private int bitField0_;
-    public static final int NODE_ID_FIELD_NUMBER = 1;
-    private int nodeId_;
+    private int payloadCase_ = 0;
+    private java.lang.Object payload_;
+    public enum PayloadCase
+        implements com.google.protobuf.Internal.EnumLite {
+      ALLNODEINFO(5),
+      NODEINFO(6),
+      PAYLOAD_NOT_SET(0);
+      private int value = 0;
+      private PayloadCase(int value) {
+        this.value = value;
+      }
+      public static PayloadCase valueOf(int value) {
+        switch (value) {
+          case 5: return ALLNODEINFO;
+          case 6: return NODEINFO;
+          case 0: return PAYLOAD_NOT_SET;
+          default: throw new java.lang.IllegalArgumentException(
+            "Value is undefined for this oneof enum.");
+        }
+      }
+      public int getNumber() {
+        return this.value;
+      }
+    };
+
+    public PayloadCase
+    getPayloadCase() {
+      return PayloadCase.valueOf(
+          payloadCase_);
+    }
+
+    public static final int MSGTYPE_FIELD_NUMBER = 1;
+    private pipe.election.Election.NewNodeMsgType msgType_;
     /**
-     * <code>optional int32 node_id = 1;</code>
+     * <code>required .NewNodeMsgType msgType = 1;</code>
      */
-    public boolean hasNodeId() {
+    public boolean hasMsgType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional int32 node_id = 1;</code>
+     * <code>required .NewNodeMsgType msgType = 1;</code>
      */
-    public int getNodeId() {
-      return nodeId_;
+    public pipe.election.Election.NewNodeMsgType getMsgType() {
+      return msgType_;
     }
 
-    public static final int HOST_ADDR_FIELD_NUMBER = 2;
-    private java.lang.Object hostAddr_;
+    public static final int ALLNODEINFO_FIELD_NUMBER = 5;
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    public boolean hasHostAddr() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+    public boolean hasAllNodeInfo() {
+      return payloadCase_ == 5;
     }
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    public java.lang.String getHostAddr() {
-      java.lang.Object ref = hostAddr_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          hostAddr_ = s;
-        }
-        return s;
+    public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
+      if (payloadCase_ == 5) {
+         return (pipe.election.Election.AllNodeInfo) payload_;
       }
+      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
     }
     /**
-     * <code>optional string host_addr = 2;</code>
+     * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
      */
-    public com.google.protobuf.ByteString
-        getHostAddrBytes() {
-      java.lang.Object ref = hostAddr_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        hostAddr_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
+    public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
+      if (payloadCase_ == 5) {
+         return (pipe.election.Election.AllNodeInfo) payload_;
       }
+      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
     }
 
-    public static final int PORT_NO_FIELD_NUMBER = 3;
-    private int portNo_;
+    public static final int NODEINFO_FIELD_NUMBER = 6;
     /**
-     * <code>optional int32 port_no = 3;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    public boolean hasPortNo() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+    public boolean hasNodeInfo() {
+      return payloadCase_ == 6;
     }
     /**
-     * <code>optional int32 port_no = 3;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    public int getPortNo() {
-      return portNo_;
-    }
-
-    public static final int JOINCLUSTER_FIELD_NUMBER = 4;
-    private int joinCluster_;
-    /**
-     * <code>optional int32 joinCluster = 4;</code>
-     */
-    public boolean hasJoinCluster() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+    public pipe.election.Election.NodeInfo getNodeInfo() {
+      if (payloadCase_ == 6) {
+         return (pipe.election.Election.NodeInfo) payload_;
+      }
+      return pipe.election.Election.NodeInfo.getDefaultInstance();
     }
     /**
-     * <code>optional int32 joinCluster = 4;</code>
+     * <code>optional .NodeInfo nodeInfo = 6;</code>
      */
-    public int getJoinCluster() {
-      return joinCluster_;
+    public pipe.election.Election.NodeInfoOrBuilder getNodeInfoOrBuilder() {
+      if (payloadCase_ == 6) {
+         return (pipe.election.Election.NodeInfo) payload_;
+      }
+      return pipe.election.Election.NodeInfo.getDefaultInstance();
     }
 
     private void initFields() {
-      nodeId_ = 0;
-      hostAddr_ = "";
-      portNo_ = 0;
-      joinCluster_ = 0;
+      msgType_ = pipe.election.Election.NewNodeMsgType.MY_INFO;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2877,6 +3022,22 @@ public final class Election {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+      if (!hasMsgType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (hasAllNodeInfo()) {
+        if (!getAllNodeInfo().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (hasNodeInfo()) {
+        if (!getNodeInfo().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2885,16 +3046,13 @@ public final class Election {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, nodeId_);
+        output.writeEnum(1, msgType_.getNumber());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getHostAddrBytes());
+      if (payloadCase_ == 5) {
+        output.writeMessage(5, (pipe.election.Election.AllNodeInfo) payload_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(3, portNo_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(4, joinCluster_);
+      if (payloadCase_ == 6) {
+        output.writeMessage(6, (pipe.election.Election.NodeInfo) payload_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2907,19 +3065,15 @@ public final class Election {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, nodeId_);
+          .computeEnumSize(1, msgType_.getNumber());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (payloadCase_ == 5) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getHostAddrBytes());
+          .computeMessageSize(5, (pipe.election.Election.AllNodeInfo) payload_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (payloadCase_ == 6) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(3, portNo_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, joinCluster_);
+          .computeMessageSize(6, (pipe.election.Election.NodeInfo) payload_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3042,14 +3196,10 @@ public final class Election {
 
       public Builder clear() {
         super.clear();
-        nodeId_ = 0;
+        msgType_ = pipe.election.Election.NewNodeMsgType.MY_INFO;
         bitField0_ = (bitField0_ & ~0x00000001);
-        hostAddr_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        portNo_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        joinCluster_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        payloadCase_ = 0;
+        payload_ = null;
         return this;
       }
 
@@ -3081,20 +3231,23 @@ public final class Election {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.nodeId_ = nodeId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
+        result.msgType_ = msgType_;
+        if (payloadCase_ == 5) {
+          if (allNodeInfoBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = allNodeInfoBuilder_.build();
+          }
         }
-        result.hostAddr_ = hostAddr_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
+        if (payloadCase_ == 6) {
+          if (nodeInfoBuilder_ == null) {
+            result.payload_ = payload_;
+          } else {
+            result.payload_ = nodeInfoBuilder_.build();
+          }
         }
-        result.portNo_ = portNo_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.joinCluster_ = joinCluster_;
         result.bitField0_ = to_bitField0_;
+        result.payloadCase_ = payloadCase_;
         onBuilt();
         return result;
       }
@@ -3110,25 +3263,43 @@ public final class Election {
 
       public Builder mergeFrom(pipe.election.Election.NewNodeMessage other) {
         if (other == pipe.election.Election.NewNodeMessage.getDefaultInstance()) return this;
-        if (other.hasNodeId()) {
-          setNodeId(other.getNodeId());
+        if (other.hasMsgType()) {
+          setMsgType(other.getMsgType());
         }
-        if (other.hasHostAddr()) {
-          bitField0_ |= 0x00000002;
-          hostAddr_ = other.hostAddr_;
-          onChanged();
-        }
-        if (other.hasPortNo()) {
-          setPortNo(other.getPortNo());
-        }
-        if (other.hasJoinCluster()) {
-          setJoinCluster(other.getJoinCluster());
+        switch (other.getPayloadCase()) {
+          case ALLNODEINFO: {
+            mergeAllNodeInfo(other.getAllNodeInfo());
+            break;
+          }
+          case NODEINFO: {
+            mergeNodeInfo(other.getNodeInfo());
+            break;
+          }
+          case PAYLOAD_NOT_SET: {
+            break;
+          }
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        if (!hasMsgType()) {
+          
+          return false;
+        }
+        if (hasAllNodeInfo()) {
+          if (!getAllNodeInfo().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasNodeInfo()) {
+          if (!getNodeInfo().isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -3149,23 +3320,859 @@ public final class Election {
         }
         return this;
       }
+      private int payloadCase_ = 0;
+      private java.lang.Object payload_;
+      public PayloadCase
+          getPayloadCase() {
+        return PayloadCase.valueOf(
+            payloadCase_);
+      }
+
+      public Builder clearPayload() {
+        payloadCase_ = 0;
+        payload_ = null;
+        onChanged();
+        return this;
+      }
+
+      private int bitField0_;
+
+      private pipe.election.Election.NewNodeMsgType msgType_ = pipe.election.Election.NewNodeMsgType.MY_INFO;
+      /**
+       * <code>required .NewNodeMsgType msgType = 1;</code>
+       */
+      public boolean hasMsgType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .NewNodeMsgType msgType = 1;</code>
+       */
+      public pipe.election.Election.NewNodeMsgType getMsgType() {
+        return msgType_;
+      }
+      /**
+       * <code>required .NewNodeMsgType msgType = 1;</code>
+       */
+      public Builder setMsgType(pipe.election.Election.NewNodeMsgType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        msgType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .NewNodeMsgType msgType = 1;</code>
+       */
+      public Builder clearMsgType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        msgType_ = pipe.election.Election.NewNodeMsgType.MY_INFO;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> allNodeInfoBuilder_;
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public boolean hasAllNodeInfo() {
+        return payloadCase_ == 5;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 5) {
+            return (pipe.election.Election.AllNodeInfo) payload_;
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 5) {
+            return allNodeInfoBuilder_.getMessage();
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public Builder setAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
+        if (allNodeInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          allNodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public Builder setAllNodeInfo(
+          pipe.election.Election.AllNodeInfo.Builder builderForValue) {
+        if (allNodeInfoBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          allNodeInfoBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public Builder mergeAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 5 &&
+              payload_ != pipe.election.Election.AllNodeInfo.getDefaultInstance()) {
+            payload_ = pipe.election.Election.AllNodeInfo.newBuilder((pipe.election.Election.AllNodeInfo) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 5) {
+            allNodeInfoBuilder_.mergeFrom(value);
+          }
+          allNodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 5;
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public Builder clearAllNodeInfo() {
+        if (allNodeInfoBuilder_ == null) {
+          if (payloadCase_ == 5) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 5) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          allNodeInfoBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public pipe.election.Election.AllNodeInfo.Builder getAllNodeInfoBuilder() {
+        return getAllNodeInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
+        if ((payloadCase_ == 5) && (allNodeInfoBuilder_ != null)) {
+          return allNodeInfoBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 5) {
+            return (pipe.election.Election.AllNodeInfo) payload_;
+          }
+          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .AllNodeInfo allNodeInfo = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> 
+          getAllNodeInfoFieldBuilder() {
+        if (allNodeInfoBuilder_ == null) {
+          if (!(payloadCase_ == 5)) {
+            payload_ = pipe.election.Election.AllNodeInfo.getDefaultInstance();
+          }
+          allNodeInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder>(
+                  (pipe.election.Election.AllNodeInfo) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 5;
+        return allNodeInfoBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder> nodeInfoBuilder_;
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public boolean hasNodeInfo() {
+        return payloadCase_ == 6;
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public pipe.election.Election.NodeInfo getNodeInfo() {
+        if (nodeInfoBuilder_ == null) {
+          if (payloadCase_ == 6) {
+            return (pipe.election.Election.NodeInfo) payload_;
+          }
+          return pipe.election.Election.NodeInfo.getDefaultInstance();
+        } else {
+          if (payloadCase_ == 6) {
+            return nodeInfoBuilder_.getMessage();
+          }
+          return pipe.election.Election.NodeInfo.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public Builder setNodeInfo(pipe.election.Election.NodeInfo value) {
+        if (nodeInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          payload_ = value;
+          onChanged();
+        } else {
+          nodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 6;
+        return this;
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public Builder setNodeInfo(
+          pipe.election.Election.NodeInfo.Builder builderForValue) {
+        if (nodeInfoBuilder_ == null) {
+          payload_ = builderForValue.build();
+          onChanged();
+        } else {
+          nodeInfoBuilder_.setMessage(builderForValue.build());
+        }
+        payloadCase_ = 6;
+        return this;
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public Builder mergeNodeInfo(pipe.election.Election.NodeInfo value) {
+        if (nodeInfoBuilder_ == null) {
+          if (payloadCase_ == 6 &&
+              payload_ != pipe.election.Election.NodeInfo.getDefaultInstance()) {
+            payload_ = pipe.election.Election.NodeInfo.newBuilder((pipe.election.Election.NodeInfo) payload_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            payload_ = value;
+          }
+          onChanged();
+        } else {
+          if (payloadCase_ == 6) {
+            nodeInfoBuilder_.mergeFrom(value);
+          }
+          nodeInfoBuilder_.setMessage(value);
+        }
+        payloadCase_ = 6;
+        return this;
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public Builder clearNodeInfo() {
+        if (nodeInfoBuilder_ == null) {
+          if (payloadCase_ == 6) {
+            payloadCase_ = 0;
+            payload_ = null;
+            onChanged();
+          }
+        } else {
+          if (payloadCase_ == 6) {
+            payloadCase_ = 0;
+            payload_ = null;
+          }
+          nodeInfoBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public pipe.election.Election.NodeInfo.Builder getNodeInfoBuilder() {
+        return getNodeInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      public pipe.election.Election.NodeInfoOrBuilder getNodeInfoOrBuilder() {
+        if ((payloadCase_ == 6) && (nodeInfoBuilder_ != null)) {
+          return nodeInfoBuilder_.getMessageOrBuilder();
+        } else {
+          if (payloadCase_ == 6) {
+            return (pipe.election.Election.NodeInfo) payload_;
+          }
+          return pipe.election.Election.NodeInfo.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>optional .NodeInfo nodeInfo = 6;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder> 
+          getNodeInfoFieldBuilder() {
+        if (nodeInfoBuilder_ == null) {
+          if (!(payloadCase_ == 6)) {
+            payload_ = pipe.election.Election.NodeInfo.getDefaultInstance();
+          }
+          nodeInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder>(
+                  (pipe.election.Election.NodeInfo) payload_,
+                  getParentForChildren(),
+                  isClean());
+          payload_ = null;
+        }
+        payloadCase_ = 6;
+        return nodeInfoBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:NewNodeMessage)
+    }
+
+    static {
+      defaultInstance = new NewNodeMessage(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:NewNodeMessage)
+  }
+
+  public interface NodeInfoOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NodeInfo)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required int32 node_id = 1;</code>
+     */
+    boolean hasNodeId();
+    /**
+     * <code>required int32 node_id = 1;</code>
+     */
+    int getNodeId();
+
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    boolean hasHostAddr();
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    java.lang.String getHostAddr();
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getHostAddrBytes();
+
+    /**
+     * <code>required int32 port_no = 3;</code>
+     */
+    boolean hasPortNo();
+    /**
+     * <code>required int32 port_no = 3;</code>
+     */
+    int getPortNo();
+  }
+  /**
+   * Protobuf type {@code NodeInfo}
+   *
+   * <pre>
+   *message which sends other cluster node's information to new node
+   * </pre>
+   */
+  public static final class NodeInfo extends
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:NodeInfo)
+      NodeInfoOrBuilder {
+    // Use NodeInfo.newBuilder() to construct.
+    private NodeInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private NodeInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final NodeInfo defaultInstance;
+    public static NodeInfo getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public NodeInfo getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private NodeInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              nodeId_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              hostAddr_ = bs;
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              portNo_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pipe.election.Election.internal_static_NodeInfo_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pipe.election.Election.internal_static_NodeInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pipe.election.Election.NodeInfo.class, pipe.election.Election.NodeInfo.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<NodeInfo> PARSER =
+        new com.google.protobuf.AbstractParser<NodeInfo>() {
+      public NodeInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new NodeInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NodeInfo> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int NODE_ID_FIELD_NUMBER = 1;
+    private int nodeId_;
+    /**
+     * <code>required int32 node_id = 1;</code>
+     */
+    public boolean hasNodeId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required int32 node_id = 1;</code>
+     */
+    public int getNodeId() {
+      return nodeId_;
+    }
+
+    public static final int HOST_ADDR_FIELD_NUMBER = 2;
+    private java.lang.Object hostAddr_;
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public boolean hasHostAddr() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public java.lang.String getHostAddr() {
+      java.lang.Object ref = hostAddr_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          hostAddr_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string host_addr = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getHostAddrBytes() {
+      java.lang.Object ref = hostAddr_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        hostAddr_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PORT_NO_FIELD_NUMBER = 3;
+    private int portNo_;
+    /**
+     * <code>required int32 port_no = 3;</code>
+     */
+    public boolean hasPortNo() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required int32 port_no = 3;</code>
+     */
+    public int getPortNo() {
+      return portNo_;
+    }
+
+    private void initFields() {
+      nodeId_ = 0;
+      hostAddr_ = "";
+      portNo_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasNodeId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPortNo()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, nodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getHostAddrBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, portNo_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, nodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getHostAddrBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, portNo_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static pipe.election.Election.NodeInfo parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.NodeInfo parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static pipe.election.Election.NodeInfo parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pipe.election.Election.NodeInfo parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pipe.election.Election.NodeInfo prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NodeInfo}
+     *
+     * <pre>
+     *message which sends other cluster node's information to new node
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NodeInfo)
+        pipe.election.Election.NodeInfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pipe.election.Election.internal_static_NodeInfo_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pipe.election.Election.internal_static_NodeInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pipe.election.Election.NodeInfo.class, pipe.election.Election.NodeInfo.Builder.class);
+      }
+
+      // Construct using pipe.election.Election.NodeInfo.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        nodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        hostAddr_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        portNo_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pipe.election.Election.internal_static_NodeInfo_descriptor;
+      }
+
+      public pipe.election.Election.NodeInfo getDefaultInstanceForType() {
+        return pipe.election.Election.NodeInfo.getDefaultInstance();
+      }
+
+      public pipe.election.Election.NodeInfo build() {
+        pipe.election.Election.NodeInfo result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public pipe.election.Election.NodeInfo buildPartial() {
+        pipe.election.Election.NodeInfo result = new pipe.election.Election.NodeInfo(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.nodeId_ = nodeId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.hostAddr_ = hostAddr_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.portNo_ = portNo_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pipe.election.Election.NodeInfo) {
+          return mergeFrom((pipe.election.Election.NodeInfo)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(pipe.election.Election.NodeInfo other) {
+        if (other == pipe.election.Election.NodeInfo.getDefaultInstance()) return this;
+        if (other.hasNodeId()) {
+          setNodeId(other.getNodeId());
+        }
+        if (other.hasHostAddr()) {
+          bitField0_ |= 0x00000002;
+          hostAddr_ = other.hostAddr_;
+          onChanged();
+        }
+        if (other.hasPortNo()) {
+          setPortNo(other.getPortNo());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasNodeId()) {
+          
+          return false;
+        }
+        if (!hasPortNo()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        pipe.election.Election.NodeInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pipe.election.Election.NodeInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
       private int bitField0_;
 
       private int nodeId_ ;
       /**
-       * <code>optional int32 node_id = 1;</code>
+       * <code>required int32 node_id = 1;</code>
        */
       public boolean hasNodeId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional int32 node_id = 1;</code>
+       * <code>required int32 node_id = 1;</code>
        */
       public int getNodeId() {
         return nodeId_;
       }
       /**
-       * <code>optional int32 node_id = 1;</code>
+       * <code>required int32 node_id = 1;</code>
        */
       public Builder setNodeId(int value) {
         bitField0_ |= 0x00000001;
@@ -3174,7 +4181,7 @@ public final class Election {
         return this;
       }
       /**
-       * <code>optional int32 node_id = 1;</code>
+       * <code>required int32 node_id = 1;</code>
        */
       public Builder clearNodeId() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -3261,19 +4268,19 @@ public final class Election {
 
       private int portNo_ ;
       /**
-       * <code>optional int32 port_no = 3;</code>
+       * <code>required int32 port_no = 3;</code>
        */
       public boolean hasPortNo() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional int32 port_no = 3;</code>
+       * <code>required int32 port_no = 3;</code>
        */
       public int getPortNo() {
         return portNo_;
       }
       /**
-       * <code>optional int32 port_no = 3;</code>
+       * <code>required int32 port_no = 3;</code>
        */
       public Builder setPortNo(int value) {
         bitField0_ |= 0x00000004;
@@ -3282,7 +4289,7 @@ public final class Election {
         return this;
       }
       /**
-       * <code>optional int32 port_no = 3;</code>
+       * <code>required int32 port_no = 3;</code>
        */
       public Builder clearPortNo() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -3291,47 +4298,15 @@ public final class Election {
         return this;
       }
 
-      private int joinCluster_ ;
-      /**
-       * <code>optional int32 joinCluster = 4;</code>
-       */
-      public boolean hasJoinCluster() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional int32 joinCluster = 4;</code>
-       */
-      public int getJoinCluster() {
-        return joinCluster_;
-      }
-      /**
-       * <code>optional int32 joinCluster = 4;</code>
-       */
-      public Builder setJoinCluster(int value) {
-        bitField0_ |= 0x00000008;
-        joinCluster_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 joinCluster = 4;</code>
-       */
-      public Builder clearJoinCluster() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        joinCluster_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:NewNodeMessage)
+      // @@protoc_insertion_point(builder_scope:NodeInfo)
     }
 
     static {
-      defaultInstance = new NewNodeMessage(true);
+      defaultInstance = new NodeInfo(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:NewNodeMessage)
+    // @@protoc_insertion_point(class_scope:NodeInfo)
   }
 
   public interface AllNodeInfoOrBuilder extends
@@ -3339,49 +4314,28 @@ public final class Election {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    java.util.List<java.lang.Integer> getNodeIdList();
+    java.util.List<pipe.election.Election.NodeInfo> 
+        getNodesInfoList();
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    int getNodeIdCount();
+    pipe.election.Election.NodeInfo getNodesInfo(int index);
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    int getNodeId(int index);
-
+    int getNodesInfoCount();
     /**
-     * <code>repeated string host_addr = 2;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    com.google.protobuf.ProtocolStringList
-        getHostAddrList();
+    java.util.List<? extends pipe.election.Election.NodeInfoOrBuilder> 
+        getNodesInfoOrBuilderList();
     /**
-     * <code>repeated string host_addr = 2;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    int getHostAddrCount();
-    /**
-     * <code>repeated string host_addr = 2;</code>
-     */
-    java.lang.String getHostAddr(int index);
-    /**
-     * <code>repeated string host_addr = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getHostAddrBytes(int index);
-
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    java.util.List<java.lang.Integer> getPortNoList();
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    int getPortNoCount();
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    int getPortNo(int index);
+    pipe.election.Election.NodeInfoOrBuilder getNodesInfoOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code AllNodeInfo}
@@ -3439,55 +4393,12 @@ public final class Election {
               }
               break;
             }
-            case 8: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                nodeId_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              nodeId_.add(input.readInt32());
-              break;
-            }
             case 10: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
-                nodeId_ = new java.util.ArrayList<java.lang.Integer>();
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                nodesInfo_ = new java.util.ArrayList<pipe.election.Election.NodeInfo>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              while (input.getBytesUntilLimit() > 0) {
-                nodeId_.add(input.readInt32());
-              }
-              input.popLimit(limit);
-              break;
-            }
-            case 18: {
-              com.google.protobuf.ByteString bs = input.readBytes();
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                hostAddr_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              hostAddr_.add(bs);
-              break;
-            }
-            case 24: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                portNo_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              portNo_.add(input.readInt32());
-              break;
-            }
-            case 26: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                portNo_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                portNo_.add(input.readInt32());
-              }
-              input.popLimit(limit);
+              nodesInfo_.add(input.readMessage(pipe.election.Election.NodeInfo.PARSER, extensionRegistry));
               break;
             }
           }
@@ -3499,13 +4410,7 @@ public final class Election {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          nodeId_ = java.util.Collections.unmodifiableList(nodeId_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          hostAddr_ = hostAddr_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          portNo_ = java.util.Collections.unmodifiableList(portNo_);
+          nodesInfo_ = java.util.Collections.unmodifiableList(nodesInfo_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3538,83 +4443,43 @@ public final class Election {
       return PARSER;
     }
 
-    public static final int NODE_ID_FIELD_NUMBER = 1;
-    private java.util.List<java.lang.Integer> nodeId_;
+    public static final int NODESINFO_FIELD_NUMBER = 1;
+    private java.util.List<pipe.election.Election.NodeInfo> nodesInfo_;
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    public java.util.List<java.lang.Integer>
-        getNodeIdList() {
-      return nodeId_;
+    public java.util.List<pipe.election.Election.NodeInfo> getNodesInfoList() {
+      return nodesInfo_;
     }
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    public int getNodeIdCount() {
-      return nodeId_.size();
+    public java.util.List<? extends pipe.election.Election.NodeInfoOrBuilder> 
+        getNodesInfoOrBuilderList() {
+      return nodesInfo_;
     }
     /**
-     * <code>repeated int32 node_id = 1;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    public int getNodeId(int index) {
-      return nodeId_.get(index);
-    }
-
-    public static final int HOST_ADDR_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList hostAddr_;
-    /**
-     * <code>repeated string host_addr = 2;</code>
-     */
-    public com.google.protobuf.ProtocolStringList
-        getHostAddrList() {
-      return hostAddr_;
+    public int getNodesInfoCount() {
+      return nodesInfo_.size();
     }
     /**
-     * <code>repeated string host_addr = 2;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    public int getHostAddrCount() {
-      return hostAddr_.size();
+    public pipe.election.Election.NodeInfo getNodesInfo(int index) {
+      return nodesInfo_.get(index);
     }
     /**
-     * <code>repeated string host_addr = 2;</code>
+     * <code>repeated .NodeInfo nodesInfo = 1;</code>
      */
-    public java.lang.String getHostAddr(int index) {
-      return hostAddr_.get(index);
-    }
-    /**
-     * <code>repeated string host_addr = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHostAddrBytes(int index) {
-      return hostAddr_.getByteString(index);
-    }
-
-    public static final int PORT_NO_FIELD_NUMBER = 3;
-    private java.util.List<java.lang.Integer> portNo_;
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    public java.util.List<java.lang.Integer>
-        getPortNoList() {
-      return portNo_;
-    }
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    public int getPortNoCount() {
-      return portNo_.size();
-    }
-    /**
-     * <code>repeated int32 port_no = 3;</code>
-     */
-    public int getPortNo(int index) {
-      return portNo_.get(index);
+    public pipe.election.Election.NodeInfoOrBuilder getNodesInfoOrBuilder(
+        int index) {
+      return nodesInfo_.get(index);
     }
 
     private void initFields() {
-      nodeId_ = java.util.Collections.emptyList();
-      hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      portNo_ = java.util.Collections.emptyList();
+      nodesInfo_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3622,6 +4487,12 @@ public final class Election {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
+      for (int i = 0; i < getNodesInfoCount(); i++) {
+        if (!getNodesInfo(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3629,14 +4500,8 @@ public final class Election {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < nodeId_.size(); i++) {
-        output.writeInt32(1, nodeId_.get(i));
-      }
-      for (int i = 0; i < hostAddr_.size(); i++) {
-        output.writeBytes(2, hostAddr_.getByteString(i));
-      }
-      for (int i = 0; i < portNo_.size(); i++) {
-        output.writeInt32(3, portNo_.get(i));
+      for (int i = 0; i < nodesInfo_.size(); i++) {
+        output.writeMessage(1, nodesInfo_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -3647,32 +4512,9 @@ public final class Election {
       if (size != -1) return size;
 
       size = 0;
-      {
-        int dataSize = 0;
-        for (int i = 0; i < nodeId_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(nodeId_.get(i));
-        }
-        size += dataSize;
-        size += 1 * getNodeIdList().size();
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < hostAddr_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(hostAddr_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getHostAddrList().size();
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < portNo_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(portNo_.get(i));
-        }
-        size += dataSize;
-        size += 1 * getPortNoList().size();
+      for (int i = 0; i < nodesInfo_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, nodesInfo_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3787,6 +4629,7 @@ public final class Election {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getNodesInfoFieldBuilder();
         }
       }
       private static Builder create() {
@@ -3795,12 +4638,12 @@ public final class Election {
 
       public Builder clear() {
         super.clear();
-        nodeId_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        portNo_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        if (nodesInfoBuilder_ == null) {
+          nodesInfo_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          nodesInfoBuilder_.clear();
+        }
         return this;
       }
 
@@ -3828,21 +4671,15 @@ public final class Election {
       public pipe.election.Election.AllNodeInfo buildPartial() {
         pipe.election.Election.AllNodeInfo result = new pipe.election.Election.AllNodeInfo(this);
         int from_bitField0_ = bitField0_;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          nodeId_ = java.util.Collections.unmodifiableList(nodeId_);
-          bitField0_ = (bitField0_ & ~0x00000001);
+        if (nodesInfoBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            nodesInfo_ = java.util.Collections.unmodifiableList(nodesInfo_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.nodesInfo_ = nodesInfo_;
+        } else {
+          result.nodesInfo_ = nodesInfoBuilder_.build();
         }
-        result.nodeId_ = nodeId_;
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          hostAddr_ = hostAddr_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
-        result.hostAddr_ = hostAddr_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          portNo_ = java.util.Collections.unmodifiableList(portNo_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.portNo_ = portNo_;
         onBuilt();
         return result;
       }
@@ -3858,41 +4695,43 @@ public final class Election {
 
       public Builder mergeFrom(pipe.election.Election.AllNodeInfo other) {
         if (other == pipe.election.Election.AllNodeInfo.getDefaultInstance()) return this;
-        if (!other.nodeId_.isEmpty()) {
-          if (nodeId_.isEmpty()) {
-            nodeId_ = other.nodeId_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureNodeIdIsMutable();
-            nodeId_.addAll(other.nodeId_);
+        if (nodesInfoBuilder_ == null) {
+          if (!other.nodesInfo_.isEmpty()) {
+            if (nodesInfo_.isEmpty()) {
+              nodesInfo_ = other.nodesInfo_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNodesInfoIsMutable();
+              nodesInfo_.addAll(other.nodesInfo_);
+            }
+            onChanged();
           }
-          onChanged();
-        }
-        if (!other.hostAddr_.isEmpty()) {
-          if (hostAddr_.isEmpty()) {
-            hostAddr_ = other.hostAddr_;
-            bitField0_ = (bitField0_ & ~0x00000002);
-          } else {
-            ensureHostAddrIsMutable();
-            hostAddr_.addAll(other.hostAddr_);
+        } else {
+          if (!other.nodesInfo_.isEmpty()) {
+            if (nodesInfoBuilder_.isEmpty()) {
+              nodesInfoBuilder_.dispose();
+              nodesInfoBuilder_ = null;
+              nodesInfo_ = other.nodesInfo_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              nodesInfoBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getNodesInfoFieldBuilder() : null;
+            } else {
+              nodesInfoBuilder_.addAllMessages(other.nodesInfo_);
+            }
           }
-          onChanged();
-        }
-        if (!other.portNo_.isEmpty()) {
-          if (portNo_.isEmpty()) {
-            portNo_ = other.portNo_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensurePortNoIsMutable();
-            portNo_.addAll(other.portNo_);
-          }
-          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        for (int i = 0; i < getNodesInfoCount(); i++) {
+          if (!getNodesInfo(i).isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -3915,229 +4754,244 @@ public final class Election {
       }
       private int bitField0_;
 
-      private java.util.List<java.lang.Integer> nodeId_ = java.util.Collections.emptyList();
-      private void ensureNodeIdIsMutable() {
+      private java.util.List<pipe.election.Election.NodeInfo> nodesInfo_ =
+        java.util.Collections.emptyList();
+      private void ensureNodesInfoIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          nodeId_ = new java.util.ArrayList<java.lang.Integer>(nodeId_);
+          nodesInfo_ = new java.util.ArrayList<pipe.election.Election.NodeInfo>(nodesInfo_);
           bitField0_ |= 0x00000001;
          }
       }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public java.util.List<java.lang.Integer>
-          getNodeIdList() {
-        return java.util.Collections.unmodifiableList(nodeId_);
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public int getNodeIdCount() {
-        return nodeId_.size();
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public int getNodeId(int index) {
-        return nodeId_.get(index);
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public Builder setNodeId(
-          int index, int value) {
-        ensureNodeIdIsMutable();
-        nodeId_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public Builder addNodeId(int value) {
-        ensureNodeIdIsMutable();
-        nodeId_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public Builder addAllNodeId(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureNodeIdIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, nodeId_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 node_id = 1;</code>
-       */
-      public Builder clearNodeId() {
-        nodeId_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-        return this;
-      }
 
-      private com.google.protobuf.LazyStringList hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureHostAddrIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          hostAddr_ = new com.google.protobuf.LazyStringArrayList(hostAddr_);
-          bitField0_ |= 0x00000002;
-         }
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public com.google.protobuf.ProtocolStringList
-          getHostAddrList() {
-        return hostAddr_.getUnmodifiableView();
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public int getHostAddrCount() {
-        return hostAddr_.size();
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public java.lang.String getHostAddr(int index) {
-        return hostAddr_.get(index);
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getHostAddrBytes(int index) {
-        return hostAddr_.getByteString(index);
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public Builder setHostAddr(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureHostAddrIsMutable();
-        hostAddr_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public Builder addHostAddr(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureHostAddrIsMutable();
-        hostAddr_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public Builder addAllHostAddr(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureHostAddrIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, hostAddr_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public Builder clearHostAddr() {
-        hostAddr_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string host_addr = 2;</code>
-       */
-      public Builder addHostAddrBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureHostAddrIsMutable();
-        hostAddr_.add(value);
-        onChanged();
-        return this;
-      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder> nodesInfoBuilder_;
 
-      private java.util.List<java.lang.Integer> portNo_ = java.util.Collections.emptyList();
-      private void ensurePortNoIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          portNo_ = new java.util.ArrayList<java.lang.Integer>(portNo_);
-          bitField0_ |= 0x00000004;
-         }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public java.util.List<pipe.election.Election.NodeInfo> getNodesInfoList() {
+        if (nodesInfoBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(nodesInfo_);
+        } else {
+          return nodesInfoBuilder_.getMessageList();
+        }
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public java.util.List<java.lang.Integer>
-          getPortNoList() {
-        return java.util.Collections.unmodifiableList(portNo_);
+      public int getNodesInfoCount() {
+        if (nodesInfoBuilder_ == null) {
+          return nodesInfo_.size();
+        } else {
+          return nodesInfoBuilder_.getCount();
+        }
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public int getPortNoCount() {
-        return portNo_.size();
+      public pipe.election.Election.NodeInfo getNodesInfo(int index) {
+        if (nodesInfoBuilder_ == null) {
+          return nodesInfo_.get(index);
+        } else {
+          return nodesInfoBuilder_.getMessage(index);
+        }
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public int getPortNo(int index) {
-        return portNo_.get(index);
-      }
-      /**
-       * <code>repeated int32 port_no = 3;</code>
-       */
-      public Builder setPortNo(
-          int index, int value) {
-        ensurePortNoIsMutable();
-        portNo_.set(index, value);
-        onChanged();
+      public Builder setNodesInfo(
+          int index, pipe.election.Election.NodeInfo value) {
+        if (nodesInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesInfoIsMutable();
+          nodesInfo_.set(index, value);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public Builder addPortNo(int value) {
-        ensurePortNoIsMutable();
-        portNo_.add(value);
-        onChanged();
+      public Builder setNodesInfo(
+          int index, pipe.election.Election.NodeInfo.Builder builderForValue) {
+        if (nodesInfoBuilder_ == null) {
+          ensureNodesInfoIsMutable();
+          nodesInfo_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesInfoBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public Builder addAllPortNo(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensurePortNoIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, portNo_);
-        onChanged();
+      public Builder addNodesInfo(pipe.election.Election.NodeInfo value) {
+        if (nodesInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesInfoIsMutable();
+          nodesInfo_.add(value);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
-       * <code>repeated int32 port_no = 3;</code>
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
        */
-      public Builder clearPortNo() {
-        portNo_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
+      public Builder addNodesInfo(
+          int index, pipe.election.Election.NodeInfo value) {
+        if (nodesInfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesInfoIsMutable();
+          nodesInfo_.add(index, value);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.addMessage(index, value);
+        }
         return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public Builder addNodesInfo(
+          pipe.election.Election.NodeInfo.Builder builderForValue) {
+        if (nodesInfoBuilder_ == null) {
+          ensureNodesInfoIsMutable();
+          nodesInfo_.add(builderForValue.build());
+          onChanged();
+        } else {
+          nodesInfoBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public Builder addNodesInfo(
+          int index, pipe.election.Election.NodeInfo.Builder builderForValue) {
+        if (nodesInfoBuilder_ == null) {
+          ensureNodesInfoIsMutable();
+          nodesInfo_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesInfoBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public Builder addAllNodesInfo(
+          java.lang.Iterable<? extends pipe.election.Election.NodeInfo> values) {
+        if (nodesInfoBuilder_ == null) {
+          ensureNodesInfoIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodesInfo_);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public Builder clearNodesInfo() {
+        if (nodesInfoBuilder_ == null) {
+          nodesInfo_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public Builder removeNodesInfo(int index) {
+        if (nodesInfoBuilder_ == null) {
+          ensureNodesInfoIsMutable();
+          nodesInfo_.remove(index);
+          onChanged();
+        } else {
+          nodesInfoBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public pipe.election.Election.NodeInfo.Builder getNodesInfoBuilder(
+          int index) {
+        return getNodesInfoFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public pipe.election.Election.NodeInfoOrBuilder getNodesInfoOrBuilder(
+          int index) {
+        if (nodesInfoBuilder_ == null) {
+          return nodesInfo_.get(index);  } else {
+          return nodesInfoBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public java.util.List<? extends pipe.election.Election.NodeInfoOrBuilder> 
+           getNodesInfoOrBuilderList() {
+        if (nodesInfoBuilder_ != null) {
+          return nodesInfoBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(nodesInfo_);
+        }
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public pipe.election.Election.NodeInfo.Builder addNodesInfoBuilder() {
+        return getNodesInfoFieldBuilder().addBuilder(
+            pipe.election.Election.NodeInfo.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public pipe.election.Election.NodeInfo.Builder addNodesInfoBuilder(
+          int index) {
+        return getNodesInfoFieldBuilder().addBuilder(
+            index, pipe.election.Election.NodeInfo.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .NodeInfo nodesInfo = 1;</code>
+       */
+      public java.util.List<pipe.election.Election.NodeInfo.Builder> 
+           getNodesInfoBuilderList() {
+        return getNodesInfoFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder> 
+          getNodesInfoFieldBuilder() {
+        if (nodesInfoBuilder_ == null) {
+          nodesInfoBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              pipe.election.Election.NodeInfo, pipe.election.Election.NodeInfo.Builder, pipe.election.Election.NodeInfoOrBuilder>(
+                  nodesInfo_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          nodesInfo_ = null;
+        }
+        return nodesInfoBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:AllNodeInfo)
@@ -4172,6 +5026,11 @@ public final class Election {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_NewNodeMessage_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NodeInfo_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_NodeInfo_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_AllNodeInfo_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -4195,17 +5054,23 @@ public final class Election {
       "ELEADERIS\020\002\"\235\002\n\023RaftElectionMessage\0226\n\004t" +
       "ype\030\001 \002(\0162(.RaftElectionMessage.Election" +
       "MessageType\022)\n\017electionMessage\030\002 \001(\0132\020.E",
-      "lectionMessage\022\021\n\tleader_id\030\004 \001(\005\022\014\n\004ter" +
+      "lectionMessage\022\021\n\tleader_id\030\t \001(\005\022\014\n\004ter" +
       "m\030\005 \002(\005\022\035\n\006leader\030\010 \001(\0132\r.LeaderStatus\"c" +
       "\n\023ElectionMessageType\022\020\n\014VOTE_REQUEST\020\001\022" +
       "\024\n\020LEADER_HEARTBEAT\020\002\022\021\n\rVOTE_RESPONSE\020\003" +
       "\022\021\n\rLEADER_HB_ACK\020\004\"O\n\017ElectionMessage\022\024" +
       "\n\014candidate_id\030\001 \001(\005\022\024\n\014vote_granted\030\002 \001" +
-      "(\010\022\020\n\010voter_id\030\003 \001(\005\"Z\n\016NewNodeMessage\022\017" +
-      "\n\007node_id\030\001 \001(\005\022\021\n\thost_addr\030\002 \001(\t\022\017\n\007po" +
-      "rt_no\030\003 \001(\005\022\023\n\013joinCluster\030\004 \001(\005\"B\n\013AllN" +
-      "odeInfo\022\017\n\007node_id\030\001 \003(\005\022\021\n\thost_addr\030\002 ",
-      "\003(\t\022\017\n\007port_no\030\003 \003(\005B\021\n\rpipe.electionH\001"
+      "(\010\022\020\n\010voter_id\030\003 \001(\005\"\201\001\n\016NewNodeMessage\022" +
+      " \n\007msgType\030\001 \002(\0162\017.NewNodeMsgType\022#\n\013all" +
+      "NodeInfo\030\005 \001(\0132\014.AllNodeInfoH\000\022\035\n\010nodeIn" +
+      "fo\030\006 \001(\0132\t.NodeInfoH\000B\t\n\007payload\"?\n\010Node",
+      "Info\022\017\n\007node_id\030\001 \002(\005\022\021\n\thost_addr\030\002 \001(\t" +
+      "\022\017\n\007port_no\030\003 \002(\005\"+\n\013AllNodeInfo\022\034\n\tnode" +
+      "sInfo\030\001 \003(\0132\t.NodeInfo*\204\001\n\016NewNodeMsgTyp" +
+      "e\022\013\n\007MY_INFO\020\001\022\r\n\tI_AM_DONE\020\002\022\021\n\rI_AM_NE" +
+      "W_NODE\020\003\022\020\n\014ARE_YOU_DONE\020\004\022\017\n\013LEADER_INF" +
+      "O\020\005\022\021\n\rALL_NODE_INFO\020\006\022\r\n\tHEY_THERE\020\007B\021\n" +
+      "\rpipe.electionH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -4242,13 +5107,19 @@ public final class Election {
     internal_static_NewNodeMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_NewNodeMessage_descriptor,
-        new java.lang.String[] { "NodeId", "HostAddr", "PortNo", "JoinCluster", });
-    internal_static_AllNodeInfo_descriptor =
+        new java.lang.String[] { "MsgType", "AllNodeInfo", "NodeInfo", "Payload", });
+    internal_static_NodeInfo_descriptor =
       getDescriptor().getMessageTypes().get(4);
+    internal_static_NodeInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_NodeInfo_descriptor,
+        new java.lang.String[] { "NodeId", "HostAddr", "PortNo", });
+    internal_static_AllNodeInfo_descriptor =
+      getDescriptor().getMessageTypes().get(5);
     internal_static_AllNodeInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_AllNodeInfo_descriptor,
-        new java.lang.String[] { "NodeId", "HostAddr", "PortNo", });
+        new java.lang.String[] { "NodesInfo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

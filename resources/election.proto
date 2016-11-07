@@ -25,7 +25,7 @@ message LeaderStatus {
 message RaftElectionMessage {
   required ElectionMessageType type = 1;
   optional ElectionMessage electionMessage = 2;
-  optional int32 leader_id = 4;
+  optional int32 leader_id = 9;
   required int32 term = 5;
   optional LeaderStatus leader = 8;
   
@@ -44,18 +44,34 @@ message ElectionMessage {
   optional int32 voter_id = 3;
 }
 
+enum NewNodeMsgType {
+	MY_INFO = 1;
+	I_AM_DONE = 2;
+	I_AM_NEW_NODE = 3;
+	ARE_YOU_DONE = 4;
+	LEADER_INFO = 5;
+	ALL_NODE_INFO = 6;
+	HEY_THERE = 7;
+}
+
 //message which sends node information
 message NewNodeMessage {
-	optional int32 node_id = 1;
-	optional string host_addr = 2;
-	optional int32 port_no = 3;
-	optional int32 joinCluster =4;
+      required NewNodeMsgType msgType = 1;
+	  oneof payload {
+	  	AllNodeInfo allNodeInfo = 5;
+	  	NodeInfo nodeInfo = 6;
+	  }
 }	
 
 //message which sends other cluster node's information to new node
+message NodeInfo {
+	required int32 node_id = 1;
+	optional string host_addr = 2;
+	required int32 port_no = 3;
+}
+
+//message which sends other cluster node's information to new node
 message AllNodeInfo {
-	repeated int32 node_id = 1;
-	repeated string host_addr = 2;
-	repeated int32 port_no = 3;
+	repeated NodeInfo nodesInfo =1; 
 }	
 	

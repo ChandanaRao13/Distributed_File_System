@@ -27,6 +27,7 @@ public class RaftElectionContext implements Runnable {
 	private RoutingConf conf;
 	private EdgeMonitor emon;
 	private int leaderId;
+	private boolean amReady = true;
 
 	private int heartbeatdt = 3000;
 	private long timeOut = 3000;
@@ -58,7 +59,8 @@ public class RaftElectionContext implements Runnable {
 	}
 
 	protected void broadcast(WorkMessage msg){		
-		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){			
+		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){	
+			System.out.println("Sending HB::"+ei.getRef());
 			if(ei.isActive() && ei.getChannel()!=null){
 				ei.getChannel().writeAndFlush(msg);
 			}
@@ -136,6 +138,12 @@ public class RaftElectionContext implements Runnable {
 	}
 	public void setTimeOut(long timeOut) {
 		this.timeOut = timeOut;
+	}
+	public boolean isAmReady() {
+		return amReady;
+	}
+	public void setAmReady(boolean amReady) {
+		this.amReady = amReady;
 	}
 
 }

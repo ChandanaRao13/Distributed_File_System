@@ -2244,6 +2244,15 @@ public final class Work {
     pipe.work.Work.StealOrBuilder getStealOrBuilder();
 
     /**
+     * <code>optional bool newNode = 15;</code>
+     */
+    boolean hasNewNode();
+    /**
+     * <code>optional bool newNode = 15;</code>
+     */
+    boolean getNewNode();
+
+    /**
      * <code>optional .Failure err = 3;</code>
      */
     boolean hasErr();
@@ -2362,19 +2371,6 @@ public final class Work {
      * <code>optional .NewNodeMessage newNodeMessage = 11;</code>
      */
     pipe.election.Election.NewNodeMessageOrBuilder getNewNodeMessageOrBuilder();
-
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    boolean hasAllNodeInfo();
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    pipe.election.Election.AllNodeInfo getAllNodeInfo();
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder();
   }
   /**
    * Protobuf type {@code WorkMessage}
@@ -2559,19 +2555,6 @@ public final class Work {
               payloadCase_ = 11;
               break;
             }
-            case 98: {
-              pipe.election.Election.AllNodeInfo.Builder subBuilder = null;
-              if (payloadCase_ == 12) {
-                subBuilder = ((pipe.election.Election.AllNodeInfo) payload_).toBuilder();
-              }
-              payload_ = input.readMessage(pipe.election.Election.AllNodeInfo.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom((pipe.election.Election.AllNodeInfo) payload_);
-                payload_ = subBuilder.buildPartial();
-              }
-              payloadCase_ = 12;
-              break;
-            }
             case 104: {
               int rawValue = input.readEnum();
               pipe.work.Work.WorkMessage.Worktype value = pipe.work.Work.WorkMessage.Worktype.valueOf(rawValue);
@@ -2587,6 +2570,11 @@ public final class Work {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
               requestId_ = bs;
+              break;
+            }
+            case 120: {
+              bitField0_ |= 0x00000020;
+              newNode_ = input.readBool();
               break;
             }
           }
@@ -2795,7 +2783,6 @@ public final class Work {
       LEADER(8),
       RAFTMESSAGE(9),
       NEWNODEMESSAGE(11),
-      ALLNODEINFO(12),
       PAYLOAD_NOT_SET(0);
       private int value = 0;
       private PayloadCase(int value) {
@@ -2811,7 +2798,6 @@ public final class Work {
           case 8: return LEADER;
           case 9: return RAFTMESSAGE;
           case 11: return NEWNODEMESSAGE;
-          case 12: return ALLNODEINFO;
           case 0: return PAYLOAD_NOT_SET;
           default: throw new java.lang.IllegalArgumentException(
             "Value is undefined for this oneof enum.");
@@ -2940,6 +2926,21 @@ public final class Work {
      */
     public pipe.work.Work.StealOrBuilder getStealOrBuilder() {
       return steal_;
+    }
+
+    public static final int NEWNODE_FIELD_NUMBER = 15;
+    private boolean newNode_;
+    /**
+     * <code>optional bool newNode = 15;</code>
+     */
+    public boolean hasNewNode() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bool newNode = 15;</code>
+     */
+    public boolean getNewNode() {
+      return newNode_;
     }
 
     public static final int ERR_FIELD_NUMBER = 3;
@@ -3161,38 +3162,13 @@ public final class Work {
       return pipe.election.Election.NewNodeMessage.getDefaultInstance();
     }
 
-    public static final int ALLNODEINFO_FIELD_NUMBER = 12;
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    public boolean hasAllNodeInfo() {
-      return payloadCase_ == 12;
-    }
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
-      if (payloadCase_ == 12) {
-         return (pipe.election.Election.AllNodeInfo) payload_;
-      }
-      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
-    }
-    /**
-     * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-     */
-    public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
-      if (payloadCase_ == 12) {
-         return (pipe.election.Election.AllNodeInfo) payload_;
-      }
-      return pipe.election.Election.AllNodeInfo.getDefaultInstance();
-    }
-
     private void initFields() {
       header_ = pipe.common.Common.Header.getDefaultInstance();
       secret_ = 0L;
       requestId_ = "";
       worktype_ = pipe.work.Work.WorkMessage.Worktype.REPLICATE_REQUEST;
       steal_ = pipe.work.Work.Steal.getDefaultInstance();
+      newNode_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3242,6 +3218,12 @@ public final class Work {
           return false;
         }
       }
+      if (hasNewNodeMessage()) {
+        if (!getNewNodeMessage().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -3283,14 +3265,14 @@ public final class Work {
       if (payloadCase_ == 11) {
         output.writeMessage(11, (pipe.election.Election.NewNodeMessage) payload_);
       }
-      if (payloadCase_ == 12) {
-        output.writeMessage(12, (pipe.election.Election.AllNodeInfo) payload_);
-      }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeEnum(13, worktype_.getNumber());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(14, getRequestIdBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBool(15, newNode_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -3346,10 +3328,6 @@ public final class Work {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, (pipe.election.Election.NewNodeMessage) payload_);
       }
-      if (payloadCase_ == 12) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(12, (pipe.election.Election.AllNodeInfo) payload_);
-      }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(13, worktype_.getNumber());
@@ -3357,6 +3335,10 @@ public final class Work {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(14, getRequestIdBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(15, newNode_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3499,6 +3481,8 @@ public final class Work {
           stealBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000010);
+        newNode_ = false;
+        bitField0_ = (bitField0_ & ~0x00000020);
         payloadCase_ = 0;
         payload_ = null;
         return this;
@@ -3557,6 +3541,10 @@ public final class Work {
         } else {
           result.steal_ = stealBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.newNode_ = newNode_;
         if (payloadCase_ == 3) {
           if (errBuilder_ == null) {
             result.payload_ = payload_;
@@ -3609,13 +3597,6 @@ public final class Work {
             result.payload_ = newNodeMessageBuilder_.build();
           }
         }
-        if (payloadCase_ == 12) {
-          if (allNodeInfoBuilder_ == null) {
-            result.payload_ = payload_;
-          } else {
-            result.payload_ = allNodeInfoBuilder_.build();
-          }
-        }
         result.bitField0_ = to_bitField0_;
         result.payloadCase_ = payloadCase_;
         onBuilt();
@@ -3650,6 +3631,9 @@ public final class Work {
         if (other.hasSteal()) {
           mergeSteal(other.getSteal());
         }
+        if (other.hasNewNode()) {
+          setNewNode(other.getNewNode());
+        }
         switch (other.getPayloadCase()) {
           case ERR: {
             mergeErr(other.getErr());
@@ -3681,10 +3665,6 @@ public final class Work {
           }
           case NEWNODEMESSAGE: {
             mergeNewNodeMessage(other.getNewNodeMessage());
-            break;
-          }
-          case ALLNODEINFO: {
-            mergeAllNodeInfo(other.getAllNodeInfo());
             break;
           }
           case PAYLOAD_NOT_SET: {
@@ -3734,6 +3714,12 @@ public final class Work {
         }
         if (hasRaftMessage()) {
           if (!getRaftMessage().isInitialized()) {
+            
+            return false;
+          }
+        }
+        if (hasNewNodeMessage()) {
+          if (!getNewNodeMessage().isInitialized()) {
             
             return false;
           }
@@ -4148,6 +4134,38 @@ public final class Work {
           steal_ = null;
         }
         return stealBuilder_;
+      }
+
+      private boolean newNode_ ;
+      /**
+       * <code>optional bool newNode = 15;</code>
+       */
+      public boolean hasNewNode() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional bool newNode = 15;</code>
+       */
+      public boolean getNewNode() {
+        return newNode_;
+      }
+      /**
+       * <code>optional bool newNode = 15;</code>
+       */
+      public Builder setNewNode(boolean value) {
+        bitField0_ |= 0x00000020;
+        newNode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool newNode = 15;</code>
+       */
+      public Builder clearNewNode() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        newNode_ = false;
+        onChanged();
+        return this;
       }
 
       private com.google.protobuf.SingleFieldBuilder<
@@ -5183,141 +5201,6 @@ public final class Work {
         return newNodeMessageBuilder_;
       }
 
-      private com.google.protobuf.SingleFieldBuilder<
-          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> allNodeInfoBuilder_;
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public boolean hasAllNodeInfo() {
-        return payloadCase_ == 12;
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public pipe.election.Election.AllNodeInfo getAllNodeInfo() {
-        if (allNodeInfoBuilder_ == null) {
-          if (payloadCase_ == 12) {
-            return (pipe.election.Election.AllNodeInfo) payload_;
-          }
-          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
-        } else {
-          if (payloadCase_ == 12) {
-            return allNodeInfoBuilder_.getMessage();
-          }
-          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public Builder setAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
-        if (allNodeInfoBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          payload_ = value;
-          onChanged();
-        } else {
-          allNodeInfoBuilder_.setMessage(value);
-        }
-        payloadCase_ = 12;
-        return this;
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public Builder setAllNodeInfo(
-          pipe.election.Election.AllNodeInfo.Builder builderForValue) {
-        if (allNodeInfoBuilder_ == null) {
-          payload_ = builderForValue.build();
-          onChanged();
-        } else {
-          allNodeInfoBuilder_.setMessage(builderForValue.build());
-        }
-        payloadCase_ = 12;
-        return this;
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public Builder mergeAllNodeInfo(pipe.election.Election.AllNodeInfo value) {
-        if (allNodeInfoBuilder_ == null) {
-          if (payloadCase_ == 12 &&
-              payload_ != pipe.election.Election.AllNodeInfo.getDefaultInstance()) {
-            payload_ = pipe.election.Election.AllNodeInfo.newBuilder((pipe.election.Election.AllNodeInfo) payload_)
-                .mergeFrom(value).buildPartial();
-          } else {
-            payload_ = value;
-          }
-          onChanged();
-        } else {
-          if (payloadCase_ == 12) {
-            allNodeInfoBuilder_.mergeFrom(value);
-          }
-          allNodeInfoBuilder_.setMessage(value);
-        }
-        payloadCase_ = 12;
-        return this;
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public Builder clearAllNodeInfo() {
-        if (allNodeInfoBuilder_ == null) {
-          if (payloadCase_ == 12) {
-            payloadCase_ = 0;
-            payload_ = null;
-            onChanged();
-          }
-        } else {
-          if (payloadCase_ == 12) {
-            payloadCase_ = 0;
-            payload_ = null;
-          }
-          allNodeInfoBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public pipe.election.Election.AllNodeInfo.Builder getAllNodeInfoBuilder() {
-        return getAllNodeInfoFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      public pipe.election.Election.AllNodeInfoOrBuilder getAllNodeInfoOrBuilder() {
-        if ((payloadCase_ == 12) && (allNodeInfoBuilder_ != null)) {
-          return allNodeInfoBuilder_.getMessageOrBuilder();
-        } else {
-          if (payloadCase_ == 12) {
-            return (pipe.election.Election.AllNodeInfo) payload_;
-          }
-          return pipe.election.Election.AllNodeInfo.getDefaultInstance();
-        }
-      }
-      /**
-       * <code>optional .AllNodeInfo allNodeInfo = 12;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder> 
-          getAllNodeInfoFieldBuilder() {
-        if (allNodeInfoBuilder_ == null) {
-          if (!(payloadCase_ == 12)) {
-            payload_ = pipe.election.Election.AllNodeInfo.getDefaultInstance();
-          }
-          allNodeInfoBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              pipe.election.Election.AllNodeInfo, pipe.election.Election.AllNodeInfo.Builder, pipe.election.Election.AllNodeInfoOrBuilder>(
-                  (pipe.election.Election.AllNodeInfo) payload_,
-                  getParentForChildren(),
-                  isClean());
-          payload_ = null;
-        }
-        payloadCase_ = 12;
-        return allNodeInfoBuilder_;
-      }
-
       // @@protoc_insertion_point(builder_scope:WorkMessage)
     }
 
@@ -5369,28 +5252,28 @@ public final class Work {
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
       "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"I\n\005Steal\022\036\n\t" +
       "readSteal\030\001 \001(\0162\013.READ_STEAL\022 \n\nwriteSte" +
-      "al\030\003 \001(\0162\014.WRITE_STEAL\"\271\005\n\013WorkMessage\022\027" +
+      "al\030\003 \001(\0162\014.WRITE_STEAL\"\245\005\n\013WorkMessage\022\027" +
       "\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002 \002(\003\022" +
       "\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(\0162\025.W" +
       "orkMessage.Worktype\022\025\n\005steal\030\n \001(\0132\006.Ste",
-      "al\022\027\n\003err\030\003 \001(\0132\010.FailureH\000\022\016\n\004ping\030\004 \001(" +
-      "\010H\000\022\032\n\004beat\030\005 \001(\0132\n.HeartbeatH\000\022\035\n\010filet" +
-      "ask\030\006 \001(\0132\t.FileTaskH\000\022\033\n\005state\030\007 \001(\0132\n." +
-      "WorkStateH\000\022\037\n\006leader\030\010 \001(\0132\r.LeaderStat" +
-      "usH\000\022+\n\013raftMessage\030\t \001(\0132\024.RaftElection" +
-      "MessageH\000\022)\n\016newNodeMessage\030\013 \001(\0132\017.NewN" +
-      "odeMessageH\000\022#\n\013allNodeInfo\030\014 \001(\0132\014.AllN" +
-      "odeInfoH\000\"\203\002\n\010Worktype\022\025\n\021REPLICATE_REQU" +
-      "EST\020\001\022\020\n\014READ_REQUEST\020\002\022\031\n\025READ_REQUEST_" +
-      "RESPONSE\020\003\022\026\n\022REPLICATE_RESPONSE\020\004\022\022\n\016DE",
-      "LETE_REQUEST\020\005\022\023\n\017DELETE_RESPONSE\020\006\022\034\n\030U" +
-      "PDATE_REPLICATE_REQUEST\020\007\022\031\n\025UPDATE_DELE" +
-      "TE_REQUEST\020\010\022\035\n\031UPDATE_REPLICATE_RESPONS" +
-      "E\020\t\022\032\n\026UPDATE_DELETE_RESPONSE\020\nB\t\n\007paylo" +
-      "ad*=\n\nREAD_STEAL\022\026\n\022READ_STEAL_REQUEST\020\001" +
-      "\022\027\n\023READ_STEAL_RESPONSE\020\002*@\n\013WRITE_STEAL" +
-      "\022\027\n\023WRITE_STEAL_REQUEST\020\001\022\030\n\024WRITE_STEAL" +
-      "_RESPONSE\020\002B\r\n\tpipe.workH\001"
+      "al\022\017\n\007newNode\030\017 \001(\010\022\027\n\003err\030\003 \001(\0132\010.Failu" +
+      "reH\000\022\016\n\004ping\030\004 \001(\010H\000\022\032\n\004beat\030\005 \001(\0132\n.Hea" +
+      "rtbeatH\000\022\035\n\010filetask\030\006 \001(\0132\t.FileTaskH\000\022" +
+      "\033\n\005state\030\007 \001(\0132\n.WorkStateH\000\022\037\n\006leader\030\010" +
+      " \001(\0132\r.LeaderStatusH\000\022+\n\013raftMessage\030\t \001" +
+      "(\0132\024.RaftElectionMessageH\000\022)\n\016newNodeMes" +
+      "sage\030\013 \001(\0132\017.NewNodeMessageH\000\"\203\002\n\010Workty" +
+      "pe\022\025\n\021REPLICATE_REQUEST\020\001\022\020\n\014READ_REQUES" +
+      "T\020\002\022\031\n\025READ_REQUEST_RESPONSE\020\003\022\026\n\022REPLIC" +
+      "ATE_RESPONSE\020\004\022\022\n\016DELETE_REQUEST\020\005\022\023\n\017DE",
+      "LETE_RESPONSE\020\006\022\034\n\030UPDATE_REPLICATE_REQU" +
+      "EST\020\007\022\031\n\025UPDATE_DELETE_REQUEST\020\010\022\035\n\031UPDA" +
+      "TE_REPLICATE_RESPONSE\020\t\022\032\n\026UPDATE_DELETE" +
+      "_RESPONSE\020\nB\t\n\007payload*=\n\nREAD_STEAL\022\026\n\022" +
+      "READ_STEAL_REQUEST\020\001\022\027\n\023READ_STEAL_RESPO" +
+      "NSE\020\002*@\n\013WRITE_STEAL\022\027\n\023WRITE_STEAL_REQU" +
+      "EST\020\001\022\030\n\024WRITE_STEAL_RESPONSE\020\002B\r\n\tpipe." +
+      "workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5436,7 +5319,7 @@ public final class Work {
     internal_static_WorkMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_WorkMessage_descriptor,
-        new java.lang.String[] { "Header", "Secret", "RequestId", "Worktype", "Steal", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNodeMessage", "AllNodeInfo", "Payload", });
+        new java.lang.String[] { "Header", "Secret", "RequestId", "Worktype", "Steal", "NewNode", "Err", "Ping", "Beat", "Filetask", "State", "Leader", "RaftMessage", "NewNodeMessage", "Payload", });
     pipe.common.Common.getDescriptor();
     pipe.election.Election.getDescriptor();
     routing.Pipe.getDescriptor();

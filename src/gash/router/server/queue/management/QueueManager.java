@@ -187,4 +187,11 @@ public class QueueManager {
 	public InternalChannelNode dequeueInboundWorkWrite() throws InterruptedException {
 			return inboundWorkWriteQueue.take();
 	}
+
+	/**
+	 * method for new node to see if the inbound write queue is empty
+	 */
+	public boolean isInboundWorkWriteQEmpty() {
+		return this.inboundWorkWriteQueue.isEmpty();
+	}
 }

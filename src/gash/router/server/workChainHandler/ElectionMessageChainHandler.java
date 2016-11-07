@@ -34,11 +34,15 @@ public class ElectionMessageChainHandler implements IWorkChainHandler {
 			WorkMessage buildNewNodeLeaderStatusResponseMessage = RaftMessageBuilder
 					.buildTheLeaderIsMessage(state.getElectionCtx().getLeaderId(),state.getElectionCtx().getTerm());				
 			ChannelFuture cf = channel.write(buildNewNodeLeaderStatusResponseMessage);
+			try{
 			channel.flush();
 			cf.awaitUninterruptibly();
 			if (cf.isDone() && !cf.isSuccess()) {
 				logger.info("Failed to write the message to the channel ");
-			}			
+			}		
+			}catch(Exception e){
+				System.out.println("Exception at Who is the Leader"+e.getMessage());
+			}
 			state.getEmon().getOutBoundEdgesList().getNode(workMessage.getHeader().getNodeId()).setChannel(channel);
 
 		}else if (workMessage.hasLeader() && workMessage.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {

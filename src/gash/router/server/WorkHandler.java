@@ -21,7 +21,7 @@ import gash.router.server.workChainHandler.ElectionMessageChainHandler;
 import gash.router.server.workChainHandler.FailureHandler;
 import gash.router.server.workChainHandler.HeartBeatHandler;
 import gash.router.server.workChainHandler.IWorkChainHandler;
-import gash.router.server.workChainHandler.NewNodeChainHandler;
+import gash.router.server.workChainHandler.NewNodeChainHandlerV2;
 import gash.router.server.workChainHandler.PingHandler;
 import gash.router.server.workChainHandler.TaskHandler;
 import gash.router.server.workChainHandler.WorkStealHandler;
@@ -79,7 +79,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		this.taskMessageChainHandler = new TaskHandler();
 		this.workStealMessageChainHandler = new WorkStealHandler();
 		this.electionMessageChainHandler = new ElectionMessageChainHandler();
-		this.newNodeChainHandler = new NewNodeChainHandler();
+		this.newNodeChainHandler = new NewNodeChainHandlerV2();
 
 		this.hearBeatChainHandler.setNextChain(electionMessageChainHandler,state);
 		this.electionMessageChainHandler.setNextChain(newNodeChainHandler,state);
@@ -113,7 +113,9 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 			Failure.Builder eb = Failure.newBuilder();
 			eb.setId(state.getConf().getNodeId());
 			eb.setRefId(msg.getHeader().getNodeId());
-			eb.setMessage(e.getMessage());
+			// changing e.getMessage to some string
+			//eb.setMessage(e.getMessage());
+			eb.setMessage("fixing the null pointer");
 			WorkMessage.Builder rb = WorkMessage.newBuilder(msg);
 			rb.setErr(eb);
 			channel.write(rb.build());

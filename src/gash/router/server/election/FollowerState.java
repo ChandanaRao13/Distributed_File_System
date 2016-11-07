@@ -16,7 +16,9 @@ public class FollowerState implements IRaftNodeState {
 			electionCtx.setCurrentState(electionCtx.candidate);		
 			return;
 		}
-		electionCtx.computeTime();
+		
+		if(electionCtx.isAmReady())
+			electionCtx.computeTime();
 	}	
 
 	@Override

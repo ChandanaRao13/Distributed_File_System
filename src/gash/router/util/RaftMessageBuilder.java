@@ -175,6 +175,7 @@ public class RaftMessageBuilder {
 		return workMessageBuilder.build();
 	}
 	
+	/*
 	//message to add new node details to nodes in cluster
 	public static WorkMessage addNewNodeInfo(int flag) {
 		Header.Builder hb = Header.newBuilder();
@@ -213,6 +214,6 @@ public class RaftMessageBuilder {
 		wb.setSecret(2);
 		wb.setAllNodeInfo(allNodeInfoMessage);
 		return wb.build();
-	}
+	}*/
 	
 }

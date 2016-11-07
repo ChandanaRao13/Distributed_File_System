@@ -159,6 +159,7 @@ public class DemoApp implements CommListener {
 			//da.chunkFile(args[0]);
 			//da.sendFileAsChunks(new File(args[0]));
 			//da.updateFileAsChunks(args[0], new File(args[1]));
+			//da.sendReadFileTasks(args[0]);
 			//da.sendDeleteFileTasks(args[0]);
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();

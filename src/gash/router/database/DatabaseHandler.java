@@ -76,6 +76,7 @@ public class DatabaseHandler {
 					.with(Constants.CHUNK_COUNT, totalChunks).with(Constants.FILE_CONTENT, contentString)
 					.with(Constants.CHUNK_ID, chunkId))
 			.run(conn);
+			//System.out.println("File saved to DB: " + filename);
 			return true;
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to store file in the database");
