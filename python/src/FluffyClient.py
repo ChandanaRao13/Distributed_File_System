@@ -43,7 +43,7 @@ class FluffyClient:
     def openConnection(self):
         self.socket.connect((self.host, self.portNumber))
         self.logger.logInfoMessage("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
-        self.print_success("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
+        self.print_success("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber) + "\n")
 
     def closeConnection(self):
         connectionStopMsg = self.clientServerMessageBuilder.buildGeneralMessage(self.nodeId, self.time, self.name + " is closing the session!!!")
@@ -115,6 +115,17 @@ class FluffyClient:
             file.close()
             pass
         return "created file at: " + filepath + " with name: " + filename
+
+    def updateFileInServer(self, filename, chunkCount, chunkId, fileChunk):
+        newCommandMsg = self.clientServerMessageBuilder.buildWriteUpdateCommandMessage(self.nodeId, self.time, self.myIp, filename, chunkCount, chunkId, fileChunk)
+        self._sendCommandMessage(newCommandMsg)
+        return self._recvCommandMessage()
+        pass
+
+    def deleteFileFromServer(self, filename):
+        newdeleteCommandMessage = self.clientServerMessageBuilder.buildReadCommandMessage(self.nodeId, self.time, self.myIp, filename)
+        self._sendCommandMessage(newdeleteCommandMessage)
+        pass
 
     def receiveMessageFromServer(self, socket, n):
         buf = ''

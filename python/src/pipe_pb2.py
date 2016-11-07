@@ -19,7 +19,7 @@ import common_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='pipe.proto',
   package='',
-  serialized_pb=_b('\n\npipe.proto\x1a\x0c\x63ommon.proto\"\xc4\x01\n\x08\x46ileTask\x12\x10\n\x08\x63hunk_no\x18\x01 \x01(\x05\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\x12\x10\n\x08\x66ilename\x18\x03 \x02(\t\x12.\n\x0e\x66ile_task_type\x18\x04 \x02(\x0e\x32\x16.FileTask.FileTaskType\x12\x14\n\x0c\x63hunk_counts\x18\x05 \x01(\x05\x12\x0e\n\x06sender\x18\x06 \x01(\t\"/\n\x0c\x46ileTaskType\x12\x08\n\x04READ\x10\x01\x12\t\n\x05WRITE\x10\x02\x12\n\n\x06\x44\x45LETE\x10\x03\"\x9d\x01\n\x0e\x43ommandMessage\x12\x17\n\x06header\x18\x01 \x02(\x0b\x32\x07.Header\x12\x1b\n\x08\x66iletask\x18\x02 \x01(\x0b\x32\t.FileTask\x12\x0e\n\x04\x66ile\x18\x06 \x01(\x0cH\x00\x12\x0e\n\x04ping\x18\x03 \x01(\x08H\x00\x12\x11\n\x07message\x18\x04 \x01(\tH\x00\x12\x17\n\x03\x65rr\x18\x05 \x01(\x0b\x32\x08.FailureH\x00\x42\t\n\x07payloadB\x0b\n\x07routingH\x01')
+  serialized_pb=_b('\n\npipe.proto\x1a\x0c\x63ommon.proto\"\xd0\x01\n\x08\x46ileTask\x12\x10\n\x08\x63hunk_no\x18\x01 \x01(\x05\x12\r\n\x05\x63hunk\x18\x02 \x01(\x0c\x12\x10\n\x08\x66ilename\x18\x03 \x02(\t\x12.\n\x0e\x66ile_task_type\x18\x04 \x02(\x0e\x32\x16.FileTask.FileTaskType\x12\x14\n\x0c\x63hunk_counts\x18\x05 \x01(\x05\x12\x0e\n\x06sender\x18\x06 \x01(\t\";\n\x0c\x46ileTaskType\x12\x08\n\x04READ\x10\x01\x12\t\n\x05WRITE\x10\x02\x12\n\n\x06\x44\x45LETE\x10\x03\x12\n\n\x06UPDATE\x10\x04\"\x9d\x01\n\x0e\x43ommandMessage\x12\x17\n\x06header\x18\x01 \x02(\x0b\x32\x07.Header\x12\x1b\n\x08\x66iletask\x18\x02 \x01(\x0b\x32\t.FileTask\x12\x0e\n\x04\x66ile\x18\x06 \x01(\x0cH\x00\x12\x0e\n\x04ping\x18\x03 \x01(\x08H\x00\x12\x11\n\x07message\x18\x04 \x01(\tH\x00\x12\x17\n\x03\x65rr\x18\x05 \x01(\x0b\x32\x08.FailureH\x00\x42\t\n\x07payloadB\x0b\n\x07routingH\x01')
   ,
   dependencies=[common_pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -44,11 +44,15 @@ _FILETASK_FILETASKTYPE = _descriptor.EnumDescriptor(
       name='DELETE', index=2, number=3,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='UPDATE', index=3, number=4,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=178,
-  serialized_end=225,
+  serialized_end=237,
 )
 _sym_db.RegisterEnumDescriptor(_FILETASK_FILETASKTYPE)
 
@@ -115,7 +119,7 @@ _FILETASK = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=29,
-  serialized_end=225,
+  serialized_end=237,
 )
 
 
@@ -182,8 +186,8 @@ _COMMANDMESSAGE = _descriptor.Descriptor(
       name='payload', full_name='CommandMessage.payload',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=228,
-  serialized_end=385,
+  serialized_start=240,
+  serialized_end=397,
 )
 
 _FILETASK.fields_by_name['file_task_type'].enum_type = _FILETASK_FILETASKTYPE

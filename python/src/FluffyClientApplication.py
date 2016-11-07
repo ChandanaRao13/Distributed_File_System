@@ -2,6 +2,8 @@ import sys
 from Logger import Logger
 from FluffyClient import FluffyClient
 from termcolor import colored
+import progressbar
+from time import sleep
 
 class FluffyClientApplication:
     def __init__(self):
@@ -26,12 +28,14 @@ class FluffyClientApplication:
         print("\n")
 
     def _printHelpContent(self):
-        print("Select an option by using the option number tagged along with the option: ")
-        print("**************************************************************************")
-        print("(1) upload - uploads a file into fluffy server\n")
-        print("(2) download - downloads a file from fluffy server\n")
-        print("(3) help - prints all the options present\n")
-        print("(4) exit - ends the application\n")
+        self.print_menu("Select an option by using the option number tagged along with the option: ")
+        self.print_menu("**************************************************************************")
+        self.print_menu("(1) upload - uploads a file into fluffy server\n")
+        self.print_menu("(2) download - downloads a file from fluffy server\n")
+        self.print_menu("(3) re-upload - uploads a file to update in fluffy server\n")
+        self.print_menu("(4) delete - deletes the file in fluffy server\n")
+        self.print_menu("(5) help - prints all the options present\n")
+        self.print_menu("(6) exit - ends the application\n")
         #print("**************************************************************************")
         self.print_info("Your option: ")
 
@@ -46,6 +50,9 @@ class FluffyClientApplication:
 
     def print_info(self, msg):
         print (colored(msg, 'blue'))
+
+    def print_menu(self, msg):
+        print (colored(msg, 'magenta'))
 
     def start(self):
         self.name = None
@@ -94,9 +101,25 @@ class FluffyClientApplication:
                 fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
                 chunkCount = len(fileChunks)
                 chunkId = 1
-                for fileChunk in fileChunks:
-                    serverResponse = self.fluffyClient.sendFileToServer(filename, chunkCount, chunkId, fileChunk)
-                    chunkId += 1
+                index = 1
+                multiple = chunkCount / 100
+                if (multiple > 100):
+                    self.print_info("Uploading.......")
+                    for fileChunk in fileChunks:
+                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        if (chunkId % multiple == 0 and index <= 100):
+                            sys.stdout.write('\r')
+                            sys.stdout.write("[%-100s] %d%%" % ('=' * index, 1 * index))
+                            sys.stdout.flush()
+                            index += 1
+                        chunkId += 1
+
+                else:
+                    self.print_info("Uploading.......")
+                    for fileChunk in fileChunks:
+                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        chunkId += 1
+
                 self.print_success("Client: Successfully uploaded file")
                 self._printHelpContent()
             ##
@@ -112,19 +135,63 @@ class FluffyClientApplication:
                 self._printHelpContent()
 
             ##
-            # displaying the commands
+            # re-upload the file i.e update
             ##
             elif (optionSelected == 3):
+                self.print_info("Enter path name of the file (eg: '/home/abcd/folder'): ")
+                filepath = raw_input()
+                self.print_info("Enter the name of your file (eg: test.txt): ")
+                filename = raw_input()
+                # bc.sendData(bc.genPing(),"127.0.0.1",4186);
+                fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
+                chunkCount = len(fileChunks)
+                chunkId = 1
+                index = 1
+                multiple = chunkCount / 100
+                if(multiple > 100):
+                    self.print_info("ReUploading.......")
+                    for fileChunk in fileChunks:
+                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        if (chunkId % multiple == 0 and index <= 100):
+                            sys.stdout.write('\r')
+                            sys.stdout.write("[%-100s] %d%%" % ('=' * index, 1 * index))
+                            sys.stdout.flush()
+                            index += 1
+                        chunkId += 1
+
+                else:
+                    self.print_info("ReUploading.......")
+                    for fileChunk in fileChunks:
+                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        chunkId += 1
+
+
+                self.print_success("Client: Successfully re uploaded file")
+                self._printHelpContent()
+
+            ##
+            #  delete the file
+            ##
+            elif (optionSelected == 4):
+                self.print_info("Enter the filename you want to delete from Fluffy: ")
+                filename = raw_input()
+                self.fluffyClient.deleteFileFromServer(filename)
+                self.print_error("Successfully deleted the file: " + filename)
+                self._printHelpContent()
+            ##
+            # displaying the commands
+            ##
+            elif (optionSelected == 5):
                 self._printHelpContent()
             ##
             # exiting the client application
             ##
-            elif (optionSelected == 4):
+            elif (optionSelected == 6):
                 self.fluffyClient.closeConnection()
                 self._printClosingMessage(self.name)
                 break
             else:
-                self.print_error("Error: Incorrect option selected: " + str(optionSelected) + " ,option should be in range (1 - 4)")
+                self.print_error("Error: Incorrect option selected: " + str(optionSelected) + " ,option should be in range (1 - 6)")
 
 if __name__ == "__main__":
     fluffyApp = FluffyClientApplication()
