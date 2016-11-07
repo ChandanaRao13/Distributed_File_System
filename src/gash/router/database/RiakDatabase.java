@@ -95,7 +95,6 @@ public class RiakDatabase {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
 			boolean exist = false;
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			FetchValue getFile = new FetchValue.Builder(fileLocation).build();
 			FetchValue.Response response = riakClient.execute(getFile);
@@ -147,7 +146,6 @@ public class RiakDatabase {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			FetchValue getFile = new FetchValue.Builder(fileLocation).build();
 			FetchValue.Response response = riakClient.execute(getFile);
@@ -169,7 +167,6 @@ public class RiakDatabase {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			FetchValue getFile = new FetchValue.Builder(fileLocation).build();
 			FetchValue.Response response = riakClient.execute(getFile);
@@ -186,11 +183,10 @@ public class RiakDatabase {
 	}
 
 	//retrieve the file if present
-	public synchronized List<FluffyFile> getFileWithChunkID(String filename,int chunkId) {
+	public synchronized FluffyFile getFileWithChunkID(String filename,int chunkId) {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			FetchValue getFile = new FetchValue.Builder(fileLocation).build();
 			FetchValue.Response response = riakClient.execute(getFile);
@@ -198,10 +194,10 @@ public class RiakDatabase {
 			riakCluster.shutdown();
 			if(outputFile!=null) {
 				for(int i=0;i<outputFile.getFiles().size();i++) {
-					if(outputFile.getFiles().get(i).getChunkId()==chunkId)
-						return outputFile.getFiles();
+					if(outputFile.getFiles().get(i).getChunkId()==chunkId) {
+						return outputFile.getFiles().get(i);
+					}
 				}
-
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -216,7 +212,6 @@ public class RiakDatabase {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			FetchValue getFile = new FetchValue.Builder(fileLocation).build();
 			FetchValue.Response response = riakClient.execute(getFile);
@@ -242,7 +237,6 @@ public class RiakDatabase {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			List<FluffyFile> allFiles = new ArrayList<>();
 			URL getFileUrl = new URL("http://localhost:8098/buckets/FluffyRiakDatabase/keys?keys=true");
 			BufferedReader in = new BufferedReader(new InputStreamReader(getFileUrl.openStream()));
@@ -279,7 +273,6 @@ public class RiakDatabase {
 		try {
 			riakClient = new RiakClient(riakCluster);
 			Namespace databaseRiak = new Namespace(Constants.DATABASE_RIAK);
-			//Namespace databaseRiak = new Namespace("Test");
 			Location fileLocation = new Location(databaseRiak, filename);
 			DeleteValue dv = new DeleteValue.Builder(fileLocation).build();
 			riakClient.execute(dv);		

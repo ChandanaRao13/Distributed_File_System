@@ -34,10 +34,8 @@ public class DatabaseConnectionManager {
 			conn = rethinkDBInstance.connection()
 					.hostname(Constants.RETHINK_HOST)	
 					.port(Constants.RETHINK_PORT).connect();
-			System.out.println("Connection Established");
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to create a connection with the database");
-			System.out.println("Could not establish database connection");
 		}
 		
 		return conn;
