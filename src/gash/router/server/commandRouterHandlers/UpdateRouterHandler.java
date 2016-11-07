@@ -32,17 +32,14 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 			boolean inRiak = DatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
 			boolean inRethink = DatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
 			String filename = fileTask.getFilename();
-			System.out.println("The filename to update:" + filename);
 			if(inRiak || inRethink){
 				logger.info("Deleting the file from database to update : " + filename);
 				if(!DataReplicationManager.fileUpdateTracker.containsKey(filename)){
 					UpdateFileInfo fileInfo = new UpdateFileInfo(fileTask.getChunkCounts());
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
-					logger.info("Trying to delete the file");
-					
+
 					if(DatabaseHandler.deleteFile(filename)){
-					//	DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
-					logger.info("Deleting the file..............");
+						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -58,7 +55,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 						
-						//DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
+						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry with write ...");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
