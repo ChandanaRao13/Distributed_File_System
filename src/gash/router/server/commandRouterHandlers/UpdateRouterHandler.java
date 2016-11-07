@@ -35,6 +35,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 			if(inRiak || inRethink){
 				logger.info("Deleting the file from database to update : " + filename);
 				if(!DataReplicationManager.fileUpdateTracker.containsKey(filename)){
+					System.out.println("Entered Here::::::::::");
 					UpdateFileInfo fileInfo = new UpdateFileInfo(fileTask.getChunkCounts());
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 
@@ -46,7 +47,6 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 						logger.error("File requested to update operation failed, in step to delete from the database");					
 					} 
 				} 
-				
 				UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
 				
 				if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
@@ -61,9 +61,10 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 						logger.error("Database write error, couldnot update the file into the database");
 					}
-				
-				if(fileInfo.getChunksProcessed() != 0) {
+				if(fileInfo.getChunksProcessed() > 0) {
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
+				} else {
+					DataReplicationManager.fileUpdateTracker.remove(filename);
 				}
 				
 				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");

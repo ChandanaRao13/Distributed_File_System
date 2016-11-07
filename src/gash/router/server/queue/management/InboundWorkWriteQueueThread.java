@@ -90,8 +90,10 @@ public class InboundWorkWriteQueueThread extends Thread{
 									QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);	
 								}
 							
-							if(fileInfo.getChunksProcessed() != 0) {
+							if(fileInfo.getChunksProcessed() > 0) {
 								DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
+							} else {
+								DataReplicationManager.fileUpdateTracker.remove(filename);
 							}
 						}
 					}
