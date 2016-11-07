@@ -2657,6 +2657,22 @@ public final class Work {
        * <code>DELETE_RESPONSE = 6;</code>
        */
       DELETE_RESPONSE(5, 6),
+      /**
+       * <code>UPDATE_REPLICATE_REQUEST = 7;</code>
+       */
+      UPDATE_REPLICATE_REQUEST(6, 7),
+      /**
+       * <code>UPDATE_DELETE_REQUEST = 8;</code>
+       */
+      UPDATE_DELETE_REQUEST(7, 8),
+      /**
+       * <code>UPDATE_REPLICATE_RESPONSE = 9;</code>
+       */
+      UPDATE_REPLICATE_RESPONSE(8, 9),
+      /**
+       * <code>UPDATE_DELETE_RESPONSE = 10;</code>
+       */
+      UPDATE_DELETE_RESPONSE(9, 10),
       ;
 
       /**
@@ -2683,6 +2699,22 @@ public final class Work {
        * <code>DELETE_RESPONSE = 6;</code>
        */
       public static final int DELETE_RESPONSE_VALUE = 6;
+      /**
+       * <code>UPDATE_REPLICATE_REQUEST = 7;</code>
+       */
+      public static final int UPDATE_REPLICATE_REQUEST_VALUE = 7;
+      /**
+       * <code>UPDATE_DELETE_REQUEST = 8;</code>
+       */
+      public static final int UPDATE_DELETE_REQUEST_VALUE = 8;
+      /**
+       * <code>UPDATE_REPLICATE_RESPONSE = 9;</code>
+       */
+      public static final int UPDATE_REPLICATE_RESPONSE_VALUE = 9;
+      /**
+       * <code>UPDATE_DELETE_RESPONSE = 10;</code>
+       */
+      public static final int UPDATE_DELETE_RESPONSE_VALUE = 10;
 
 
       public final int getNumber() { return value; }
@@ -2695,6 +2727,10 @@ public final class Work {
           case 4: return REPLICATE_RESPONSE;
           case 5: return DELETE_REQUEST;
           case 6: return DELETE_RESPONSE;
+          case 7: return UPDATE_REPLICATE_REQUEST;
+          case 8: return UPDATE_DELETE_REQUEST;
+          case 9: return UPDATE_REPLICATE_RESPONSE;
+          case 10: return UPDATE_DELETE_RESPONSE;
           default: return null;
         }
       }
@@ -5333,7 +5369,7 @@ public final class Work {
       "\005state\030\001 \002(\0132\n.WorkState\")\n\004Task\022\021\n\tseri" +
       "es_id\030\001 \002(\003\022\016\n\006seq_id\030\002 \002(\005\"I\n\005Steal\022\036\n\t" +
       "readSteal\030\001 \001(\0162\013.READ_STEAL\022 \n\nwriteSte" +
-      "al\030\003 \001(\0162\014.WRITE_STEAL\"\305\004\n\013WorkMessage\022\027" +
+      "al\030\003 \001(\0162\014.WRITE_STEAL\"\271\005\n\013WorkMessage\022\027" +
       "\n\006header\030\001 \002(\0132\007.Header\022\016\n\006secret\030\002 \002(\003\022" +
       "\021\n\trequestId\030\016 \001(\t\022\'\n\010worktype\030\r \001(\0162\025.W" +
       "orkMessage.Worktype\022\025\n\005steal\030\n \001(\0132\006.Ste",
@@ -5344,14 +5380,17 @@ public final class Work {
       "usH\000\022+\n\013raftMessage\030\t \001(\0132\024.RaftElection" +
       "MessageH\000\022)\n\016newNodeMessage\030\013 \001(\0132\017.NewN" +
       "odeMessageH\000\022#\n\013allNodeInfo\030\014 \001(\0132\014.AllN" +
-      "odeInfoH\000\"\217\001\n\010Worktype\022\025\n\021REPLICATE_REQU" +
+      "odeInfoH\000\"\203\002\n\010Worktype\022\025\n\021REPLICATE_REQU" +
       "EST\020\001\022\020\n\014READ_REQUEST\020\002\022\031\n\025READ_REQUEST_" +
       "RESPONSE\020\003\022\026\n\022REPLICATE_RESPONSE\020\004\022\022\n\016DE",
-      "LETE_REQUEST\020\005\022\023\n\017DELETE_RESPONSE\020\006B\t\n\007p" +
-      "ayload*=\n\nREAD_STEAL\022\026\n\022READ_STEAL_REQUE" +
-      "ST\020\001\022\027\n\023READ_STEAL_RESPONSE\020\002*@\n\013WRITE_S" +
-      "TEAL\022\027\n\023WRITE_STEAL_REQUEST\020\001\022\030\n\024WRITE_S" +
-      "TEAL_RESPONSE\020\002B\r\n\tpipe.workH\001"
+      "LETE_REQUEST\020\005\022\023\n\017DELETE_RESPONSE\020\006\022\034\n\030U" +
+      "PDATE_REPLICATE_REQUEST\020\007\022\031\n\025UPDATE_DELE" +
+      "TE_REQUEST\020\010\022\035\n\031UPDATE_REPLICATE_RESPONS" +
+      "E\020\t\022\032\n\026UPDATE_DELETE_RESPONSE\020\nB\t\n\007paylo" +
+      "ad*=\n\nREAD_STEAL\022\026\n\022READ_STEAL_REQUEST\020\001" +
+      "\022\027\n\023READ_STEAL_RESPONSE\020\002*@\n\013WRITE_STEAL" +
+      "\022\027\n\023WRITE_STEAL_REQUEST\020\001\022\030\n\024WRITE_STEAL" +
+      "_RESPONSE\020\002B\r\n\tpipe.workH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -30,7 +30,6 @@ public class WriteRouterHandler implements ICommandRouterHandlers{
 		
 		if(taskType == FileTaskType.WRITE){
 			if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
-			//if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
 				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 				DataReplicationManager.getInstance().broadcastReplication(request.getCommandMessage());

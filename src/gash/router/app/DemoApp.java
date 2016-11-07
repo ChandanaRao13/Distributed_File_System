@@ -145,7 +145,8 @@ public class DemoApp implements CommListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String host = "127.0.0.1";
+		//String host = "127.0.0.1";
+		String host = "169.254.203.5";
 		int port = 4568;
 
 		try {
@@ -154,9 +155,10 @@ public class DemoApp implements CommListener {
 
 			// do stuff w/ the connection
 			// da.ping(2);
-			//da.sendReadFileTasks(args[0]);
+			da.sendReadFileTasks(args[0]);
 			//da.chunkFile(args[0]);
-			da.sendFileAsChunks(new File(args[0]));
+			//da.sendFileAsChunks(new File(args[0]));
+			//da.updateFileAsChunks(args[0], new File(args[1]));
 			//da.sendDeleteFileTasks(args[0]);
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
@@ -231,6 +233,41 @@ public class DemoApp implements CommListener {
 		System.out.println(chunkedFile.size());
 	}
 	
+	private void updateFileAsChunks(String filename, File file) {
+		ArrayList<ByteString> chunkedFile = new ArrayList<ByteString>();
+
+		int sizeOfChunk = 1024 * 1024;
+		int numOfChunks = 0;
+		byte[] buffer = new byte[sizeOfChunk];
+
+		try {
+			BufferedInputStream bis = new BufferedInputStream(
+					new FileInputStream(file));
+			//String name = file.getName();
+
+			int tmp = 0;
+			while ((tmp = bis.read(buffer)) > 0) {
+				try {
+					ByteString bs = ByteString.copyFrom(buffer, 0, tmp);
+					chunkedFile.add(bs);
+					numOfChunks++;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			for (int index = 0; index < chunkedFile.size(); index++) {
+				System.out.println(chunkedFile.get(index));
+				mc.updateFile(chunkedFile.get(index), filename, numOfChunks,
+						index + 1); 
+				Thread.sleep(100);
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println(chunkedFile.size());
+	}
 	
 	public void sendReadFileTasks(String filename){
 		try {

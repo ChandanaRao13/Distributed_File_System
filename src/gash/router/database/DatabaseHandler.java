@@ -376,4 +376,35 @@ public class DatabaseHandler {
 		fileContents = riakDatabase.getAllFiles();
 		return fileContents;
 	}
+	
+	public static boolean isFileAvailableInRethink(String filename) throws EmptyConnectionPoolException{
+		Connection connection = databaseConnectionManager.getConnection();
+
+		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).run(connection);
+		databaseConnectionManager.releaseConnection(connection);
+		if (dataFromDB == null)
+			System.out.println("Database error");
+		else{
+			int count  = 0;
+			for (Object record : dataFromDB) {
+				count ++;
+			}
+
+			if(count != 0){
+				return true;
+			}
+		}
+		return false;	
+	}
+
+	public static boolean isFileAvailableInRiak(String filename) throws EmptyConnectionPoolException{
+		riakDatabase = RiakDatabase.getRiakInstance();
+		int isAvailable = riakDatabase.getChunkCount(filename);
+		if(isAvailable>0){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

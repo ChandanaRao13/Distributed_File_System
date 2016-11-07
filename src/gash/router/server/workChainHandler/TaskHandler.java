@@ -72,7 +72,15 @@ public class TaskHandler implements IWorkChainHandler{
 				logger.info("Deleting the file from database : " + workMessage.getFiletask().getFilename());
 				QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
 			} else if(workMessage.getWorktype() == Worktype.DELETE_RESPONSE){
-				logger.info("Recieved replication successful message");
+				logger.info("Recieved deletion successful message");
+			} else if(workMessage.getWorktype() == Worktype.UPDATE_DELETE_REQUEST){
+				QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
+			} else if(workMessage.getWorktype() == Worktype.UPDATE_DELETE_RESPONSE){
+				logger.info("Recieved update deletion successful message");
+			} else if(workMessage.getWorktype() == Worktype.UPDATE_REPLICATE_REQUEST){
+				QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
+			} else if(workMessage.getWorktype() == Worktype.UPDATE_REPLICATE_RESPONSE){
+				logger.info("Recieved update replication successful message");
 			}
 		} else {
 			//this.nextChainHandler.handle(workMessage, channel);
