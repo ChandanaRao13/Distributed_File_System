@@ -123,7 +123,7 @@ class FluffyClient:
         pass
 
     def deleteFileFromServer(self, filename):
-        newdeleteCommandMessage = self.clientServerMessageBuilder.buildReadCommandMessage(self.nodeId, self.time, self.myIp, filename)
+        newdeleteCommandMessage = self.clientServerMessageBuilder.buildDeleteFileCommandMessage(self.nodeId, self.time, self.myIp, filename)
         self._sendCommandMessage(newdeleteCommandMessage)
         pass
 

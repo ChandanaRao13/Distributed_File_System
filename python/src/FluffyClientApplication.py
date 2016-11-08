@@ -103,10 +103,10 @@ class FluffyClientApplication:
                 chunkId = 1
                 index = 1
                 multiple = chunkCount / 100
-                if (multiple > 100):
+                if (multiple > 0):
                     self.print_info("Uploading.......")
                     for fileChunk in fileChunks:
-                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        serverResponse = self.fluffyClient.sendFileToServer(filename, chunkCount, chunkId, fileChunk)
                         if (chunkId % multiple == 0 and index <= 100):
                             sys.stdout.write('\r')
                             sys.stdout.write("[%-100s] %d%%" % ('=' * index, 1 * index))
@@ -117,7 +117,7 @@ class FluffyClientApplication:
                 else:
                     self.print_info("Uploading.......")
                     for fileChunk in fileChunks:
-                        serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        serverResponse = self.fluffyClient.sendFileToServer(filename, chunkCount, chunkId, fileChunk)
                         chunkId += 1
 
                 self.print_success("Client: Successfully uploaded file")
@@ -148,7 +148,7 @@ class FluffyClientApplication:
                 chunkId = 1
                 index = 1
                 multiple = chunkCount / 100
-                if(multiple > 100):
+                if(multiple > 0):
                     self.print_info("ReUploading.......")
                     for fileChunk in fileChunks:
                         serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
