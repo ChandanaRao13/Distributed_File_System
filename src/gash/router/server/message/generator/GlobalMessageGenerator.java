@@ -30,6 +30,4 @@ public class GlobalMessageGenerator {
 	public static void setRoutingConf(RoutingConf routingConf) {
 		GlobalMessageGenerator.routingConf = routingConf;
 	}
-
-	
 }
