@@ -75,12 +75,16 @@ class FluffyClient:
     def chunkFileInto1MB(self, file):
         oneMBfileChunks = []
         fileReadSize = 1024 * 1024
-        with open(file, "rb") as file:
-            dataRead = file.read(fileReadSize)
-            while dataRead != '' and dataRead != None and len(dataRead) > 0:
-                oneMBfileChunks.append(dataRead)
+        try:
+            with open(file, "rb") as file:
                 dataRead = file.read(fileReadSize)
-            return oneMBfileChunks
+                while dataRead != '' and dataRead != None and len(dataRead) > 0:
+                    oneMBfileChunks.append(dataRead)
+                    dataRead = file.read(fileReadSize)
+                return oneMBfileChunks
+        except IOError as e:
+            raise ValueError('Unable to read file: ' + file + ' error: ' + e.message)
+
 
     def _sendCommandMessage(self, commandMessage):
         messageLength = struct.pack('>L', len(commandMessage))
@@ -113,12 +117,15 @@ class FluffyClient:
             self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
             pass
 
-        with open(filepath + "/" + "new" + msg.filetask.filename, "w") as file:
-            for x in range(chunkCounts + 1):
-                file.write(self.fileResponseMap[x + 1])
-            file.close()
-            pass
-        return "created file at: " + filepath + " with name: " + filename
+        try:
+            with open(filepath + "/" + "new" + msg.filetask.filename, "w") as file:
+                for x in range(chunkCounts + 1):
+                    file.write(self.fileResponseMap[x + 1])
+                file.close()
+                pass
+            return "created file at: " + filepath + " with name: " + filename
+        except IOError as e:
+            raise ValueError('Cannot create file: ' + filename + ' at filepath: ' + filepath + ' error: ' + e.message)
 
     def updateFileInServer(self, filename, chunkCount, chunkId, fileChunk):
         newCommandMsg = self.clientServerMessageBuilder.buildWriteUpdateCommandMessage(self.nodeId, self.time, self.myIp, filename, chunkCount, chunkId, fileChunk)

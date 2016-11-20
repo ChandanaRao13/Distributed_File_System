@@ -99,7 +99,11 @@ class FluffyClientApplication:
                 self.print_info("Enter the name of your file (eg: test.txt): ")
                 filename = raw_input()
                 #bc.sendData(bc.genPing(),"127.0.0.1",4186);
-                fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
+                try:
+                    fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
+                except ValueError as e:
+                    self.print_error("Error: Cannot create chunks: " + e.message)
+                    continue
                 chunkCount = len(fileChunks)
                 chunkId = 1
                 index = 1
@@ -131,7 +135,11 @@ class FluffyClientApplication:
                 filename = raw_input()
                 self.print_info("Enter the filepath for file download location: ")
                 filepath = raw_input()
-                fileContents = self.fluffyClient.getFileFromServer(filepath, filename)
+                try:
+                    fileContents = self.fluffyClient.getFileFromServer(filepath, filename)
+                except ValueError as e:
+                    self.print_error("Error: cannot create a file at the location: " + e.message)
+                    continue
                 self.print_success("Client: Successfully downloaded file")
                 self._printHelpContent()
 
