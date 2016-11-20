@@ -1,11 +1,14 @@
 package gash.router.server.election;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.channels.Channel;
 import java.util.Random;
 import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
+import gash.router.cluster.GlobalServerState;
 import gash.router.container.RoutingConf;
 import gash.router.server.ServerState;
 import gash.router.server.WorkHandler;
@@ -50,7 +53,7 @@ public class RaftElectionContext implements Runnable {
 		leader.setElectionContext(this);
 
 		rand = new Random();
-		
+
 		heartbeatdt = conf.getHeartbeatDt();
 		generateTimeOut();
 		timeOut += 5000;
@@ -120,14 +123,14 @@ public class RaftElectionContext implements Runnable {
 	public void setEmon(EdgeMonitor emon) {
 		this.emon = emon;
 	}
-	
+
 	public IRaftNodeState getCurrentState() {
 		return currentState;
 	}
 	public void setCurrentState(IRaftNodeState currentState) {
 		this.currentState = currentState;
 	}
-	
+
 	public int getLeaderId() {
 		return leaderId;
 	}
@@ -146,5 +149,23 @@ public class RaftElectionContext implements Runnable {
 	public void setAmReady(boolean amReady) {
 		this.amReady = amReady;
 	}
+
+	public String getLeaderHost() {
+		String host="";
+		if(leaderId == conf.getNodeId()){
+			try {
+				 host = InetAddress.getLocalHost().toString();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}else{
+			EdgeInfo ei = state.getEmon().getOutboundEdges().getEdgeListMap().get(leaderId);
+			host = ei.getHost();
+		}
+		return host;
+	}
+	
 
 }

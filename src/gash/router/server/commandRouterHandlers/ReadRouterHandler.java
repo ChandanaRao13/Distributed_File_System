@@ -38,7 +38,6 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 			NodeLoad node = LoadQueueManager.getInstance().getMininumNodeLoadInfo(chunkCount);
 			// convert the read request to work messages of total number of chunks
 			for(int index = 0; index < chunkCount; index++) {
-				
 				WorkMessage worKMessage = 
 						MessageGenerator.getInstance().generateReadRequestMessage(request.getCommandMessage(), clientId, node.getNodeId(), index + 1);
 				Channel nodeChannel = EdgeMonitor.node2ChannelMap.get(node.getNodeId());

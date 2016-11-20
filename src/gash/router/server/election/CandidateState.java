@@ -52,6 +52,7 @@ public class CandidateState implements IRaftNodeState {
 				electionCtx.generateTimeOut();
 				System.out.println("Yay! I Won the election! I am the Leader. My Node Id is " + electionCtx.getConf().getNodeId());
 				electionCtx.setLeaderId(electionCtx.getConf().getNodeId());
+				
 				electionCtx.setCurrentState(electionCtx.leader);				
 				voted =false; //reset once the leader is elected
 				voteCount = 0; //reset once the leader is elected

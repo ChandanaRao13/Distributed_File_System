@@ -15,6 +15,8 @@
  */
 package gash.router.server;
 
+import global.Global.GlobalHeader;
+import global.Global.GlobalMessage;
 import pipe.common.Common.Failure;
 import pipe.common.Common.Header;
 import pipe.work.Work.WorkMessage;
@@ -68,5 +70,29 @@ public class PrintUtil {
 
 	public static void printFailure(Failure f) {
 		System.out.println("ERROR: " + f.getId() + "." + f.getRefId() + " : " + f.getMessage());
+	}
+
+	public static void printCommand(GlobalMessage msg) {
+		PrintUtil.printHeader(msg.getGlobalHeader());
+/*
+		System.out.print(" Global: ");
+		if (msg.hasErr()) {
+			System.out.println("Failure");
+			System.out.println(PrintUtil.gap + "Code:    " + msg.getErr().getId());
+			System.out.println(PrintUtil.gap + "Ref ID:  " + msg.getErr().getRefId());
+			System.out.println(PrintUtil.gap + "Message: " + msg.getErr().getMessage());
+		} else if (msg.hasPing())
+			System.out.println("Ping");
+		else if (msg.hasMessage()) {
+			System.out.println("Message");
+			System.out.println(PrintUtil.gap + "Msg:  " + msg.getMessage());
+		} else
+			System.out.println("Unknown");
+		*/
+	}
+
+	private static void printHeader(GlobalHeader globalHeader) {
+		// TODO Auto-generated method stub
+		
 	}
 }

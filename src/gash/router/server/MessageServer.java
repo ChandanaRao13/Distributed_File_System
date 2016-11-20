@@ -25,6 +25,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import gash.router.cluster.GlobalEdgeMonitor;
+import gash.router.cluster.GlobalInit;
+import gash.router.cluster.GlobalServerState;
+import gash.router.container.GlobalRoutingConf;
 import gash.router.container.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.election.RaftElectionContext;
@@ -50,24 +54,29 @@ public class MessageServer {
 	// public static final String sPoolSize = "pool.size";
 
 	protected RoutingConf conf;
+	protected GlobalRoutingConf globalConf;
 	protected boolean background = false;
+	
 
 	/**
 	 * initialize the server with a configuration of it's resources
 	 * 
 	 * @param cfg
 	 */
-	public MessageServer(File cfg) {
+	public MessageServer(File cfg,File globalCfg) {
 		init(cfg);
+		initGlobal(globalCfg);
 	}
 
-	public MessageServer(RoutingConf conf) {
+	public MessageServer(RoutingConf conf,GlobalRoutingConf globalConf) {
 		this.conf = conf;
+		this.globalConf = globalConf;
 	}
 
 	public void release() {
 	}
 
+	@SuppressWarnings("static-access")
 	public void startServer() throws InterruptedException {
 		QueueManager.initManager();
 		DataReplicationManager.initDataReplicationManager();
@@ -77,8 +86,12 @@ public class MessageServer {
 		
 		StartWorkCommunication comm = new StartWorkCommunication(conf);
 		logger.info("Work starting");
-
-		// We always start the worker in the background
+		
+		// start the global in the background
+		StartGlobalCommunication globalComm = new StartGlobalCommunication(globalConf,comm);
+		Thread globalthread = new Thread(globalComm);
+		globalthread.start();
+		// start the worker in the background
 		Thread cthread = new Thread(comm);
 		cthread.start();
 		
@@ -129,6 +142,41 @@ public class MessageServer {
 			}
 		}
 	}
+	
+	private void initGlobal(File globalCfg) {
+		if (!globalCfg.exists())
+			throw new RuntimeException(globalCfg.getAbsolutePath() + " not found");
+		// resource initialization - how message are processed
+		BufferedInputStream br = null;
+		try {
+			byte[] raw = new byte[(int) globalCfg.length()];
+			br = new BufferedInputStream(new FileInputStream(globalCfg));
+			br.read(raw);
+			this.globalConf = JsonUtil.decode(new String(raw), GlobalRoutingConf.class);
+			if (!verifyGlobalConf(this.globalConf))
+				throw new RuntimeException("verification of configuration failed");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+
+
+
+	private boolean verifyGlobalConf(GlobalRoutingConf globalConf2) {
+		return (globalConf != null);
+	}
+
+
+
 
 	private boolean verifyConf(RoutingConf conf) {
 		return (conf != null);
@@ -266,6 +314,86 @@ public class MessageServer {
 
 				// shutdown monitor
 				EdgeMonitor emon = state.getEmon();
+				if (emon != null)
+					emon.shutdown();
+			}
+		}
+	}
+	
+	
+	/**
+	 * initialize netty communication
+	 * 
+	 * @param port
+	 *            The port to listen to
+	 */
+	private static class StartGlobalCommunication implements Runnable {
+		GlobalServerState state;
+		RaftElectionContext electionCtx; 
+		
+
+		public StartGlobalCommunication(GlobalRoutingConf conf, StartWorkCommunication work) {
+			if (conf == null)
+				throw new RuntimeException("missing global conf");
+
+			state = new GlobalServerState();
+			state.setConf(conf);
+			state.setElectionCtx(electionCtx);
+			
+
+			TaskList tasks = new TaskList(new NoOpBalancer());
+			state.setTasks(tasks);			
+		
+
+			
+
+			GlobalEdgeMonitor emon = new GlobalEdgeMonitor(state);
+			Thread t = new Thread(emon);
+			t.start();
+			
+		}
+
+		public void run() {
+			// construct boss and worker threads (num threads = number of cores)
+
+			EventLoopGroup bossGroup = new NioEventLoopGroup();
+			EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+			try {
+				ServerBootstrap b = new ServerBootstrap();
+				bootstrap.put(state.getConf().getGlobalPort(), b);
+
+				b.group(bossGroup, workerGroup);
+				b.channel(NioServerSocketChannel.class);
+				b.option(ChannelOption.SO_BACKLOG, 100);
+				b.option(ChannelOption.TCP_NODELAY, true);
+				b.option(ChannelOption.SO_KEEPALIVE, true);
+				// b.option(ChannelOption.MESSAGE_SIZE_ESTIMATOR);
+
+				boolean compressComm = false;
+				b.childHandler(new GlobalInit(state, compressComm));
+
+				// Start the server.
+				logger.info("Starting global server (" + state.getConf().getClusterId() + "), listening on port = "
+						+ state.getConf().getGlobalPort());
+				ChannelFuture f = b.bind(state.getConf().getGlobalPort()).syncUninterruptibly();
+
+				logger.info(f.channel().localAddress() + " -> open: " + f.channel().isOpen() + ", write: "
+						+ f.channel().isWritable() + ", act: " + f.channel().isActive());
+
+				// block until the server socket is closed.
+				f.channel().closeFuture().sync();
+
+			} catch (Exception ex) {
+				// on bind().sync()
+				logger.error("Failed to setup handler.", ex);
+			} finally {
+				// Shut down all event loops to terminate all threads.
+				bossGroup.shutdownGracefully();
+				workerGroup.shutdownGracefully();
+
+				// shutdown monitor
+				GlobalEdgeMonitor emon = state.getEmon();
 				if (emon != null)
 					emon.shutdown();
 			}

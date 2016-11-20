@@ -13,43 +13,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package gash.router.server;
+package gash.router.cluster;
 
+public interface GlobalEdgeListener {
+	public abstract void onAdd(GlobalEdgeInfo ei);
 
-import java.io.File;
-
-
-/**
- * @author gash1
- * 
- */
-public class MessageApp {
-
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		if (args.length == 0) {
-			System.out.println("usage: server <config file>");
-			System.exit(1);
-		}
-
-
-		File cf = new File(args[0]);
-		File global_cf = new File(args[1]);
-		
-		try {
-			MessageServer svr = new MessageServer(cf,global_cf);
-			svr.startServer();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			System.out.println("server closing");
-		}
-	}
+	public abstract void onRemove(GlobalEdgeInfo ei);
 }
-
-
-
-
