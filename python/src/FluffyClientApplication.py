@@ -35,7 +35,8 @@ class FluffyClientApplication:
         self.print_menu("(3) re-upload - uploads a file to update in fluffy server\n")
         self.print_menu("(4) delete - deletes the file in fluffy server\n")
         self.print_menu("(5) help - prints all the options present\n")
-        self.print_menu("(6) exit - ends the application\n")
+        self.print_menu("(6) ping - ping the server\n")
+        self.print_menu("(7) exit - ends the application\n")
         #print("**************************************************************************")
         self.print_info("Your option: ")
 
@@ -183,6 +184,14 @@ class FluffyClientApplication:
             ##
             elif (optionSelected == 5):
                 self._printHelpContent()
+            ##
+            # exiting the client application
+            ##
+            elif (optionSelected == 6):
+                self.fluffyClient.send_ping()
+                self.print_info("pinged the server")
+                self._printHelpContent()
+
             ##
             # exiting the client application
             ##

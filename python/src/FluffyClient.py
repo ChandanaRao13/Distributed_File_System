@@ -40,6 +40,10 @@ class FluffyClient:
     def print_info(self, msg):
         print (colored(msg, 'blue'))
 
+    def send_ping(self):
+        commandMsg = self.clientServerMessageBuilder.buildPingCommandMessage(1, 20000)
+        self._sendCommandMessage(commandMsg)
+
     def openConnection(self):
         self.socket.connect((self.host, self.portNumber))
         self.logger.logInfoMessage("Client: Connected to a server socket using address: " + self.host + " and port: " + str(self.portNumber))
