@@ -2,6 +2,11 @@ package gash.router.database.datatypes;
 
 import java.util.Arrays;
 
+/**
+ * POJO for FluffyFile - ORM object file for the RethinkDB and RiakDB
+ * @author vaishampayan
+ *
+ */
 public class FluffyFile {
 	private String filename;
 	private int totalChunks;

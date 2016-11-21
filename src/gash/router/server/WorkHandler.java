@@ -14,8 +14,8 @@
  * under the License.
  */
 package gash.router.server;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gash.router.server.workChainHandler.ElectionMessageChainHandler;
 import gash.router.server.workChainHandler.FailureHandler;
@@ -28,24 +28,8 @@ import gash.router.server.workChainHandler.WorkStealHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import gash.router.server.edges.EdgeInfo;
-import gash.router.server.edges.EdgeList;
-import gash.router.util.RaftMessageBuilder;
-import io.netty.channel.ChannelFuture;
 import pipe.common.Common.Failure;
-import pipe.common.Common.Header;
-import pipe.election.Election;
-import pipe.election.Election.LeaderStatus.LeaderQuery;
-import pipe.election.Election.LeaderStatus.LeaderState;
-import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
-import pipe.work.Work.Heartbeat;
-import pipe.work.Work.Task;
 import pipe.work.Work.WorkMessage;
-import pipe.work.Work.WorkState;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -60,7 +44,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 	protected ServerState state;
 	protected boolean debug = false;
 
-	IWorkChainHandler hearBeatChainHandler;
+	IWorkChainHandler heartBeatChainHandler;
 	IWorkChainHandler pingMessageChainHandler;
 	IWorkChainHandler failureMessageChainHandler;
 	IWorkChainHandler taskMessageChainHandler;
@@ -73,7 +57,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		} else {
 			return;
 		}
-		this.hearBeatChainHandler = new HeartBeatHandler();
+		this.heartBeatChainHandler = new HeartBeatHandler();
 		this.pingMessageChainHandler = new PingHandler();
 		this.failureMessageChainHandler = new FailureHandler();
 		this.taskMessageChainHandler = new TaskHandler();
@@ -81,7 +65,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		this.electionMessageChainHandler = new ElectionMessageChainHandler();
 		this.newNodeChainHandler = new NewNodeChainHandlerV2();
 
-		this.hearBeatChainHandler.setNextChain(electionMessageChainHandler,state);
+		this.heartBeatChainHandler.setNextChain(electionMessageChainHandler,state);
 		this.electionMessageChainHandler.setNextChain(newNodeChainHandler,state);
 		this.newNodeChainHandler.setNextChain(pingMessageChainHandler,state);		
 		this.pingMessageChainHandler.setNextChain(failureMessageChainHandler,state);
@@ -96,20 +80,17 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 	 */
 	public void handleMessage(WorkMessage msg, Channel channel) {
 		if (msg == null) {
-			// TODO add logging
-			System.out.println("ERROR: Unexpected content - " + msg);
+			logger.info("Error: Received empty WorkMessage: " + msg);
+			System.out.println("Error: Received empty WorkMessage: " + msg);
 			return;
 		}
 
 		if (debug)
 			PrintUtil.printWork(msg);
-
-		// TODO How can you implement this without if-else statements?
 		try {
-			hearBeatChainHandler.handle(msg, channel);
-			 
+			heartBeatChainHandler.handle(msg, channel);
 		} catch (Exception e) {
-			// TODO add logging
+			logger.debug("Error: error in handling heartBeat: " + e.getMessage());
 			Failure.Builder eb = Failure.newBuilder();
 			eb.setId(state.getConf().getNodeId());
 			eb.setRefId(msg.getHeader().getNodeId());
@@ -140,6 +121,12 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		handleMessage(msg, ctx.channel());
 	}
 
+	/**
+	 * 
+	 * @param ctx
+	 * @param cause
+	 * @throws Exception
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		logger.error("Unexpected exception from downstream.", cause);

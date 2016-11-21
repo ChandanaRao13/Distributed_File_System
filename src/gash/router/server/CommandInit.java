@@ -14,6 +14,7 @@ import routing.Pipe.CommandMessage;
 
 /**
  * Initializes the external interface
+ * 
  * @author gash
  *
  */
@@ -50,7 +51,6 @@ public class CommandInit extends ChannelInitializer<SocketChannel> {
 		pipeline.addLast("protobufDecoder", new ProtobufDecoder(CommandMessage.getDefaultInstance()));
 		pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
 		pipeline.addLast("protobufEncoder", new ProtobufEncoder());
-
 
 		// our server processor (new instance for each connection)
 		pipeline.addLast("handler", new CommandHandler(conf));

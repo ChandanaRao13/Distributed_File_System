@@ -50,25 +50,21 @@ public class MessageServer {
 
 	protected static HashMap<Integer, ServerBootstrap> bootstrap = new HashMap<Integer, ServerBootstrap>();
 
-	// public static final String sPort = "port";
-	// public static final String sPoolSize = "pool.size";
-
 	protected RoutingConf conf;
 	protected GlobalRoutingConf globalConf;
 	protected boolean background = false;
-	
 
 	/**
 	 * initialize the server with a configuration of it's resources
 	 * 
 	 * @param cfg
 	 */
-	public MessageServer(File cfg,File globalCfg) {
+	public MessageServer(File cfg, File globalCfg) {
 		init(cfg);
 		initGlobal(globalCfg);
 	}
 
-	public MessageServer(RoutingConf conf,GlobalRoutingConf globalConf) {
+	public MessageServer(RoutingConf conf, GlobalRoutingConf globalConf) {
 		this.conf = conf;
 		this.globalConf = globalConf;
 	}
@@ -76,29 +72,28 @@ public class MessageServer {
 	public void release() {
 	}
 
-	@SuppressWarnings("static-access")
 	public void startServer() throws InterruptedException {
 		QueueManager.initManager();
 		DataReplicationManager.initDataReplicationManager();
 		MessageGenerator.initGenerator();
 		MessageGenerator.setRoutingConf(conf);
 		LoadQueueManager.initLoadQueueManager();
-		
+
 		StartWorkCommunication comm = new StartWorkCommunication(conf);
 		logger.info("Work starting");
-		
+
 		// start the global in the background
-		StartGlobalCommunication globalComm = new StartGlobalCommunication(globalConf,comm);
+		StartGlobalCommunication globalComm = new StartGlobalCommunication(globalConf, comm);
 		Thread globalthread = new Thread(globalComm);
 		globalthread.start();
-		
+
 		// start the worker in the background
 		Thread cthread = new Thread(comm);
 		cthread.start();
-		
+
 		if (!conf.isInternalNode()) {
 
-			StartCommandCommunication comm2 = new StartCommandCommunication(conf,comm);
+			StartCommandCommunication comm2 = new StartCommandCommunication(conf, comm);
 			logger.info("Command starting");
 
 			if (background) {
@@ -143,7 +138,7 @@ public class MessageServer {
 			}
 		}
 	}
-	
+
 	private void initGlobal(File globalCfg) {
 		if (!globalCfg.exists())
 			throw new RuntimeException(globalCfg.getAbsolutePath() + " not found");
@@ -169,15 +164,9 @@ public class MessageServer {
 		}
 	}
 
-
-
-
 	private boolean verifyGlobalConf(GlobalRoutingConf globalConf2) {
 		return (globalConf != null);
 	}
-
-
-
 
 	private boolean verifyConf(RoutingConf conf) {
 		return (conf != null);
@@ -191,8 +180,10 @@ public class MessageServer {
 	 */
 	private static class StartCommandCommunication implements Runnable {
 		RoutingConf conf;
-		RaftElectionContext electionCtx; 
-		public StartCommandCommunication(RoutingConf conf,StartWorkCommunication work) {
+		@SuppressWarnings("unused")
+		RaftElectionContext electionCtx;
+
+		public StartCommandCommunication(RoutingConf conf, StartWorkCommunication work) {
 			this.conf = conf;
 			this.electionCtx = work.workElectionCtx;
 		}
@@ -258,8 +249,8 @@ public class MessageServer {
 			state.setElectionCtx(workElectionCtx);
 
 			TaskList tasks = new TaskList(new NoOpBalancer());
-			state.setTasks(tasks);			
-			workElectionCtx = new RaftElectionContext(state);	
+			state.setTasks(tasks);
+			workElectionCtx = new RaftElectionContext(state);
 			workElectionCtx.setConf(conf);
 
 			state.setElectionCtx(workElectionCtx);
@@ -267,9 +258,9 @@ public class MessageServer {
 			EdgeMonitor emon = new EdgeMonitor(state);
 			Thread t = new Thread(emon);
 			t.start();
-			
+
 			workElectionCtx.init();
-			
+
 			Thread managerThread = new Thread(workElectionCtx);
 			managerThread.start();
 		}
@@ -320,8 +311,7 @@ public class MessageServer {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * initialize netty communication
 	 * 
@@ -330,29 +320,25 @@ public class MessageServer {
 	 */
 	private static class StartGlobalCommunication implements Runnable {
 		GlobalServerState state;
-		RaftElectionContext electionCtx; 
-		
+		@SuppressWarnings("unused")
+		RaftElectionContext electionCtx;
 
 		public StartGlobalCommunication(GlobalRoutingConf conf, StartWorkCommunication work) {
 			if (conf == null)
-				throw new RuntimeException("missing global conf");
+				throw new RuntimeException("Exception: Missing global conf");
 
 			state = new GlobalServerState();
 			state.setConf(conf);
 			work.workElectionCtx.setGlobalState(state);
 			state.setElectionCtx(work.workElectionCtx);
-			
 
 			TaskList tasks = new TaskList(new NoOpBalancer());
-			state.setTasks(tasks);			
-		
-
-			
+			state.setTasks(tasks);
 
 			GlobalEdgeMonitor emon = new GlobalEdgeMonitor(state);
 			Thread t = new Thread(emon);
 			t.start();
-			
+
 		}
 
 		public void run() {
@@ -385,7 +371,6 @@ public class MessageServer {
 
 				// block until the server socket is closed.
 				f.channel().closeFuture().sync();
-
 			} catch (Exception ex) {
 				// on bind().sync()
 				logger.error("Failed to setup handler.", ex);
@@ -410,18 +395,14 @@ public class MessageServer {
 	 */
 	public static class JsonUtil {
 		private static JsonUtil instance;
-
 		public static void init(File cfg) {
 
 		}
-
 		public static JsonUtil getInstance() {
 			if (instance == null)
 				throw new RuntimeException("Server has not been initialized");
-
 			return instance;
 		}
-
 		public static String encode(Object data) {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
@@ -430,7 +411,6 @@ public class MessageServer {
 				return null;
 			}
 		}
-
 		public static <T> T decode(String data, Class<T> theClass) {
 			try {
 				ObjectMapper mapper = new ObjectMapper();

@@ -28,7 +28,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import pipe.common.Common.Failure;
 import routing.Pipe.CommandMessage;
-import routing.Pipe.FileTask;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -103,7 +102,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		logger.error("Unexpected exception from downstream.", cause);
+		logger.error("Unexpected exception from downstream: ", cause);
 		ctx.close();
 	}
 

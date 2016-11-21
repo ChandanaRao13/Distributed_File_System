@@ -2,6 +2,11 @@ package gash.router.database.datatypes;
 
 import java.util.ArrayList;
 
+/**
+ * POJO for FluffyFileList
+ * @author vaishampayan
+ *
+ */
 public class FluffyFileList {
 	ArrayList<FluffyFile> files;
 	

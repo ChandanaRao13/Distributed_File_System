@@ -15,16 +15,13 @@
  */
 package gash.router.server;
 
-
 import java.io.File;
-
 
 /**
  * @author gash1
  * 
  */
 public class MessageApp {
-
 
 	/**
 	 * @param args
@@ -35,12 +32,11 @@ public class MessageApp {
 			System.exit(1);
 		}
 
-
 		File cf = new File(args[0]);
 		File global_cf = new File(args[1]);
-		
+
 		try {
-			MessageServer svr = new MessageServer(cf,global_cf);
+			MessageServer svr = new MessageServer(cf, global_cf);
 			svr.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,7 +45,3 @@ public class MessageApp {
 		}
 	}
 }
-
-
-
-
