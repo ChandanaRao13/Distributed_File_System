@@ -1,13 +1,10 @@
-package gash.router.server.commandRouterHandlers;
-
-import io.netty.channel.Channel;
-
-import java.util.concurrent.ConcurrentHashMap;
+package gash.router.server.commandmessage.routerhandlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pipe.work.Work.WorkMessage;
+import gash.router.cluster.GlobalEdgeMonitor;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
@@ -16,13 +13,10 @@ import gash.router.server.queue.management.NodeLoad;
 import gash.router.server.queue.management.QueueManager;
 import gash.router.util.GlobalMessageBuilder;
 import global.Global.GlobalMessage;
-import routing.Pipe.CommandMessage;
+import io.netty.channel.Channel;
+import pipe.work.Work.WorkMessage;
 import routing.Pipe.FileTask;
 import routing.Pipe.FileTask.FileTaskType;
-import gash.router.cluster.GlobalEdgeMonitor;
-import gash.router.database.RethinkDatabaseHandler;
-
-
 
 public class ReadRouterHandler implements ICommandRouterHandlers{
 	private  ICommandRouterHandlers nextInChain;
@@ -32,6 +26,7 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 		this.nextInChain = nextChain;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void handleFileTask(InternalChannelNode request) throws Exception {
 		FileTaskType taskType = request.getCommandMessage().getFiletask().getFileTaskType();

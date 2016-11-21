@@ -1,12 +1,12 @@
 package gash.router.server.queue.management;
 
-import gash.router.server.commandRouterHandlers.DeleteRouterHandler;
-import gash.router.server.commandRouterHandlers.ReadRouterHandler;
-import gash.router.server.commandRouterHandlers.UpdateRouterHandler;
-import gash.router.server.commandRouterHandlers.WriteRouterHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import gash.router.server.commandmessage.routerhandlers.DeleteRouterHandler;
+import gash.router.server.commandmessage.routerhandlers.ReadRouterHandler;
+import gash.router.server.commandmessage.routerhandlers.UpdateRouterHandler;
+import gash.router.server.commandmessage.routerhandlers.WriteRouterHandler;
 
 
 public class InboundCommandQueueThread extends Thread {

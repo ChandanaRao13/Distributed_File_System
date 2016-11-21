@@ -1,21 +1,15 @@
-package gash.router.server.commandRouterHandlers;
-
-import io.netty.channel.Channel;
+package gash.router.server.commandmessage.routerhandlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pipe.work.Work.WorkMessage;
-import routing.Pipe.CommandMessage;
-import routing.Pipe.FileTask.FileTaskType;
 import gash.router.database.RethinkDatabaseHandler;
-import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
-import gash.router.server.queue.management.LoadQueueManager;
-import gash.router.server.queue.management.NodeLoad;
 import gash.router.server.queue.management.QueueManager;
 import gash.router.server.replication.DataReplicationManager;
+import routing.Pipe.CommandMessage;
+import routing.Pipe.FileTask.FileTaskType;
 
 public class DeleteRouterHandler implements ICommandRouterHandlers {
 	private  ICommandRouterHandlers nextInChain;
