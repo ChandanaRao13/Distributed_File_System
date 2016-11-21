@@ -8,8 +8,7 @@ public class FollowerState implements IRaftNodeState {
 
 	private RaftElectionContext electionCtx;
 	private boolean voted = false;
-	
-	
+
 	@Override
 	public synchronized void doAction() {	
 		if(electionCtx.getTimeOut() <=0 ) {
@@ -35,7 +34,7 @@ public class FollowerState implements IRaftNodeState {
 				sendVote(msg,false);			
 		}		
 	}
-	
+
 	@Override
 	public synchronized void sendVote(WorkMessage msg, boolean voteGranted) {
 		System.out.println("You are sending vote to Candidate No: " + msg.getHeader().getNodeId());
@@ -44,7 +43,6 @@ public class FollowerState implements IRaftNodeState {
 		if(ei.getChannel()!=null)
 			ei.getChannel().writeAndFlush(voteResponseMessage); 	
 	}
-
 
 	@Override
 	public synchronized void voteRecieved(WorkMessage msg) {
@@ -88,10 +86,5 @@ public class FollowerState implements IRaftNodeState {
 				//	electionCtx.setLastKnownBeat(System.currentTimeMillis());
 			}
 		}
-		
 	}
-
-	
-	
-	
 }

@@ -2,19 +2,13 @@ package gash.router.server.election;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.channels.Channel;
 import java.util.Random;
-import java.util.logging.Logger;
-
-import org.slf4j.LoggerFactory;
 
 import gash.router.cluster.GlobalServerState;
 import gash.router.container.RoutingConf;
 import gash.router.server.ServerState;
-import gash.router.server.WorkHandler;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.edges.EdgeMonitor;
-import gash.router.util.RaftMessageBuilder;
 import pipe.work.Work.WorkMessage;
 
 public class RaftElectionContext implements Runnable {
@@ -24,8 +18,7 @@ public class RaftElectionContext implements Runnable {
 	IRaftNodeState candidate;
 	IRaftNodeState leader;
 	IRaftNodeState currentState;
-	String timerName ;
-
+	String timerName;
 
 	private int term = 0;
 	private RoutingConf conf;
@@ -36,15 +29,16 @@ public class RaftElectionContext implements Runnable {
 
 	private int heartbeatdt = 3000;
 	private long timeOut = 3000;
-	private long globalTimer =5000;
-	private long globalTimerBegin=0;
+	private long globalTimer = 5000;
+	@SuppressWarnings("unused")
+	private long globalTimerBegin = 0;
 	private Random rand;
 	private long timerBegin = 0;
 
-
-	public RaftElectionContext(ServerState state){
-		this.state =state;
+	public RaftElectionContext(ServerState state) {
+		this.state = state;
 	}
+
 	public void init() {
 
 		follower = new FollowerState();
@@ -66,52 +60,49 @@ public class RaftElectionContext implements Runnable {
 
 	}
 
-	protected void broadcast(WorkMessage msg){		
-		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){	
-			if(ei.isActive() && ei.getChannel()!=null){
-				System.out.println("Sending HB::"+ei.getRef());
+	protected void broadcast(WorkMessage msg) {
+		for (EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()) {
+			if (ei.isActive() && ei.getChannel() != null) {
+				System.out.println("Sending HB::" + ei.getRef());
 				ei.getChannel().writeAndFlush(msg);
 			}
 		}
 		/*
-		for(EdgeInfo ei : emon.getInBoundEdgesList().getEdgeListMap().values()){	
-			if(ei.isActive() && ei.getChannel()!=null){
-				ei.getChannel().writeAndFlush(msg);
-			}
-		}*/
+		 * for(EdgeInfo ei :
+		 * emon.getInBoundEdgesList().getEdgeListMap().values()){
+		 * if(ei.isActive() && ei.getChannel()!=null){
+		 * ei.getChannel().writeAndFlush(msg); } }
+		 */
 	}
 
-
 	@Override
-	public void run() {		
-		while(true){
+	public void run() {
+		while (true) {
 			int activeChannel = state.getEmon().getActiveChannels();
-			if(activeChannel>=2){
+			if (activeChannel >= 2) {
 				timerBegin = System.currentTimeMillis();
-				currentState.doAction(); 
-			} 
+				currentState.doAction();
+			}
 		}
 
 	}
 
-	//Timer 
+	// Timer
 	public synchronized void generateTimeOut() {
-		int temp =  rand.nextInt(heartbeatdt)+heartbeatdt;
-		timeOut = (long)temp;		
+		int temp = rand.nextInt(heartbeatdt) + heartbeatdt;
+		timeOut = (long) temp;
 	}
-	
 
-
-	//Timer
+	// Timer
 	public synchronized void computeTime() {
 		timeOut = timeOut - (System.currentTimeMillis() - timerBegin);
 	}
-
 
 	/* Getters and setter */
 	public int getTerm() {
 		return term;
 	}
+
 	public void setTerm(int term) {
 		this.term = term;
 	}
@@ -119,6 +110,7 @@ public class RaftElectionContext implements Runnable {
 	public RoutingConf getConf() {
 		return conf;
 	}
+
 	public void setConf(RoutingConf conf) {
 		this.conf = conf;
 	}
@@ -126,6 +118,7 @@ public class RaftElectionContext implements Runnable {
 	public EdgeMonitor getEmon() {
 		return emon;
 	}
+
 	public void setEmon(EdgeMonitor emon) {
 		this.emon = emon;
 	}
@@ -133,6 +126,7 @@ public class RaftElectionContext implements Runnable {
 	public IRaftNodeState getCurrentState() {
 		return currentState;
 	}
+
 	public void setCurrentState(IRaftNodeState currentState) {
 		this.currentState = currentState;
 	}
@@ -140,56 +134,63 @@ public class RaftElectionContext implements Runnable {
 	public int getLeaderId() {
 		return leaderId;
 	}
+
 	public void setLeaderId(int nodeId) {
-		this.leaderId = nodeId;		
+		this.leaderId = nodeId;
 	}
+
 	public long getTimeOut() {
 		return timeOut;
 	}
+
 	public void setTimeOut(long timeOut) {
 		this.timeOut = timeOut;
 	}
+
 	public boolean isAmReady() {
 		return amReady;
 	}
+
 	public void setAmReady(boolean amReady) {
 		this.amReady = amReady;
 	}
 
 	public String getLeaderHost() {
 
-		String host="";
-		if(leaderId == conf.getNodeId()){
+		String host = "";
+		if (leaderId == conf.getNodeId()) {
 			try {
 				InetAddress inet = InetAddress.getLocalHost();
-				host =inet.getHostAddress();
+				host = inet.getHostAddress();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				System.out.println("Entered UnknownHostException");
 				e.printStackTrace();
 			}
 
-		}else{
+		} else {
 			EdgeInfo ei = state.getEmon().getOutboundEdges().getEdgeListMap().get(leaderId);
-			if(ei!=null){
+			if (ei != null) {
 				host = ei.getHost();
 			}
 
 		}
 		return host;
 	}
+
 	public GlobalServerState getGlobalState() {
 		return globalState;
 	}
+
 	public void setGlobalState(GlobalServerState globalState) {
 		this.globalState = globalState;
 	}
+
 	public long getGlobalTimer() {
 		return globalTimer;
 	}
+
 	public void setGlobalTimer(long globalTimer) {
 		this.globalTimer = globalTimer;
 	}
-
-
 }

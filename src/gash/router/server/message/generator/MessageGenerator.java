@@ -8,15 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 
-import gash.router.container.GlobalRoutingConf;
 import gash.router.container.RoutingConf;
 import gash.router.database.datatypes.FluffyFile;
-import global.Global.File;
-import global.Global.GlobalHeader;
-import global.Global.GlobalMessage;
-import global.Global.Request;
-import global.Global.RequestType;
-import global.Global.Response;
 import pipe.common.Common.Header;
 import pipe.election.Election.AllNodeInfo;
 import pipe.election.Election.NewNodeMessage;
@@ -48,7 +41,7 @@ public class MessageGenerator {
 	public static MessageGenerator getInstance(){
 		MessageGenerator messageGenerator = instance.get();
 		if(messageGenerator == null){
-			logger.error(" Error while getting instance of MessageGenerator ");
+			logger.error("Error while getting instance of MessageGenerator ");
 		}
 		return messageGenerator;
 	}
