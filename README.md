@@ -11,7 +11,7 @@ http://localhost:8098/buckets/FluffyRiakDatabase/keys?keys=true
 View the value for a key:
 http://localhost:8098/buckets/FluffyRiakDatabase/keys/samples.pdf 
 
-// to delete a key
+To delete a key:
 curl -v -X DELETE http://127.0.0.1:8098/buckets/FluffyRiakDatabase/keys/samples.pdf //
 
 
