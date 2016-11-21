@@ -91,6 +91,7 @@ public class MessageServer {
 		StartGlobalCommunication globalComm = new StartGlobalCommunication(globalConf,comm);
 		Thread globalthread = new Thread(globalComm);
 		globalthread.start();
+		
 		// start the worker in the background
 		Thread cthread = new Thread(comm);
 		cthread.start();
@@ -338,7 +339,8 @@ public class MessageServer {
 
 			state = new GlobalServerState();
 			state.setConf(conf);
-			state.setElectionCtx(electionCtx);
+			work.workElectionCtx.setGlobalState(state);
+			state.setElectionCtx(work.workElectionCtx);
 			
 
 			TaskList tasks = new TaskList(new NoOpBalancer());

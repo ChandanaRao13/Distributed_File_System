@@ -62,7 +62,7 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	private GlobalServerState state;
 	private boolean forever = true;
 	private long dt = 2000;
-	private Channel leaderChannel;
+	
 
 
 	public GlobalEdgeMonitor(GlobalServerState state) {
@@ -105,9 +105,13 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	public void run() {
 		while (forever) {
 			try {
+
 				for (GlobalEdgeInfo ei : this.outboundEdges.map.values()) {
 					if (ei.isActive() && ei.getChannel() != null) {
-						
+						if(ei.getChannel()!=null){
+							ei.getChannel().writeAndFlush(GlobalMessageBuilder.buildPingMessage());
+						}
+
 					} else if(ei.getChannel() == null){
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 						ei.setChannel(channel);
@@ -173,21 +177,12 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 		// TODO ?
 	}
 
-	public Channel getLeaderChannel() {
-		return leaderChannel;
-	}
-
-	public void setLeaderChannel(Channel leaderChannel) {
-		this.leaderChannel = leaderChannel;
-	}
-	
-	public void broadcastToClusterLeaders(GlobalMessage msg){
+	public void broadcastToClusterFriends(GlobalMessage msg){
 		for(GlobalEdgeInfo ei : this.outboundEdges.map.values()){	
 			if(ei.isActive() && ei.getChannel()!=null){
 				ei.getChannel().writeAndFlush(msg);
 			}
 		}
-		
 	}
 }
 

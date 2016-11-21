@@ -62,7 +62,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	private EdgeList inboundEdges;
 	private long dt = 2000;
 	private ServerState state;
-	private RaftElectionContext electionCtx;
+	private static RaftElectionContext electionCtx;
 	private boolean forever = true;
 	private ArrayList<InetAddress> activeIps;
 

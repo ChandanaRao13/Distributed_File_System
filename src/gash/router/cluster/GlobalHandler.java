@@ -63,14 +63,14 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	protected GlobalServerState state;
 	protected boolean debug = false;
 
-	
+
 	public GlobalHandler(GlobalServerState state) {
 		if (state != null) {
 			this.state = state;
 		} else {
 			return;
 		}
-		
+
 	}
 
 	/**
@@ -83,18 +83,12 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
 			return;
-		}else if(msg.hasMessage()){
-			System.out.println(msg.getMessage());
-		}else if(msg.hasWhoIsClusterLeader()){
-			String leaderHost = state.getElectionCtx().getLeaderHost();
-			int leaderPort = state.getConf().getGlobalPort();
-			GlobalMessage replyMessage = GlobalMessageBuilder.buildTheLeaderIsMessage(leaderHost, leaderPort);
-			if(channel.isOpen() && channel!=null){
-				channel.writeAndFlush(replyMessage);
-			}
-		}else if(msg.hasClusterLeaderInfo()){
-			Channel ch = state.getEmon().connectToChannel(msg.getClusterLeaderInfo().getLeaderIp(),msg.getClusterLeaderInfo().getLeaderPort());
-			state.getEmon().setLeaderChannel(ch);
+		}else if(msg.hasPing()){
+			System.out.println("Got Ping from Cluster Id:"+msg.getGlobalHeader().getClusterId());
+			state.getEmon().broadcastToClusterFriends(GlobalMessageBuilder.buildPingMessage());
+		}
+		else if(msg.hasMessage()){
+			System.out.println("Recieved -->"+msg.getMessage()+" from Cluster Id: "+msg.getGlobalHeader().getClusterId());
 		}
 
 		if (debug)
@@ -102,8 +96,8 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 
 		// TODO How can you implement this without if-else statements?
 		try {
-			
-			 
+
+
 		} catch (Exception e) {
 			// TODO add logging
 			/*Failure.Builder eb = Failure.newBuilder();

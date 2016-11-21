@@ -19,6 +19,7 @@ import pipe.work.Work.WorkMessage;
 
 public class RaftElectionContext implements Runnable {
 	ServerState state;
+
 	IRaftNodeState follower;
 	IRaftNodeState candidate;
 	IRaftNodeState leader;
@@ -31,9 +32,12 @@ public class RaftElectionContext implements Runnable {
 	private EdgeMonitor emon;
 	private int leaderId;
 	private boolean amReady = true;
+	private GlobalServerState globalState;
 
 	private int heartbeatdt = 3000;
 	private long timeOut = 3000;
+	private long globalTimer =5000;
+	private long globalTimerBegin=0;
 	private Random rand;
 	private long timerBegin = 0;
 
@@ -95,6 +99,8 @@ public class RaftElectionContext implements Runnable {
 		int temp =  rand.nextInt(heartbeatdt)+heartbeatdt;
 		timeOut = (long)temp;		
 	}
+	
+
 
 	//Timer
 	public synchronized void computeTime() {
@@ -151,21 +157,39 @@ public class RaftElectionContext implements Runnable {
 	}
 
 	public String getLeaderHost() {
+
 		String host="";
 		if(leaderId == conf.getNodeId()){
 			try {
-				 host = InetAddress.getLocalHost().toString();
+				InetAddress inet = InetAddress.getLocalHost();
+				host =inet.getHostAddress();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
+				System.out.println("Entered UnknownHostException");
 				e.printStackTrace();
 			}
 
 		}else{
 			EdgeInfo ei = state.getEmon().getOutboundEdges().getEdgeListMap().get(leaderId);
-			host = ei.getHost();
+			if(ei!=null){
+				host = ei.getHost();
+			}
+
 		}
 		return host;
 	}
-	
+	public GlobalServerState getGlobalState() {
+		return globalState;
+	}
+	public void setGlobalState(GlobalServerState globalState) {
+		this.globalState = globalState;
+	}
+	public long getGlobalTimer() {
+		return globalTimer;
+	}
+	public void setGlobalTimer(long globalTimer) {
+		this.globalTimer = globalTimer;
+	}
+
 
 }

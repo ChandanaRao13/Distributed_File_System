@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import gash.router.container.GlobalRoutingConf;
 import global.Global.GlobalHeader;
 import global.Global.GlobalMessage;
-import global.Global.LeaderInfo;
-import global.Global.WhoIsLeader;
 import pipe.common.Common.Header;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
@@ -26,6 +24,20 @@ public class GlobalMessageBuilder {
 
 	}
 
+	public static GlobalMessage buildPingMessage(){
+
+		GlobalHeader.Builder header = GlobalHeader.newBuilder();
+		header.setClusterId(conf.getClusterId());
+		header.setTime(System.currentTimeMillis());
+		header.setDestinationId(conf.getClusterId());
+
+		GlobalMessage.Builder gm = GlobalMessage.newBuilder();
+		gm.setGlobalHeader(header);
+		gm.setPing(true);
+
+		return gm.build();
+	}
+	
 	public static GlobalMessage buildSimpleMessage(String message){
 
 		GlobalHeader.Builder header = GlobalHeader.newBuilder();
@@ -39,6 +51,8 @@ public class GlobalMessageBuilder {
 
 		return gm.build();
 	}
+	
+	/*
 	public static GlobalMessage buildWhoIsTheLeaderMessage(){
 
 		GlobalHeader.Builder header = GlobalHeader.newBuilder();
@@ -74,4 +88,19 @@ public class GlobalMessageBuilder {
 
 		return gm.build();
 	}
+
+	public static GlobalMessage buildLetsConnectMessage() {
+		GlobalHeader.Builder header = GlobalHeader.newBuilder();
+		header.setClusterId(conf.getClusterId());
+		header.setTime(System.currentTimeMillis());
+		
+		LetsConnect.Builder letsConnectMessage = LetsConnect.newBuilder();
+		letsConnectMessage.setPort(conf.getGlobalPort());
+		
+		GlobalMessage.Builder gm = GlobalMessage.newBuilder();
+		gm.setGlobalHeader(header);
+		gm.setLetsConnect(letsConnectMessage);
+		
+		return gm.build();
+	}*/
 }

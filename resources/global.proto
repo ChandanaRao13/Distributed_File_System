@@ -16,8 +16,6 @@ message GlobalMessage {
 		string message = 3; // For testing only
 		Request request = 4; // Global File Request - (READ only for now)
 		Response response = 5; // Global File Response -( contains the READ's result)
-		WhoIsLeader whoIsClusterLeader = 6; 
-		LeaderInfo clusterLeaderInfo =7; 
 	}
 }
 
@@ -55,12 +53,3 @@ message Response {
 	}
 }
 
-message WhoIsLeader{
-	required string requesterIp =1; 
-	required int32 requesterPort =2;
-}
-
-message LeaderInfo{
-	required string leaderIp =1;
-	required int32 leaderPort =2;
-}

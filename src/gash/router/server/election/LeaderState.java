@@ -1,6 +1,7 @@
 package gash.router.server.election;
 
 import gash.router.server.edges.EdgeInfo;
+import gash.router.util.GlobalMessageBuilder;
 import gash.router.util.RaftMessageBuilder;
 import pipe.work.Work.WorkMessage;
 
@@ -8,13 +9,15 @@ public class LeaderState implements IRaftNodeState {
 	
 	private RaftElectionContext electionCtx;
 	
+	
 	@Override
 	public void doAction() {
 		try{
+			
 			WorkMessage leaderHeartBeatMsg = RaftMessageBuilder.buildLeaderResponseMessage(electionCtx.getConf().getNodeId(), electionCtx.getTerm());
 			electionCtx.setLeaderId(electionCtx.getConf().getNodeId());
 			electionCtx.broadcast(leaderHeartBeatMsg);	
-			//System.out.println("Sending heartbeat");
+			System.out.println("I am the Leader HeartBeat!!!");
 			Thread.sleep(electionCtx.getConf().getHeartbeatDt()/4);
 		}catch (InterruptedException e) {
 			e.printStackTrace();

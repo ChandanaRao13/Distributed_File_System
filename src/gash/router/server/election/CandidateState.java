@@ -1,6 +1,7 @@
 package gash.router.server.election;
 
 import gash.router.server.edges.EdgeInfo;
+import gash.router.util.GlobalMessageBuilder;
 import gash.router.util.RaftMessageBuilder;
 import pipe.work.Work.WorkMessage;
 
