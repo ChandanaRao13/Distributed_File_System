@@ -20,7 +20,7 @@ import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
 import routing.Pipe.FileTask.FileTaskType;
 import gash.router.cluster.GlobalEdgeMonitor;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 
 
 
@@ -37,12 +37,12 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 		FileTaskType taskType = request.getCommandMessage().getFiletask().getFileTaskType();
 		FileTask fileTask = request.getCommandMessage().getFiletask();
 		if (taskType == FileTaskType.READ) {
-			boolean inRiak = DatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
-			boolean inRethink = DatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
+			boolean inRiak = RethinkDatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
+			boolean inRethink = RethinkDatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
 			String filename = fileTask.getFilename();
 			String clientId = EdgeMonitor.clientInfoMap(request);
 			if (inRiak || inRethink) {
-				int chunkCount = DatabaseHandler
+				int chunkCount = RethinkDatabaseHandler
 						.getFilesChunkCount(request.getCommandMessage().getFiletask().getFilename());
 				request.setChunkCount(chunkCount);
 				NodeLoad node = LoadQueueManager.getInstance().getMininumNodeLoadInfo(chunkCount);

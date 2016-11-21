@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
 import gash.router.cluster.GlobalEdgeMonitor;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.database.datatypes.FluffyFile;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
@@ -62,7 +62,7 @@ public class InboundReadQueueThread extends Thread {
 						String filename = ft.getFilename();
 
 						System.out.println("Reading file: " + filename + " and chunkID : " + chunkId);
-						List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename, chunkId);
+						List<FluffyFile> content = RethinkDatabaseHandler.getFileContentWithChunkId(filename, chunkId);
 						ByteString byteStringContent = ByteString.copyFrom(content.get(0).getFile());
 						int chunkCount = content.get(0).getTotalChunks();
 						WorkMessage msg = MessageGenerator.getInstance().generateReadRequestResponseMessage(ft,

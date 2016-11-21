@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
 import routing.Pipe.FileTask.FileTaskType;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
 import gash.router.server.queue.management.QueueManager;
@@ -29,8 +29,8 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 		FileTask fileTask = request.getCommandMessage().getFiletask();
 		FileTaskType taskType = fileTask.getFileTaskType();
 		if(taskType == FileTaskType.UPDATE){
-			boolean inRiak = DatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
-			boolean inRethink = DatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
+			boolean inRiak = RethinkDatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
+			boolean inRethink = RethinkDatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
 			String filename = fileTask.getFilename();
 			if(inRiak || inRethink){
 				logger.info("Deleting the file from database to update : " + filename);
@@ -39,7 +39,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 					UpdateFileInfo fileInfo = new UpdateFileInfo(fileTask.getChunkCounts());
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 
-					if(DatabaseHandler.deleteFile(filename)){
+					if(RethinkDatabaseHandler.deleteFile(filename)){
 						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
@@ -49,7 +49,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 				} 
 				UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
 				
-				if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
+				if(RethinkDatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 						fileInfo.decrementChunkProcessed();
 						
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");

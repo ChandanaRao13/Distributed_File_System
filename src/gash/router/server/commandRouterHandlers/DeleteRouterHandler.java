@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask.FileTaskType;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
@@ -32,9 +32,9 @@ public class DeleteRouterHandler implements ICommandRouterHandlers {
 		FileTaskType taskType = request.getCommandMessage().getFiletask().getFileTaskType();
 		if(taskType == FileTaskType.DELETE){
 			String filename = request.getCommandMessage().getFiletask().getFilename();
-			if(DatabaseHandler.isFileAvailable(filename)){
+			if(RethinkDatabaseHandler.isFileAvailable(filename)){
 				logger.info("Deleting the file from database : " + filename);
-				if(DatabaseHandler.deleteFile(filename)){
+				if(RethinkDatabaseHandler.deleteFile(filename)){
 					CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
 					QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 					DataReplicationManager.getInstance().broadcastDeletion(request.getCommandMessage());

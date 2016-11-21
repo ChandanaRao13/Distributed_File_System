@@ -1,6 +1,6 @@
 package gash.router.server.queue.management;
 
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.replication.DataReplicationManager;
 import gash.router.server.replication.UpdateFileInfo;
@@ -38,7 +38,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 					Channel channel = internalNode.getChannel();
 					FileTask ft= workMessage.getFiletask();
 					if(workMessage.getWorktype() == Worktype.REPLICATE_REQUEST){
-						if(DatabaseHandler.addFile(ft.getFilename(), ft.getChunkCounts(), ft.getChunk().toByteArray(), ft.getChunkNo())){
+						if(RethinkDatabaseHandler.addFile(ft.getFilename(), ft.getChunkCounts(), ft.getChunk().toByteArray(), ft.getChunkNo())){
 
 							WorkMessage workResponseMessage = MessageGenerator.getInstance().generateReplicationAcknowledgementMessage(workMessage);
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, channel);
@@ -47,7 +47,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 							QueueManager.getInstance().enqueueInboundWorkWrite(workMessage, channel);
 						} 
 					} else if (workMessage.getWorktype() == Worktype.DELETE_REQUEST){
-						if(DatabaseHandler.deleteFile(ft.getFilename())){
+						if(RethinkDatabaseHandler.deleteFile(ft.getFilename())){
 							WorkMessage workResponseMessage = MessageGenerator.getInstance().generateDeletionAcknowledgementMessage(workMessage);
 							QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, internalNode.getChannel());
 						} else {
@@ -62,7 +62,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 							DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 							logger.info("Trying to delete the file, in slave");
 							
-							if(DatabaseHandler.deleteFile(filename)){
+							if(RethinkDatabaseHandler.deleteFile(filename)){
 								WorkMessage workResponseMessage = MessageGenerator.getInstance().generateUpdateDeletionAcknowledgementMessage(workMessage);
 								QueueManager.getInstance().enqueueOutboundWorkWrite(workResponseMessage, channel);
 							} else {
@@ -79,7 +79,7 @@ public class InboundWorkWriteQueueThread extends Thread{
 						} else {
 							UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
 							
-							if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
+							if(RethinkDatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 									fileInfo.decrementChunkProcessed();
 									
 									WorkMessage workResponseMessage = MessageGenerator.getInstance().generateUpdateReplicationAcknowledgementMessage(workMessage);

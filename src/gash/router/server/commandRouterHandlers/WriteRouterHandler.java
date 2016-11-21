@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pipe.common.Common.Header;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
 import gash.router.server.queue.management.QueueManager;
@@ -29,7 +29,7 @@ public class WriteRouterHandler implements ICommandRouterHandlers{
 		FileTaskType taskType = fileTask.getFileTaskType();
 
 		if(taskType == FileTaskType.WRITE){
-			if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
+			if(RethinkDatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 					CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
 					QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 					DataReplicationManager.getInstance().broadcastReplication(request.getCommandMessage());

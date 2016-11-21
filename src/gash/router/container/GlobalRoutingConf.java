@@ -37,7 +37,6 @@ public class GlobalRoutingConf {
 	private String globalHost;
 	private List<GlobalRoutingEntry> routing;
 
-
 	public HashMap<String, Integer> asHashMap() {
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		if (routing != null) {
@@ -73,6 +72,7 @@ public class GlobalRoutingConf {
 	public void setGlobalPort(int globalPort) {
 		this.globalPort = globalPort;
 	}
+
 	public List<GlobalRoutingEntry> getRouting() {
 		return routing;
 	}

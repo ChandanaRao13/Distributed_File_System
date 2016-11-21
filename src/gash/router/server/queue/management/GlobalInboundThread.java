@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
 import gash.router.cluster.GlobalEdgeMonitor;
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.database.datatypes.FluffyFile;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
@@ -56,17 +56,17 @@ public class GlobalInboundThread extends Thread {
 					if (message.getRequest().getRequestType() == RequestType.READ) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 							String filename = message.getRequest().getFileName();
-							boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
-							boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
+							boolean inRiak = RethinkDatabaseHandler.isFileAvailableInRiak(filename);
+							boolean inRethink = RethinkDatabaseHandler.isFileAvailableInRethink(filename);
 							if (inRiak || inRethink) {
 								//Read from leader database and return to another cluster
 								
-								int chunkCount = DatabaseHandler
+								int chunkCount = RethinkDatabaseHandler
 										.getFilesChunkCount(message.getRequest().getFileName());
 								globalNode.setChunkCount(chunkCount);
 
 								for (int index = 0; index < chunkCount; index++) {
-									List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename, index +1);
+									List<FluffyFile> content = RethinkDatabaseHandler.getFileContentWithChunkId(filename, index +1);
 									ByteString byteStringContent = ByteString.copyFrom(content.get(0).getFile());
 									GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalReadResponseMessage(
 											globalNode.getGlobalMessage(), index + 1, byteStringContent, chunkCount);

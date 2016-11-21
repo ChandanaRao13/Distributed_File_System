@@ -21,14 +21,15 @@ import gash.router.server.manage.exceptions.FileChunkNotFoundException;
 import gash.router.server.manage.exceptions.FileNotFoundException;
 import gash.router.util.Constants;
 
-public class DatabaseHandler {
+@SuppressWarnings({ "static-access", "unchecked" })
+public class RethinkDatabaseHandler {
 
 	private static DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.getInstance();
 
 	public static final RethinkDB rethinkDBInstance = RethinkDB.r;
-	public static RiakDatabase riakDatabase = null;
+	public static RiakDatabaseHandler riakDatabase = null;
 	public static final JSONParser jsonParse = new JSONParser();
-	protected static Logger logger = LoggerFactory.getLogger(DatabaseHandler.class);
+	protected static Logger logger = LoggerFactory.getLogger(RethinkDatabaseHandler.class);
 
 	/**
 	 * adds the give line into the db
@@ -36,17 +37,18 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param line
 	 * @param chunkId
-	 * @throws EmptyConnectionPoolException 
+	 * @throws EmptyConnectionPoolException
 	 * @throws Exception
 	 */
 	@Deprecated
-	public static boolean addFile(String filename, String line, int chunkId, int totalChunks) throws EmptyConnectionPoolException {
+	public static boolean addFile(String filename, String line, int chunkId, int totalChunks)
+			throws EmptyConnectionPoolException {
 		Connection conn = databaseConnectionManager.getConnection();
 		try {
 			rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
-			.insert(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename).with(Constants.FILE_CONTENT, line)
-					.with(Constants.CHUNK_COUNT, totalChunks).with(Constants.CHUNK_ID, chunkId))
-			.run(conn);
+					.insert(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename).with(Constants.FILE_CONTENT, line)
+							.with(Constants.CHUNK_COUNT, totalChunks).with(Constants.CHUNK_ID, chunkId))
+					.run(conn);
 			return true;
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to store file in the database");
@@ -63,20 +65,21 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param line
 	 * @param chunkId
-	 * @throws EmptyConnectionPoolException 
+	 * @throws EmptyConnectionPoolException
 	 * @throws Exception
 	 */
 	@Deprecated
-	public static boolean addFile(String filename, ByteString line, int chunkId, int totalChunks) throws EmptyConnectionPoolException {
+	public static boolean addFile(String filename, ByteString line, int chunkId, int totalChunks)
+			throws EmptyConnectionPoolException {
 		Connection conn = databaseConnectionManager.getConnection();
 		try {
 			String contentString = new String(line.toByteArray());
 			rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
-			.insert(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)
-					.with(Constants.CHUNK_COUNT, totalChunks).with(Constants.FILE_CONTENT, contentString)
-					.with(Constants.CHUNK_ID, chunkId))
-			.run(conn);
-			//System.out.println("File saved to DB: " + filename);
+					.insert(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)
+							.with(Constants.CHUNK_COUNT, totalChunks).with(Constants.FILE_CONTENT, contentString)
+							.with(Constants.CHUNK_ID, chunkId))
+					.run(conn);
+			// System.out.println("File saved to DB: " + filename);
 			return true;
 		} catch (Exception e) {
 			logger.error("ERROR: Unable to store file in the database");
@@ -93,17 +96,20 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param input
 	 * @param chunkId
-	 * @throws EmptyConnectionPoolException 
+	 * @throws EmptyConnectionPoolException
 	 * @throws Exception
 	 */
-	public static boolean addFile(String filename, int chunkCount, byte[] input, int chunkId) throws EmptyConnectionPoolException {
-		if(chunkCount>3) {
+	public static boolean addFile(String filename, int chunkCount, byte[] input, int chunkId)
+			throws EmptyConnectionPoolException {
+		if (chunkCount > 3) {
 			Connection connection = databaseConnectionManager.getConnection();
 			try {
-				rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE).insert(rethinkDBInstance
-						.hashMap(Constants.FILE_NAME, filename).with(Constants.CHUNK_COUNT, chunkCount)
-						.with(Constants.FILE_CONTENT, rethinkDBInstance.binary(input)).with(Constants.CHUNK_ID, chunkId))
-				.run(connection);
+				rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+						.insert(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)
+								.with(Constants.CHUNK_COUNT, chunkCount)
+								.with(Constants.FILE_CONTENT, rethinkDBInstance.binary(input))
+								.with(Constants.CHUNK_ID, chunkId))
+						.run(connection);
 				return true;
 			} catch (Exception e) {
 				logger.debug("ERROR: Unable to store file in the database");
@@ -111,26 +117,28 @@ public class DatabaseHandler {
 				return false;
 			} finally {
 				databaseConnectionManager.releaseConnection(connection);
-			}  }else {
-				//if total chunk count is less than 3 chunks file will be stored in Riak
-				try {
-					riakDatabase = RiakDatabase.getRiakInstance();
-					riakDatabase.storeFile(filename, chunkCount, input, chunkId);
-					return true;
-				} catch(Exception e) {
-					logger.debug("ERROR: Unable to store file in the Riak database");
-					e.printStackTrace();
-					return false;
-				}
 			}
+		} else {
+			// if total chunk count is less than 3 chunks file will be stored in
+			// Riak
+			try {
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
+				riakDatabase.storeFile(filename, chunkCount, input, chunkId);
+				return true;
+			} catch (Exception e) {
+				logger.debug("ERROR: Unable to store file in the Riak database");
+				e.printStackTrace();
+				return false;
+			}
+		}
 	}
 
 	/**
 	 * 
 	 * @param filename
 	 * @return
-	 * @throws FileNotFoundException 
-	 * @throws EmptyConnectionPoolException 
+	 * @throws FileNotFoundException
+	 * @throws EmptyConnectionPoolException
 	 * @throws Exception
 	 */
 	public static int getFilesChunkCount(String filename) throws FileNotFoundException, EmptyConnectionPoolException {
@@ -146,10 +154,10 @@ public class DatabaseHandler {
 			if (result.size() == 1) {
 				return Integer.parseInt(String.valueOf(result.get(0)));
 			} else {
-				//checking file in riak database
-				riakDatabase = RiakDatabase.getRiakInstance();
+				// checking file in riak database
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
 				int riakResult = riakDatabase.getChunkCount(filename);
-				if(riakResult!=0)
+				if (riakResult != 0)
 					return riakResult;
 				return 0;
 			}
@@ -178,7 +186,7 @@ public class DatabaseHandler {
 
 		if (dataFromDB != null) {
 			int result = dataFromDB.bufferedSize();
-			if(result != 0){
+			if (result != 0) {
 				List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 				for (Object record : dataFromDB) {
 					FluffyFile fluffyFile = new FluffyFile();
@@ -191,14 +199,14 @@ public class DatabaseHandler {
 				}
 				return fileContents;
 			} else {
-				//checking in riak database 
-				riakDatabase = RiakDatabase.getRiakInstance();
+				// checking in riak database
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
 				List<FluffyFile> riakFile = riakDatabase.getFile(filename);
-				if(riakFile!=null)
+				if (riakFile != null)
 					return riakFile;
 			}
-		}		
-		throw new FileNotFoundException(filename);	
+		}
+		throw new FileNotFoundException(filename);
 	}
 
 	/**
@@ -224,7 +232,7 @@ public class DatabaseHandler {
 		List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 		if (dataFromDB != null) {
 			int result = dataFromDB.bufferedSize();
-			if(result != 0){
+			if (result != 0) {
 				for (Object record : dataFromDB) {
 					FluffyFile fluffyFile = new FluffyFile();
 					HashMap<String, Object> fileContentMap = (HashMap<String, Object>) record;
@@ -236,17 +244,17 @@ public class DatabaseHandler {
 				}
 				return fileContents;
 			} else {
-				riakDatabase = RiakDatabase.getRiakInstance();
-				FluffyFile riakFile = riakDatabase.getFileWithChunkID(filename,chunkId);
-				if(riakFile!=null){
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
+				FluffyFile riakFile = riakDatabase.getFileWithChunkID(filename, chunkId);
+				if (riakFile != null) {
 					fileContents.add(riakFile);
-					return fileContents ;
+					return fileContents;
 				} else {
-					throw new FileNotFoundException(filename);			
+					throw new FileNotFoundException(filename);
 				}
 			}
-		} 
-		throw new FileNotFoundException(filename);				
+		}
+		throw new FileNotFoundException(filename);
 	}
 
 	/**
@@ -262,7 +270,7 @@ public class DatabaseHandler {
 	 * @throws EmptyConnectionPoolException
 	 */
 	public static ByteString getFileChunkContentWithChunkId(String filename, int chunkId) throws IOException,
-	ParseException, FileNotFoundException, FileChunkNotFoundException, EmptyConnectionPoolException {
+			ParseException, FileNotFoundException, FileChunkNotFoundException, EmptyConnectionPoolException {
 		Connection connection = databaseConnectionManager.getConnection();
 
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
@@ -272,9 +280,8 @@ public class DatabaseHandler {
 
 		databaseConnectionManager.releaseConnection(connection);
 		if (dataFromDB != null) {
-			List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 			int result = dataFromDB.bufferedSize();
-			if(result != 0){
+			if (result != 0) {
 				for (Object record : dataFromDB) {
 					System.out.println(record);
 					HashMap<String, Object> fileContentMap = (HashMap<String, Object>) record;
@@ -283,17 +290,24 @@ public class DatabaseHandler {
 				}
 				return ByteString.copyFrom("".getBytes());
 			} else {
-				//checking in riak database 
-				riakDatabase = RiakDatabase.getRiakInstance();
-				FluffyFile riakFile = riakDatabase.getFileWithChunkID(filename,chunkId);
-				if(riakFile != null)
+				// checking in riak database
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
+				FluffyFile riakFile = riakDatabase.getFileWithChunkID(filename, chunkId);
+				if (riakFile != null)
 					return ByteString.copyFrom(riakFile.getFile());
 			}
 		}
-		throw new FileChunkNotFoundException(filename, chunkId);	
+		throw new FileChunkNotFoundException(filename, chunkId);
 	}
 
-	public static boolean isFileAvailable(String filename) throws EmptyConnectionPoolException{
+	/**
+	 * returns true if a file is present in Riak or RethinkDB
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
+	public static boolean isFileAvailable(String filename) throws EmptyConnectionPoolException {
 		Connection connection = databaseConnectionManager.getConnection();
 
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
@@ -301,22 +315,23 @@ public class DatabaseHandler {
 		databaseConnectionManager.releaseConnection(connection);
 		if (dataFromDB == null)
 			System.out.println("Database error");
-		else{
-			int count  = 0;
+		else {
+			int count = 0;
 			for (Object record : dataFromDB) {
-				count ++;
+				if (record != null)
+					return true;
+				count++;
 			}
-
-			if(count != 0){
+			if (count != 0) {
 				return true;
 			} else {
-				riakDatabase = RiakDatabase.getRiakInstance();
+				riakDatabase = RiakDatabaseHandler.getRiakInstance();
 				int isAvailable = riakDatabase.getChunkCount(filename);
-				if(isAvailable>0)
+				if (isAvailable > 0)
 					return true;
 			}
 		}
-		return false;	
+		return false;
 	}
 
 	/**
@@ -325,16 +340,22 @@ public class DatabaseHandler {
 	 * @param filename
 	 * @param input
 	 * @param chunkId
-	 * @throws EmptyConnectionPoolException 
+	 * @throws EmptyConnectionPoolException
 	 * @throws Exception
 	 */
 	public static boolean deleteFile(String filename) throws EmptyConnectionPoolException {
 		Connection connection = databaseConnectionManager.getConnection();
 		try {
-			HashMap<String, Object> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+			/**
+			 * HashMap<String, Object> dataFromDB =
+			 * rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+			 * .filter(rethinkDBInstance.hashMap(Constants.FILE_NAME,
+			 * filename)).delete().run(connection);
+			 */
+			rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
 					.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).delete().run(connection);
 			databaseConnectionManager.releaseConnection(connection);
-			riakDatabase = RiakDatabase.getRiakInstance();
+			riakDatabase = RiakDatabaseHandler.getRiakInstance();
 			riakDatabase.deleteFile(filename);
 			return true;
 		} catch (Exception e) {
@@ -347,62 +368,91 @@ public class DatabaseHandler {
 		}
 	}
 
-
+	/**
+	 * returns all file contents from rethinkDB
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static List<FluffyFile> getAllFileContentsFromRethink()
 			throws FileNotFoundException, IOException, ParseException, EmptyConnectionPoolException {
 		System.out.println("Entered DatabaseHandler::getAllFileContents");
 		List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 		Connection connection = databaseConnectionManager.getConnection();
 		System.out.println("Entered DatabaseHandler::getAllFileContents::querying");
-		ArrayList<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE).getField(Constants.FILE_NAME).distinct().run(connection);
+		ArrayList<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
+				.getField(Constants.FILE_NAME).distinct().run(connection);
 		databaseConnectionManager.releaseConnection(connection);
 		System.out.println("Entered DatabaseHandler::getAllFileContents::After querying");
-		if (dataFromDB!= null){
+		if (dataFromDB != null) {
 			for (Object record : dataFromDB) {
-				System.out.println("Record::"+record);
+				System.out.println("Record::" + record);
 				List<FluffyFile> eachFileContent = new ArrayList<FluffyFile>();
 				eachFileContent = getFileContents(record.toString());
-				//System.out.println("eachFileContent::"+eachFileContent);
+				// System.out.println("eachFileContent::"+eachFileContent);
 				fileContents.addAll(eachFileContent);
 			}
 		}
 		return fileContents;
 	}
 
-
+	/**
+	 * returns a List of FluffyFile objects from Riak
+	 * 
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static List<FluffyFile> getAllFileContentsFromRiak()
 			throws FileNotFoundException, IOException, ParseException, EmptyConnectionPoolException {
 		List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
-		riakDatabase = RiakDatabase.getRiakInstance();
+		riakDatabase = RiakDatabaseHandler.getRiakInstance();
 		fileContents = riakDatabase.getAllFiles();
 		return fileContents;
 	}
-	
-	public static boolean isFileAvailableInRethink(String filename) throws EmptyConnectionPoolException{
-		Connection connection = databaseConnectionManager.getConnection();
 
+	/**
+	 * returns true if a file is Available in RethinkDB
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
+	public static boolean isFileAvailableInRethink(String filename) throws EmptyConnectionPoolException {
+		Connection connection = databaseConnectionManager.getConnection();
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).run(connection);
 		databaseConnectionManager.releaseConnection(connection);
 		if (dataFromDB == null)
 			System.out.println("Database error");
-		else{
-			int count  = 0;
+		else {
+			int count = 0;
 			for (Object record : dataFromDB) {
-				count ++;
+				if (record != null)
+					return true;
+				count++;
 			}
-
-			if(count != 0){
+			if (count != 0) {
 				return true;
 			}
 		}
-		return false;	
+		return false;
 	}
 
-	public static boolean isFileAvailableInRiak(String filename) throws EmptyConnectionPoolException{
-		riakDatabase = RiakDatabase.getRiakInstance();
+	/**
+	 * checks if a certain file is available in Riak
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
+	public static boolean isFileAvailableInRiak(String filename) throws EmptyConnectionPoolException {
+		riakDatabase = RiakDatabaseHandler.getRiakInstance();
 		int isAvailable = riakDatabase.getChunkCount(filename);
-		if(isAvailable>0){
+		if (isAvailable > 0) {
 			return true;
 		} else {
 			return false;

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gash.router.database.DatabaseHandler;
+import gash.router.database.RethinkDatabaseHandler;
 import gash.router.database.datatypes.FluffyFile;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
@@ -94,8 +94,8 @@ public class DataReplicationManager {
 	public void newNodeReplication(Integer nodeId,Channel channel){
 		System.out.println("Entered DataReplicationManager::newNodeReplication::Channel open?::"+(channel!=null));
 		try {
-			List<FluffyFile> filesFromRethinkDB = DatabaseHandler.getAllFileContentsFromRethink();
-			List<FluffyFile> filesFromRiakDB = DatabaseHandler.getAllFileContentsFromRiak();
+			List<FluffyFile> filesFromRethinkDB = RethinkDatabaseHandler.getAllFileContentsFromRethink();
+			List<FluffyFile> filesFromRiakDB = RethinkDatabaseHandler.getAllFileContentsFromRiak();
 			filesFromRethinkDB.addAll(filesFromRiakDB);
 			System.out.println("Returned from Database handler::"+filesFromRethinkDB.size());
 			for(FluffyFile record : filesFromRethinkDB){
