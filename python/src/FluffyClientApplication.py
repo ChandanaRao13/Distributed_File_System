@@ -121,6 +121,7 @@ class FluffyClientApplication:
                         serverResponse = self.fluffyClient.sendFileToServer(filename, chunkCount, chunkId, fileChunk)
                         chunkId += 1
 
+                print("")
                 self.print_success("Client: Successfully uploaded file")
                 self._printHelpContent()
             ##
@@ -166,7 +167,7 @@ class FluffyClientApplication:
                         serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
                         chunkId += 1
 
-
+                print("")
                 self.print_success("Client: Successfully re uploaded file")
                 self._printHelpContent()
 

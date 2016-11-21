@@ -115,9 +115,8 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 
 					} else if(ei.getChannel() == null){
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
-
 						if (channel == null) {
-							logger.info("trying to connect to cluster  " + ei.getRef());
+							//logger.info("trying to connect to cluster  " + ei.getRef());
 						} else {
 							ei.setChannel(channel);
 							ei.setActive(true);
