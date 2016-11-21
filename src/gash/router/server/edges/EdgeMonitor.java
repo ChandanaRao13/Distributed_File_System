@@ -155,27 +155,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		return inboundEdges;
 	}
 
-	private WorkMessage createHB(EdgeInfo ei) {
-		WorkState.Builder sb = WorkState.newBuilder();
-		sb.setEnqueued(-1);
-		sb.setProcessed(-1);
-
-		Heartbeat.Builder bb = Heartbeat.newBuilder();
-		bb.setState(sb);
-
-		Header.Builder hb = Header.newBuilder();
-		hb.setNodeId(state.getConf().getNodeId());
-		hb.setDestination(-1);
-		hb.setTime(System.currentTimeMillis());
-
-		WorkMessage.Builder wb = WorkMessage.newBuilder();
-		wb.setHeader(hb);
-		wb.setBeat(bb);
-		wb.setSecret(1234);
-
-		return wb.build();
-	}
-
 	public void shutdown() {
 		forever = false;
 	}
@@ -186,8 +165,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			try {
 				for (EdgeInfo ei : this.outboundEdges.map.values()) {
 					if (ei.isActive() && ei.getChannel() != null) {
-						WorkMessage wm = createHB(ei);
-						ei.getChannel().writeAndFlush(wm);
+						//WorkMessage wm = createHB(ei);
+						//ei.getChannel().writeAndFlush(wm);
 					} else if (ei.getChannel() == null) {
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 						ei.setChannel(channel);

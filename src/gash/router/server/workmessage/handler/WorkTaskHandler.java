@@ -82,7 +82,7 @@ public class WorkTaskHandler implements IWorkChainHandler {
 			}
 		} else {
 			// this.nextChainHandler.handle(workMessage, channel);
-			logger.info("Error:  Work Chain Handler got a message that we don't handle right now");
+			//logger.info("Error:  Work Chain Handler got a message that we don't handle right now: " + workMessage.toString());
 		}
 	}
 }

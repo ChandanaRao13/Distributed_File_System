@@ -76,6 +76,7 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 		forever = false;
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void run() {
 		while (forever) {
