@@ -20,9 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
-import gash.router.server.commandChainHandler.ICommandChainHandler;
-import gash.router.server.commandChainHandler.MessageChainHandler;
-import gash.router.server.commandChainHandler.PingChainHandler;
+import gash.router.server.commandmessage.handler.ICommandChainHandler;
+import gash.router.server.commandmessage.handler.CmdMessageHandler;
+import gash.router.server.commandmessage.handler.CmdPingHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -48,8 +48,8 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 			this.conf = conf;
 		}
 		
-		pingChainHandle = new PingChainHandler();
-		messageChainHandle = new MessageChainHandler();
+		pingChainHandle = new CmdPingHandler();
+		messageChainHandle = new CmdMessageHandler();
 		messageChainHandle.setNextChainHandler(pingChainHandle);
 	}
 
