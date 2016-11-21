@@ -1,4 +1,4 @@
-package gash.router.server.workChainHandler;
+package gash.router.server.workmessage.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +13,10 @@ import pipe.work.Work.WorkMessage;
  * @author vaishampayan
  *
  */
-public class FailureHandler implements IWorkChainHandler{
+public class WorkFailureHandler implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger(FailureHandler.class);
+	protected static Logger logger = LoggerFactory.getLogger(WorkFailureHandler.class);
 
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain, ServerState state) {
@@ -25,13 +25,13 @@ public class FailureHandler implements IWorkChainHandler{
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	public void handle(WorkMessage workMessage, Channel channel) {
 		// TODO Auto-generated method stub
-		if(workMessage.hasErr()) {
+		if (workMessage.hasErr()) {
 			Failure err = workMessage.getErr();
 			logger.error("failure from " + workMessage.getHeader().getNodeId());
-		}
-		else {
+		} else {
 			nextChainHandler.handle(workMessage, channel);
 		}
 	}

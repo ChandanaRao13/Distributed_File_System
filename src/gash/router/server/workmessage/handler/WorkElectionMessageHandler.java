@@ -1,4 +1,4 @@
-package gash.router.server.workChainHandler;
+package gash.router.server.workmessage.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +11,10 @@ import pipe.election.Election.LeaderStatus.LeaderQuery;
 import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
 import pipe.work.Work.WorkMessage;
 
-public class ElectionMessageChainHandler implements IWorkChainHandler {
+public class WorkElectionMessageHandler implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
-	protected static Logger logger = LoggerFactory.getLogger(ElectionMessageChainHandler.class);
+	protected static Logger logger = LoggerFactory.getLogger(WorkElectionMessageHandler.class);
 
 	@Override
 	public void setNextChain(IWorkChainHandler nextChain, ServerState state) {

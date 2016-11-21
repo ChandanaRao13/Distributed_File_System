@@ -1,4 +1,4 @@
-package gash.router.server.workChainHandler;
+package gash.router.server.workmessage.handler;
 
 import gash.router.server.ServerState;
 import io.netty.channel.Channel;

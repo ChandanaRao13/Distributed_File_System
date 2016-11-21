@@ -21,6 +21,7 @@ public class DataReplicationManager {
 	protected static Logger logger = LoggerFactory.getLogger("DataReplicationManager");
 	protected static AtomicReference<DataReplicationManager> instance = new AtomicReference<DataReplicationManager>();
 	public static ConcurrentHashMap<String, UpdateFileInfo> fileUpdateTracker = new ConcurrentHashMap<String, UpdateFileInfo>();
+
 	public static DataReplicationManager initDataReplicationManager() {
 		instance.compareAndSet(null, new DataReplicationManager());
 		System.out.println(" --- Initializing Data Replication Manager --- ");
@@ -31,14 +32,12 @@ public class DataReplicationManager {
 		if (instance != null && instance.get() != null) {
 			return instance.get();
 		}
-		throw new Exception(" Data Replication Manager not started ");
+		throw new Exception("Data Replication Manager not started ");
 	}
-
 
 	public void broadcastReplication(CommandMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
-
 			Set<Integer> nodeIds = node2ChannelMap.keySet();
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
@@ -52,7 +51,6 @@ public class DataReplicationManager {
 	public void broadcastDeletion(CommandMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
-
 			Set<Integer> nodeIds = node2ChannelMap.keySet();
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
@@ -66,17 +64,17 @@ public class DataReplicationManager {
 	public void broadcastUpdateReplication(CommandMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
-
 			Set<Integer> nodeIds = node2ChannelMap.keySet();
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
-				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateReplicationRequestMsg(message, nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateReplicationRequestMsg(message,
+						nodeId);
 				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
 	}
-	
+
 	public void broadcastUpdateDeletion(CommandMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
@@ -84,27 +82,28 @@ public class DataReplicationManager {
 			Set<Integer> nodeIds = node2ChannelMap.keySet();
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
-				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateDeletionRequestMsg(message, nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateDeletionRequestMsg(message,
+						nodeId);
 				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
 	}
-	
-	public void newNodeReplication(Integer nodeId,Channel channel){
-		System.out.println("Entered DataReplicationManager::newNodeReplication::Channel open?::"+(channel!=null));
+
+	public void newNodeReplication(Integer nodeId, Channel channel) {
+		System.out.println("Entered DataReplicationManager::newNodeReplication::Channel open?::" + (channel != null));
 		try {
 			List<FluffyFile> filesFromRethinkDB = RethinkDatabaseHandler.getAllFileContentsFromRethink();
 			List<FluffyFile> filesFromRiakDB = RethinkDatabaseHandler.getAllFileContentsFromRiak();
 			filesFromRethinkDB.addAll(filesFromRiakDB);
-			System.out.println("Returned from Database handler::"+filesFromRethinkDB.size());
-			for(FluffyFile record : filesFromRethinkDB){
-				WorkMessage replicateFileMsg = MessageGenerator.getInstance().generateReplicationRequestMsg(nodeId,record);
+			System.out.println("Returned from Database handler::" + filesFromRethinkDB.size());
+			for (FluffyFile record : filesFromRethinkDB) {
+				WorkMessage replicateFileMsg = MessageGenerator.getInstance().generateReplicationRequestMsg(nodeId,
+						record);
 				QueueManager.getInstance().enqueueOutboundWriteWork(replicateFileMsg, channel);
-				
 			}
 		} catch (Exception e) {
-			System.out.println("Exception at newNodeReplication");
+			System.out.println("Exception at newNodeReplication: " + e.getMessage());
 		}
 	}
 }

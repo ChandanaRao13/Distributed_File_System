@@ -17,14 +17,14 @@ package gash.router.server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gash.router.server.workChainHandler.ElectionMessageChainHandler;
-import gash.router.server.workChainHandler.FailureHandler;
-import gash.router.server.workChainHandler.HeartBeatHandler;
-import gash.router.server.workChainHandler.IWorkChainHandler;
-import gash.router.server.workChainHandler.NewNodeChainHandlerV2;
-import gash.router.server.workChainHandler.PingHandler;
-import gash.router.server.workChainHandler.TaskHandler;
-import gash.router.server.workChainHandler.WorkStealHandler;
+import gash.router.server.workmessage.handler.WorkElectionMessageHandler;
+import gash.router.server.workmessage.handler.WorkFailureHandler;
+import gash.router.server.workmessage.handler.WorkHeartBeatHandler;
+import gash.router.server.workmessage.handler.IWorkChainHandler;
+import gash.router.server.workmessage.handler.NewNodeChainHandlerV2;
+import gash.router.server.workmessage.handler.WorkPingHandler;
+import gash.router.server.workmessage.handler.WorkTaskHandler;
+import gash.router.server.workmessage.handler.WorkStealHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -57,12 +57,12 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 		} else {
 			return;
 		}
-		this.heartBeatChainHandler = new HeartBeatHandler();
-		this.pingMessageChainHandler = new PingHandler();
-		this.failureMessageChainHandler = new FailureHandler();
-		this.taskMessageChainHandler = new TaskHandler();
+		this.heartBeatChainHandler = new WorkHeartBeatHandler();
+		this.pingMessageChainHandler = new WorkPingHandler();
+		this.failureMessageChainHandler = new WorkFailureHandler();
+		this.taskMessageChainHandler = new WorkTaskHandler();
 		this.workStealMessageChainHandler = new WorkStealHandler();
-		this.electionMessageChainHandler = new ElectionMessageChainHandler();
+		this.electionMessageChainHandler = new WorkElectionMessageHandler();
 		this.newNodeChainHandler = new NewNodeChainHandlerV2();
 
 		this.heartBeatChainHandler.setNextChain(electionMessageChainHandler,state);

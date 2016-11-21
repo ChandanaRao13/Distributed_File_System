@@ -1,4 +1,4 @@
-package gash.router.server.workChainHandler;
+package gash.router.server.workmessage.handler;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.ArrayList;
@@ -21,6 +21,11 @@ import pipe.election.Election.NewNodeMsgType;
 import pipe.election.Election.NodeInfo;
 import pipe.work.Work.WorkMessage;
 
+/**
+ * 
+ * @author vaishampayan, chandana
+ *
+ */
 public class NewNodeChainHandlerV2 implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;

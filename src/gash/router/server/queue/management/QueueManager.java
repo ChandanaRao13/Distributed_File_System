@@ -332,6 +332,11 @@ public class QueueManager {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 * @throws InterruptedException
+	 */
 	public InternalChannelNode dequeueInboundWriteWork() throws InterruptedException {
 		return inboundWriteWorkQueue.take();
 	}
