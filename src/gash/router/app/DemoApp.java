@@ -36,7 +36,7 @@ import routing.Pipe.CommandMessage;
 
 public class DemoApp implements CommListener {
 	private MessageClient mc;
-	private java.util.Map<String, ArrayList<CommandMessage>> byteList = new HashMap<String, ArrayList<CommandMessage>>();
+	private java.util.Map<String, ArrayList<CommandMessage>> fileContentsMap = new HashMap<String, ArrayList<CommandMessage>>();
 
 	public DemoApp(MessageClient mc) {
 		init(mc);
@@ -49,7 +49,6 @@ public class DemoApp implements CommListener {
 
 	private void ping(int N) {
 		// test round-trip overhead (note overhead for initial connection)
-		final int maxN = 10;
 		long[] dt = new long[N];
 		long st = System.currentTimeMillis(), ft = 0;
 		for (int n = 0; n < N; n++) {
@@ -82,13 +81,13 @@ public class DemoApp implements CommListener {
 			System.out.println(msg.getFiletask().getChunkCounts());
 			
 		*/
-			if(!byteList.containsKey(msg.getFiletask().getFilename())){
-				byteList.put(msg.getFiletask().getFilename(), new ArrayList<CommandMessage>());
+			if(!fileContentsMap.containsKey(msg.getFiletask().getFilename())){
+				fileContentsMap.put(msg.getFiletask().getFilename(), new ArrayList<CommandMessage>());
 				System.out.println("Chunk list created ");
 			}
-			byteList.get(msg.getFiletask().getFilename()).add(msg);
-			System.out.println("Size: " + byteList.get(msg.getFiletask().getFilename()).size() + " Actual size: " + msg.getFiletask().getChunkCounts() );
-			if(byteList.get(msg.getFiletask().getFilename()).size() == msg.getFiletask().getChunkCounts()){
+			fileContentsMap.get(msg.getFiletask().getFilename()).add(msg);
+			System.out.println("Size: " + fileContentsMap.get(msg.getFiletask().getFilename()).size() + " Actual size: " + msg.getFiletask().getChunkCounts() );
+			if(fileContentsMap.get(msg.getFiletask().getFilename()).size() == msg.getFiletask().getChunkCounts()){
 				try {
 					System.out.println("size is same: ");
 					File file = new File("new" + msg.getFiletask().getFilename());
@@ -96,7 +95,7 @@ public class DemoApp implements CommListener {
 					//List<ByteString> byteString = new ArrayList<ByteString>();
 					FileOutputStream outputStream = new FileOutputStream(file);
 					
-					List<CommandMessage> abcd = byteList.get(msg.getFiletask().getFilename());
+					List<CommandMessage> abcd = fileContentsMap.get(msg.getFiletask().getFilename());
 					ByteString[] byteStringArray = new ByteString[abcd.size()];
 					for(int index = 0; index < abcd.size(); index++) {
 						byteStringArray[abcd.get(index).getFiletask().getChunkNo() - 1] = abcd.get(index).getFiletask().getChunk();
@@ -104,26 +103,6 @@ public class DemoApp implements CommListener {
 					for(int index = 0; index < byteStringArray.length; index++) {
 						outputStream.write(byteStringArray[index].toByteArray());
 					}
-					/*int i=1;
-					while(i <= msg.getFiletask().getChunkCounts()){
-						for(int j=0; j < byteList.get(msg.getFiletask().getFilename()).size(); j++){
-							System.out.println("Inside the for loop ");
-							if(byteList.get(msg.getFiletask().getFilename()).get(j).getFiletask().getChunkNo() == i){
-								System.out.println("Added chunk to file "+i);
-								byteString.add(byteList.get(msg.getFiletask().getFilename()).get(j).getFiletask().getChunk());
-								System.out.println(byteList.get(msg.getFiletask().getFilename()).get(j).getFiletask().getChunk().size());
-								System.out.println("ByteArray" + byteList.get(msg.getFiletask().getFilename()).get(j).getFiletask().getChunk().toByteArray());
-								outputStream.write(byteList.get(msg.getFiletask().getFilename()).get(j).getFiletask().getChunk().toByteArray());
-								
-								i++;
-								break;
-							}
-						}
-						
-					}
-					ByteString bs = ByteString.copyFrom(byteString);
-					outputStream.write(bs.toByteArray());
-					*/
 					outputStream.flush();
 					outputStream.close();
 					

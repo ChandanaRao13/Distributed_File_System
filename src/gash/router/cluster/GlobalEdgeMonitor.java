@@ -18,43 +18,18 @@
 //changes
 package gash.router.cluster;
 
-//change
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import gash.router.container.GlobalRoutingConf.GlobalRoutingEntry;
+import gash.router.server.queue.management.QueueManager;
+import gash.router.util.GlobalMessageBuilder;
+import global.Global.GlobalMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import gash.router.container.GlobalRoutingConf.GlobalRoutingEntry;
-import gash.router.cluster.GlobalServerState;
-import gash.router.server.WorkInit;
-import gash.router.server.edges.EdgeInfo;
-import gash.router.server.election.RaftElectionContext;
-import gash.router.server.message.generator.MessageGenerator;
-import gash.router.server.queue.management.InternalChannelNode;
-import gash.router.server.queue.management.LoadQueueManager;
-import gash.router.server.queue.management.NodeLoad;
-import gash.router.server.queue.management.QueueManager;
-import gash.router.util.GlobalMessageBuilder;
-import gash.router.util.RaftMessageBuilder;
-import global.Global.GlobalMessage;
-import io.netty.channel.ChannelFuture;
-import pipe.common.Common.Header;
-import pipe.work.Work.Heartbeat;
-import pipe.work.Work.WorkMessage;
-import pipe.work.Work.WorkState;
 
 public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	protected static Logger logger = LoggerFactory.getLogger("Global edge monitor");
@@ -63,9 +38,8 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	private static GlobalServerState state;
 	private boolean forever = true;
 	private long dt = 2000;
-	
 
-
+	@SuppressWarnings("static-access")
 	public GlobalEdgeMonitor(GlobalServerState state) {
 		if (state == null)
 			throw new RuntimeException("state is null");
@@ -90,11 +64,11 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 		outboundEdges.createIfNew(ref, host, port);
 	}
 
-	public GlobalEdgeList getOutBoundEdgesList(){
+	public GlobalEdgeList getOutBoundEdgesList() {
 		return outboundEdges;
 	}
 
-	public GlobalEdgeList getInBoundEdgesList(){
+	public GlobalEdgeList getInBoundEdgesList() {
 		return inboundEdges;
 	}
 
@@ -109,14 +83,15 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 
 				for (GlobalEdgeInfo ei : this.outboundEdges.map.values()) {
 					if (ei.isActive() && ei.getChannel() != null) {
-						if(ei.getChannel()!=null){
-							//ei.getChannel().writeAndFlush(GlobalMessageBuilder.buildPingMessage());
+						if (ei.getChannel() != null) {
+							// ei.getChannel().writeAndFlush(GlobalMessageBuilder.buildPingMessage());
 						}
 
-					} else if(ei.getChannel() == null){
+					} else if (ei.getChannel() == null) {
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 						if (channel == null) {
-							//logger.info("trying to connect to cluster  " + ei.getRef());
+							// logger.info("trying to connect to cluster " +
+							// ei.getRef());
 						} else {
 							ei.setChannel(channel);
 							ei.setActive(true);
@@ -126,13 +101,13 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 				Thread.sleep(dt);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 	}
 
 	public Channel connectToChannel(String host, int port) {
-		System.out.println("Host::"+host+"\n Port::"+port);
+		System.out.println("Host::" + host + "\n Port::" + port);
 		System.out.println("Connect to Channel Connection------");
 		Bootstrap b = new Bootstrap();
 		Channel ch = null;
@@ -145,18 +120,19 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 			b.option(ChannelOption.TCP_NODELAY, true);
 			b.option(ChannelOption.SO_KEEPALIVE, true);
 			ch = b.connect(host, port).sync().channel();
-			System.out.println("Channel created "+ch);
-			logger.info(ch.localAddress() + " -> open: " + ch.isOpen() + ", write: "
-					+ ch.isWritable() + ", act: " + ch.isActive());
+			System.out.println("Channel created " + ch);
+			logger.info(ch.localAddress() + " -> open: " + ch.isOpen() + ", write: " + ch.isWritable() + ", act: "
+					+ ch.isActive());
 			Thread.sleep(dt);
 		} catch (Exception e) {
-			//e.printStackTrace();
-			logger.info("Exception---"+e.getMessage());
+			// e.printStackTrace();
+			logger.info("Exception---" + e.getMessage());
 
 		}
 		return ch;
 
 	}
+
 	public GlobalEdgeList getOutboundEdges() {
 		return outboundEdges;
 	}
@@ -182,25 +158,25 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	public synchronized void onRemove(GlobalEdgeInfo ei) {
 		// TODO ?
 	}
-	
-	public static int getClusterId(){
+
+	public static int getClusterId() {
 		return state.getConf().getClusterId();
 	}
 
-	public static void broadcastToClusterFriends(GlobalMessage msg){
+	public static void broadcastToClusterFriends(GlobalMessage msg) {
 		System.out.println("Broadcasting");
-		for(GlobalEdgeInfo ei : outboundEdges.map.values()){
-			Channel ch =ei.getChannel(); 
+		for (GlobalEdgeInfo ei : outboundEdges.map.values()) {
+			Channel ch = ei.getChannel();
 			QueueManager.getInstance().enqueueglobalOutboundQueue(msg, ch);
-		/*	System.out.println("Channel::"+ei.getChannel());
-			if(ei.getChannel()!=null){
-				System.out.println("Channel-----::"+ei.getChannel());
-				System.out.println("Is write ..... " + ei.getChannel().isWritable());
-				ei.getChannel().writeAndFlush(msg);
-			}*/
+			/*
+			 * System.out.println("Channel::"+ei.getChannel());
+			 * if(ei.getChannel()!=null){
+			 * System.out.println("Channel-----::"+ei.getChannel());
+			 * System.out.println("Is write ..... " +
+			 * ei.getChannel().isWritable());
+			 * ei.getChannel().writeAndFlush(msg); }
+			 */
 		}
 	}
 
 }
-
-

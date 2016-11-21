@@ -17,6 +17,11 @@ package gash.router.cluster;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 
+ * GlobalEdgeList contains the list of edges
+ *
+ */
 public class GlobalEdgeList {
 	protected ConcurrentHashMap<String, GlobalEdgeInfo> map = new ConcurrentHashMap<String, GlobalEdgeInfo>();
 

@@ -17,6 +17,11 @@ package gash.router.cluster;
 
 import io.netty.channel.Channel;
 
+/**
+ * 
+ * GlobalEdgeInfo class contains the details aboutu the global edge
+ *
+ */
 public class GlobalEdgeInfo {
 	private int ref;
 	private String host;

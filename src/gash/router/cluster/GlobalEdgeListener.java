@@ -15,6 +15,10 @@
  */
 package gash.router.cluster;
 
+/**
+ * Listener Interface for Global
+ *
+ */
 public interface GlobalEdgeListener {
 	public abstract void onAdd(GlobalEdgeInfo ei);
 
