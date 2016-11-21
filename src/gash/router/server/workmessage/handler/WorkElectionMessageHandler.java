@@ -45,13 +45,19 @@ public class WorkElectionMessageHandler implements IWorkChainHandler {
 			}
 			state.getEmon().getOutBoundEdgesList().getNode(workMessage.getHeader().getNodeId()).setChannel(channel);
 
-		}else if (workMessage.hasLeader() && workMessage.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
+		}
+		else if (workMessage.hasLeader() && workMessage.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
 			System.out.println("Current leader is ::"+workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setLeaderId(workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setTerm(workMessage.getLeader().getTerm());
-		} else if(workMessage.hasRaftMessage() && workMessage.getRaftMessage().getType() == ElectionMessageType.LEADER_HB_ACK) {
+		}
+		else if(workMessage.hasRaftMessage() && workMessage.getRaftMessage().getType() == ElectionMessageType.LEADER_HB_ACK) {
 			state.getElectionCtx().getCurrentState().sendHearbeatAck(workMessage);
-		} else {
+		}
+		else if (workMessage.getLeader().getAction() ==  LeaderQuery.WHOISTHELEADER){
+			//TODO
+		}
+		else {
 			this.nextChainHandler.handle(workMessage, channel);
 		}		
 	}
