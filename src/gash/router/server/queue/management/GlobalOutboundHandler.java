@@ -5,11 +5,16 @@ import org.slf4j.LoggerFactory;
 
 import io.netty.channel.ChannelFuture;
 
-public class GlobalOutboundThread extends Thread {
+/**
+ * 
+ * OutBound Global Message Handler
+ *
+ */
+public class GlobalOutboundHandler extends Thread {
 	private QueueManager manager;
-	protected static Logger logger = LoggerFactory.getLogger(GlobalOutboundThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(GlobalOutboundHandler.class);
 
-	public GlobalOutboundThread(QueueManager manager) {
+	public GlobalOutboundHandler(QueueManager manager) {
 		super();
 		this.manager = manager;
 		if (manager.globalOutboundQueue == null)
@@ -18,35 +23,30 @@ public class GlobalOutboundThread extends Thread {
 
 	@Override
 	public void run() {
-
 		while (true) {
 			try {
-				InternalChannelNode message = manager.dequeueglobalOutboundQueue();
-		       	logger.info("Routing global message to next cluster ");
-
-				if (message.getChannel()!= null && message.getChannel().isOpen()) {
-					
+				InternalChannelNode message = manager.dequeueGlobalOutboundQueue();
+				logger.info("Routing global message to next cluster ");
+				if (message.getChannel() != null && message.getChannel().isOpen()) {
 					ChannelFuture cf = message.getChannel().writeAndFlush(message.getGlobalMessage());
-				//	message.getChannel().flush();
+					// message.getChannel().flush();
 					cf.awaitUninterruptibly();
-					if(cf.isSuccess()){
+					if (cf.isSuccess()) {
 						logger.info("Wrote message to the channel of another cluster");
 					} else {
 						manager.returnOutboundGlobalMessage(message);
 					}
 				} else {
-					logger.info("Checking if channel is null : "+(message.getChannel() == null));
+					logger.info("Checking if channel is null : " + (message.getChannel() == null));
 					manager.returnOutboundGlobalMessage(message);
 				}
 			} catch (InterruptedException ie) {
+				logger.error("Error: Interrupted exception while communicating: " + ie.getMessage());
 				break;
 			} catch (Exception e) {
-				
-				logger.error("Exception thrown in client communcation", e);
+				logger.error("Exception thrown in client communcation: ", e.getMessage());
 				break;
 			}
 		}
-
-		}
 	}
-
+}

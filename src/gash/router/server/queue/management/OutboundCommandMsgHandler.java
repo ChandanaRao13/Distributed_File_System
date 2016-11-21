@@ -5,12 +5,16 @@ import io.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class OutboundCommandQueueThread extends Thread {
+/**
+ * 
+ * Outbound Command Message Handler
+ *
+ */
+public class OutboundCommandMsgHandler extends Thread {
 	private QueueManager manager;
-	protected static Logger logger = LoggerFactory.getLogger(InboundCommandQueueThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(InboundCommandMsgHandler.class);
 
-	public OutboundCommandQueueThread(QueueManager manager) {
+	public OutboundCommandMsgHandler(QueueManager manager) {
 		super();
 		this.manager = manager;
 		if (manager.outboundCommandQueue == null)
@@ -44,7 +48,7 @@ public class OutboundCommandQueueThread extends Thread {
 				}
 					
 			} catch (Exception e) {
-				logger.error("Exception thrown in client communcation", e);
+				logger.error("Error: Exception thrown in client communcation :", e.getMessage());
 				break;
 			}
 		}

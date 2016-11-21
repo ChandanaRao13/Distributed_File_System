@@ -65,7 +65,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 				System.out.println("Info: Received a ping from Cluster Id: " + msg.getGlobalHeader().getClusterId());
 				logger.info("Info: Received a ping from Cluster Id: " + msg.getGlobalHeader().getClusterId());
 				// state.getEmon().broadcastToClusterFriends(GlobalMessageBuilder.buildPingMessage());
-				QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
+				QueueManager.getInstance().enqueueGlobalInboundQueue(msg, channel);
 			} else if (msg.hasMessage()) {
 				System.out.println("Info: Received a message: " + msg.getMessage() + " from ClusterId: " + msg.getGlobalHeader().getClusterId());
 				logger.info("Info: Received a message: " + msg.getMessage() + " from ClusterId: " + msg.getGlobalHeader().getClusterId());
@@ -73,13 +73,13 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 				logger.info("Info: Received a global request");
 				if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 					logger.info("Info: Received a global request and I(leader) am processing it");
-					QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
+					QueueManager.getInstance().enqueueGlobalInboundQueue(msg, channel);
 				}
 			} else if (msg.hasResponse()) {
 				logger.info("Info: Received a global response");
 				if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 					logger.info("Info: Received a global response and I(leader) am processing");
-					QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
+					QueueManager.getInstance().enqueueGlobalInboundQueue(msg, channel);
 				}
 			}
 			if (debug)

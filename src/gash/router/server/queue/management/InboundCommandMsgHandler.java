@@ -8,17 +8,15 @@ import gash.router.server.commandmessage.routerhandlers.ReadRouterHandler;
 import gash.router.server.commandmessage.routerhandlers.UpdateRouterHandler;
 import gash.router.server.commandmessage.routerhandlers.WriteRouterHandler;
 
-
-public class InboundCommandQueueThread extends Thread {
-
+public class InboundCommandMsgHandler extends Thread {
 	private QueueManager manager;
 	private WriteRouterHandler writerRouter;
 	private ReadRouterHandler readRouter;
 	private DeleteRouterHandler deleteRouter;
 	private UpdateRouterHandler updateRouter;
-	protected static Logger logger = LoggerFactory.getLogger(InboundCommandQueueThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(InboundCommandMsgHandler.class);
 
-	public InboundCommandQueueThread(QueueManager manager) {
+	public InboundCommandMsgHandler(QueueManager manager) {
 		super();
 		this.manager = manager;
 		if (manager.inboundCommandQueue == null)
@@ -35,7 +33,6 @@ public class InboundCommandQueueThread extends Thread {
 
 	@Override
 	public void run() {
-
 		// Poll the queue for messages
 		while (true) {
 			try {
@@ -43,8 +40,6 @@ public class InboundCommandQueueThread extends Thread {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 		}
 	}
-
 }

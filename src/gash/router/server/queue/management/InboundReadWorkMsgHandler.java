@@ -20,15 +20,15 @@ import pipe.work.Work.WorkMessage.Worktype;
 import routing.Pipe.CommandMessage;
 import routing.Pipe.FileTask;
 
-public class InboundReadQueueThread extends Thread {
+public class InboundReadWorkMsgHandler extends Thread {
 
 	private QueueManager manager;
-	protected static Logger logger = LoggerFactory.getLogger(InboundReadQueueThread.class);
+	protected static Logger logger = LoggerFactory.getLogger(InboundReadWorkMsgHandler.class);
 
-	public InboundReadQueueThread(QueueManager manager) {
+	public InboundReadWorkMsgHandler(QueueManager manager) {
 		super();
 		this.manager = manager;
-		if (manager.inboundWorkReadQueue == null)
+		if (manager.inboundReadWorkQueue == null)
 			throw new RuntimeException("Manager has no inbound read queue");
 	}
 
@@ -102,9 +102,10 @@ public class InboundReadQueueThread extends Thread {
 					}
 				}
 			} catch (InterruptedException e) {
-				logger.info("InterruptedException: " + e.getMessage());
+				logger.info("Error: InterruptedException in inbound read work msg handler: " + e.getMessage());
 				e.printStackTrace();
 			} catch (Exception e) {
+				logger.info("Error: Exception in inbound read work msg handler: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}

@@ -43,7 +43,7 @@ public class DataReplicationManager {
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
 				WorkMessage workMessage = MessageGenerator.getInstance().generateReplicationRequestMsg(message, nodeId);
-				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
@@ -57,7 +57,7 @@ public class DataReplicationManager {
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
 				WorkMessage workMessage = MessageGenerator.getInstance().generateDeletionRequestMsg(message, nodeId);
-				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
@@ -71,7 +71,7 @@ public class DataReplicationManager {
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
 				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateReplicationRequestMsg(message, nodeId);
-				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
@@ -85,7 +85,7 @@ public class DataReplicationManager {
 			for (Integer nodeId : nodeIds) {
 				Channel channel = node2ChannelMap.get(nodeId);
 				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateDeletionRequestMsg(message, nodeId);
-				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+				QueueManager.getInstance().enqueueOutboundWriteWork(workMessage, channel);
 			}
 
 		}
@@ -100,7 +100,7 @@ public class DataReplicationManager {
 			System.out.println("Returned from Database handler::"+filesFromRethinkDB.size());
 			for(FluffyFile record : filesFromRethinkDB){
 				WorkMessage replicateFileMsg = MessageGenerator.getInstance().generateReplicationRequestMsg(nodeId,record);
-				QueueManager.getInstance().enqueueOutboundWorkWrite(replicateFileMsg, channel);
+				QueueManager.getInstance().enqueueOutboundWriteWork(replicateFileMsg, channel);
 				
 			}
 		} catch (Exception e) {

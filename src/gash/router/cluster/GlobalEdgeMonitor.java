@@ -189,7 +189,7 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 		System.out.println("Broadcasting");
 		for (GlobalEdgeInfo ei : outboundEdges.map.values()) {
 			Channel ch = ei.getChannel();
-			QueueManager.getInstance().enqueueglobalOutboundQueue(msg, ch);
+			QueueManager.getInstance().enqueueGlobalOutboundQueue(msg, ch);
 			/*
 			 * System.out.println("Channel::"+ei.getChannel());
 			 * if(ei.getChannel()!=null){
