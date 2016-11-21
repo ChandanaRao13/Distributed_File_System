@@ -1,6 +1,7 @@
 package gash.router.server.queue.management;
 
 import pipe.work.Work.WorkMessage;
+import global.Global.GlobalMessage;
 import io.netty.channel.Channel;
 import routing.Pipe.CommandMessage;
 
@@ -8,6 +9,7 @@ public class InternalChannelNode {
 	
 	private CommandMessage commandMessage;
 	private WorkMessage workMessage;
+	private GlobalMessage globalMessage;
 	private Channel channel;
 	private boolean isWork;
 	private int chunkCount =0; 
@@ -24,6 +26,14 @@ public class InternalChannelNode {
 		this.workMessage = workMessage; 
 		this.channel = channel;
 		isWork = true;
+	}
+	
+	
+	public InternalChannelNode(GlobalMessage globalMessage, Channel channel){
+		this.globalMessage = globalMessage; 
+		this.channel = channel;
+		isWork = false;
+		
 	}
 	
 	/**
@@ -98,5 +108,13 @@ public class InternalChannelNode {
 		} else {
 			chunkCount--;
 		}
+	}
+	
+	public GlobalMessage getGlobalMessage() {
+		return globalMessage;
+	}
+
+	public void setGlobalMessage(GlobalMessage globalMessage) {
+		this.globalMessage = globalMessage;
 	}
 }

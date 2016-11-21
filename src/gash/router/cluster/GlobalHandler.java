@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import gash.router.server.PrintUtil;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.edges.EdgeList;
+import gash.router.server.edges.EdgeMonitor;
+import gash.router.server.queue.management.QueueManager;
 import gash.router.util.GlobalMessageBuilder;
 import gash.router.util.RaftMessageBuilder;
 import global.Global.GlobalMessage;
@@ -65,6 +67,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 
 
 	public GlobalHandler(GlobalServerState state) {
+		System.out.println("Initializing Global Handler");
 		if (state != null) {
 			this.state = state;
 		} else {
@@ -79,17 +82,27 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	 * @param msg
 	 */
 	public void handleMessage(GlobalMessage msg, Channel channel) {
+		System.out.println("Global " + msg);
 		if (msg == null) {
 			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
 			return;
 		}else if(msg.hasPing()){
 			System.out.println("Got Ping from Cluster Id:"+msg.getGlobalHeader().getClusterId());
-			state.getEmon().broadcastToClusterFriends(GlobalMessageBuilder.buildPingMessage());
+			//state.getEmon().broadcastToClusterFriends(GlobalMessageBuilder.buildPingMessage());
+			QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
 		}
 		else if(msg.hasMessage()){
 			System.out.println("Recieved -->"+msg.getMessage()+" from Cluster Id: "+msg.getGlobalHeader().getClusterId());
-		}
+		} else if(msg.hasRequest()){
+			if(EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
+				QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
+			}
+		} else if(msg.hasResponse()){
+			if(EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
+				QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
+			}
+		} 
 
 		if (debug)
 			PrintUtil.printCommand(msg);

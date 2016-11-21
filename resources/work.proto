@@ -53,6 +53,7 @@ message WorkMessage {
         UPDATE_DELETE_REQUEST = 8;
         UPDATE_REPLICATE_RESPONSE = 9;
         UPDATE_DELETE_RESPONSE = 10;
+        GLOBAL_READ_REQUEST = 11;
     }
     optional Worktype worktype = 13;
     

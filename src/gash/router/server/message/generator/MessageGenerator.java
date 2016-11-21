@@ -8,8 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 
+import gash.router.container.GlobalRoutingConf;
 import gash.router.container.RoutingConf;
 import gash.router.database.datatypes.FluffyFile;
+import global.Global.File;
+import global.Global.GlobalHeader;
+import global.Global.GlobalMessage;
+import global.Global.Request;
+import global.Global.RequestType;
+import global.Global.Response;
 import pipe.common.Common.Header;
 import pipe.election.Election.AllNodeInfo;
 import pipe.election.Election.NewNodeMessage;
@@ -559,6 +566,5 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	/**************************Ending of new node MessageGenrator function*************************/
-
 }
 

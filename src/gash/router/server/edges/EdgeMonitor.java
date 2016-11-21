@@ -61,7 +61,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	private EdgeList outboundEdges;
 	private EdgeList inboundEdges;
 	private long dt = 2000;
-	private ServerState state;
+	private static ServerState state;
 	private static RaftElectionContext electionCtx;
 	private boolean forever = true;
 	private ArrayList<InetAddress> activeIps;
@@ -412,6 +412,14 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 				ei.setChannel(connectToChannel(ei.getHost(), ei.getPort()));
 		}
 		
+	}
+	
+	public static int getLeaderId(){
+		return electionCtx.getLeaderId();
+	}
+	
+	public static int getNodeId(){
+		return state.getConf().getNodeId();
 	}
 }
 

@@ -146,16 +146,16 @@ public class DemoApp implements CommListener {
 	 */
 	public static void main(String[] args) {
 		//String host = "127.0.0.1";
-		String host = "169.254.203.5";
-		int port = 4568;
+		String host = "169.254.203.3";
+		int port = 4368;
 
 		try {
 			MessageClient mc = new MessageClient(host, port);
 			DemoApp da = new DemoApp(mc);
 
 			// do stuff w/ the connection
-			// da.ping(2);
-			da.sendReadFileTasks(args[0]);
+			 da.ping(1);
+			//da.sendReadFileTasks(args[0]);
 			//da.chunkFile(args[0]);
 			//da.sendFileAsChunks(new File(args[0]));
 			//da.updateFileAsChunks(args[0], new File(args[1]));

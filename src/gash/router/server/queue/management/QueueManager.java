@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import global.Global.GlobalMessage;
 import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
 
@@ -33,6 +34,12 @@ public class QueueManager {
 	protected LinkedBlockingDeque<InternalChannelNode> outboundWorkWriteQueue;
 	protected LinkedBlockingDeque<InternalChannelNode> inboundWorkWriteQueue;
 	
+	/**
+	 * Global Queues
+	 */
+	protected LinkedBlockingDeque<InternalChannelNode> globalInboundQueue;
+	protected LinkedBlockingDeque<InternalChannelNode> globalOutboundQueue;
+	
 	protected InboundCommandQueueThread inboundCommmanderThread;
 	protected OutboundWorkWriteQueueThread outboundWorkWriterThread;
 	protected InboundWorkWriteQueueThread inboundWorkWriterThread;
@@ -40,6 +47,11 @@ public class QueueManager {
 	protected OutboundWorkReadThread outboundReadThread;
 	protected InboundReadQueueThread inboundReadThread;
 	
+	/**
+	 * Global Threads
+	 */
+	protected GlobalInboundThread inboundGlobalThread;
+	protected GlobalOutboundThread outboundGlobalThread;
 	
 	public static QueueManager initManager() {
 		instance.compareAndSet(null, new QueueManager());
@@ -78,6 +90,43 @@ public class QueueManager {
 		inboundWorkWriteQueue = new LinkedBlockingDeque<InternalChannelNode>();
 		inboundWorkWriterThread = new InboundWorkWriteQueueThread(this);
 		inboundWorkWriterThread.start();
+		
+		globalInboundQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		inboundGlobalThread = new GlobalInboundThread(this);
+		inboundGlobalThread.start();
+		
+		globalOutboundQueue = new LinkedBlockingDeque<InternalChannelNode>();
+		outboundGlobalThread = new GlobalOutboundThread(this);
+		outboundGlobalThread.start();
+	}
+	public void enqueueglobalInboundQueue(GlobalMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			globalInboundQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("global message not enqueued for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueglobalInboundQueue() throws InterruptedException {
+			return globalInboundQueue.take();
+	}
+	
+	public void enqueueglobalOutboundQueue(GlobalMessage message, Channel ch) {
+		try {
+			InternalChannelNode entry = new InternalChannelNode(message, ch);
+			globalOutboundQueue.put(entry);
+		} catch (InterruptedException e) {
+			logger.error("global message not enqueued for processing", e);
+		}
+	}
+	
+	public InternalChannelNode dequeueglobalOutboundQueue() throws InterruptedException {
+			return globalOutboundQueue.take();
+	}
+	
+	public void returnOutboundGlobalMessage(InternalChannelNode channelNode) throws InterruptedException {
+		globalOutboundQueue.putFirst(channelNode);
 	}
 	
 	public void enqueueInboundCommmand(CommandMessage message, Channel ch) {
