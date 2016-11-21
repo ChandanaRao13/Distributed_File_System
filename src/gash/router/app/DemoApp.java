@@ -150,6 +150,7 @@ public class DemoApp implements CommListener {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "resource" })
 	@Deprecated
 	private void chunkFile(String file) throws IOException {
 		ArrayList<String> chunkedFile = new ArrayList<String>();
@@ -177,6 +178,7 @@ public class DemoApp implements CommListener {
 		}
 	}
 
+	@SuppressWarnings({ "unused", "resource" })
 	private void sendFileAsChunks(File file) {
 		ArrayList<ByteString> chunkedFile = new ArrayList<ByteString>();
 
@@ -213,6 +215,7 @@ public class DemoApp implements CommListener {
 		System.out.println(chunkedFile.size());
 	}
 	
+	@SuppressWarnings({ "unused", "resource" })
 	private void updateFileAsChunks(String filename, File file) {
 		ArrayList<ByteString> chunkedFile = new ArrayList<ByteString>();
 

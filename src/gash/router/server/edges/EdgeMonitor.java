@@ -27,12 +27,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +39,13 @@ import gash.router.server.queue.management.InternalChannelNode;
 import gash.router.server.queue.management.LoadQueueManager;
 import gash.router.server.queue.management.NodeLoad;
 import gash.router.util.RaftMessageBuilder;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import pipe.common.Common.Header;
-import pipe.work.Work.Heartbeat;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import pipe.work.Work.WorkMessage;
-import pipe.work.Work.WorkState;
 
 public class EdgeMonitor implements EdgeListener, Runnable {
 	protected static Logger logger = LoggerFactory.getLogger("edge monitor");
@@ -165,8 +161,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			try {
 				for (EdgeInfo ei : this.outboundEdges.map.values()) {
 					if (ei.isActive() && ei.getChannel() != null) {
-						//WorkMessage wm = createHB(ei);
-						//ei.getChannel().writeAndFlush(wm);
 					} else if (ei.getChannel() == null) {
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 						ei.setChannel(channel);

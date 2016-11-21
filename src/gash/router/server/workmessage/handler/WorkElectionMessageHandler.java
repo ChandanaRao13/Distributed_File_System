@@ -47,7 +47,6 @@ public class WorkElectionMessageHandler implements IWorkChainHandler {
 
 		}
 		else if (workMessage.hasLeader() && workMessage.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
-			System.out.println("Current leader is ::"+workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setLeaderId(workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setTerm(workMessage.getLeader().getTerm());
 		}

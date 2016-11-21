@@ -1,16 +1,11 @@
 package gash.router.util;
 
-import java.util.ArrayList;
-
 import gash.router.container.RoutingConf;
 import pipe.common.Common.Header;
-import pipe.election.Election.AllNodeInfo;
 import pipe.election.Election.ElectionMessage;
 import pipe.election.Election.LeaderStatus;
-import pipe.election.Election.LeaderStatus.Builder;
 import pipe.election.Election.LeaderStatus.LeaderQuery;
 import pipe.election.Election.LeaderStatus.LeaderState;
-import pipe.election.Election.NewNodeMessage;
 import pipe.election.Election.RaftElectionMessage;
 import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
 import pipe.work.Work.WorkMessage;
