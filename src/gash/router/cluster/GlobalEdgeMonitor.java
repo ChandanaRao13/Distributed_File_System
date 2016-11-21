@@ -100,6 +100,8 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 				}
 				Thread.sleep(dt);
 			} catch (InterruptedException e) {
+				logger.info("Error: Failure while trying to connect to cluster: Interrupted by the error: "
+						+ e.getMessage());
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
@@ -126,25 +128,41 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 			Thread.sleep(dt);
 		} catch (Exception e) {
 			// e.printStackTrace();
-			logger.info("Exception---" + e.getMessage());
+			logger.info("Error: Exception in connection to channel: " + e.getMessage());
 
 		}
 		return ch;
 
 	}
 
+	/**
+	 * getter for outbound edges
+	 * @return
+	 */
 	public GlobalEdgeList getOutboundEdges() {
 		return outboundEdges;
 	}
 
+	/**
+	 * setter for outbound edges
+	 * @param outboundEdgesInfo
+	 */
 	public void setOutboundEdges(GlobalEdgeList outboundEdgesInfo) {
 		outboundEdges = outboundEdgesInfo;
 	}
 
+	/**
+	 * getter for inbound edges
+	 * @return
+	 */
 	public GlobalEdgeList getInboundEdges() {
 		return inboundEdges;
 	}
 
+	/**
+	 * setter for inbound edges
+	 * @param inboundEdgesInfo
+	 */
 	public void setInboundEdges(GlobalEdgeList inboundEdgesInfo) {
 		inboundEdges = inboundEdgesInfo;
 	}
@@ -159,6 +177,10 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 		// TODO ?
 	}
 
+	/**
+	 * returns the clusterId
+	 * @return
+	 */
 	public static int getClusterId() {
 		return state.getConf().getClusterId();
 	}
