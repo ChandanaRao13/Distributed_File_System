@@ -256,4 +256,69 @@ public static GlobalMessage generateGlobalForwardReadResponseMessage(GlobalMessa
 	
 	return gb.build();
 } 
+
+public static GlobalMessage generateGlobalUpdateRequestMessage(CommandMessage message, String clientId) {
+	GlobalHeader.Builder hb = GlobalHeader.newBuilder();
+	hb.setClusterId(conf.getClusterId());
+	hb.setDestinationId(conf.getClusterId());
+	hb.setTime(System.currentTimeMillis());
+
+	File.Builder fb = File.newBuilder();
+	fb.setChunkId(message.getFiletask().getChunkNo());
+	fb.setData(message.getFiletask().getChunk());
+	fb.setFilename(message.getFiletask().getFilename());
+	fb.setTotalNoOfChunks(message.getFiletask().getChunkCounts());
+	
+	Request.Builder rb = Request.newBuilder();
+	rb.setRequestId(clientId);
+	rb.setRequestType(RequestType.UPDATE);
+	rb.setFile(fb.build());
+	
+	GlobalMessage.Builder gb = GlobalMessage.newBuilder();
+	gb.setGlobalHeader(hb);
+	gb.setRequest(rb);
+	return gb.build();
+}
+
+public static GlobalMessage generateGlobalWriteRequestMessage(CommandMessage message, String clientId) {
+	GlobalHeader.Builder hb = GlobalHeader.newBuilder();
+	hb.setClusterId(conf.getClusterId());
+	hb.setDestinationId(conf.getClusterId());
+	hb.setTime(System.currentTimeMillis());
+
+	File.Builder fb = File.newBuilder();
+	fb.setChunkId(message.getFiletask().getChunkNo());
+	fb.setData(message.getFiletask().getChunk());
+	fb.setFilename(message.getFiletask().getFilename());
+	fb.setTotalNoOfChunks(message.getFiletask().getChunkCounts());
+	
+	Request.Builder rb = Request.newBuilder();
+	rb.setRequestId(clientId);
+	rb.setRequestType(RequestType.WRITE);
+	rb.setFile(fb.build());
+	
+	GlobalMessage.Builder gb = GlobalMessage.newBuilder();
+	gb.setGlobalHeader(hb);
+	gb.setRequest(rb);
+	return gb.build();
+}
+
+public static GlobalMessage generateGlobalDeleteRequestMessage(String filename,String clientId) {
+	GlobalHeader.Builder hb = GlobalHeader.newBuilder();
+	hb.setClusterId(conf.getClusterId());
+	hb.setDestinationId(conf.getClusterId());
+	hb.setTime(System.currentTimeMillis());
+
+	Request.Builder rb = Request.newBuilder();
+	rb.setRequestId(clientId);
+	rb.setRequestType(RequestType.DELETE);
+	rb.setFileName(filename);
+	
+	GlobalMessage.Builder gb = GlobalMessage.newBuilder();
+	gb.setGlobalHeader(hb);
+	gb.setRequest(rb);
+
+	return gb.build();
+}
+
 }

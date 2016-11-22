@@ -88,6 +88,26 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
+	public WorkMessage generateReplicationRequestMsg(GlobalMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		FileTask.Builder fb = FileTask.newBuilder();
+		fb.setFilename(message.getRequest().getFile().getFilename());
+		fb.setChunkNo(message.getRequest().getFile().getChunkId());
+		fb.setFileTaskType(FileTaskType.WRITE);
+		fb.setSender(message.getRequest().getRequestId());
+		
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb.build());
+		wb.setFiletask(fb.build());
+		wb.setSecret(1234);
+
+		wb.setWorktype(Worktype.REPLICATE_REQUEST);
+		return wb.build();
+	}
+	
 	public WorkMessage generateUpdateReplicationRequestMsg(CommandMessage message, Integer nodeId){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(nodeId);
@@ -107,6 +127,30 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
+	public WorkMessage generateGlobalUpdateReplicationRequestMsg(GlobalMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		File file = message.getRequest().getFile();
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setChunkNo(file.getChunkId());
+		tb.setChunk(file.getData());
+		tb.setFilename(file.getFilename());
+		tb.setFileTaskType(FileTaskType.UPDATE);
+		tb.setChunkCounts(file.getTotalNoOfChunks());
+		tb.setSender(message.getRequest().getRequestId());
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.UPDATE_REPLICATE_REQUEST);
+		return wb.build();
+	}
+	
+	
 	public WorkMessage generateDeletionRequestMsg(CommandMessage message, Integer nodeId){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(nodeId);
@@ -123,6 +167,24 @@ public class MessageGenerator {
 		return wb.build();
 	}
 	
+	public WorkMessage generateDeletionRequestMsg(GlobalMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setFilename(message.getRequest().getFileName());
+		tb.setFileTaskType(FileTaskType.DELETE);
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.DELETE_REQUEST);
+		return wb.build();
+	}
+	
 	public WorkMessage generateUpdateDeletionRequestMsg(CommandMessage message, Integer nodeId){
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(nodeId);
@@ -133,6 +195,29 @@ public class MessageGenerator {
 		wb.setSecret(1234);
 		
 		FileTask.Builder tb = FileTask.newBuilder(message.getFiletask());
+		wb.setFiletask(tb);
+
+		wb.setWorktype(Worktype.UPDATE_DELETE_REQUEST);
+		return wb.build();
+	}
+	
+	public WorkMessage generateUpdateDeletionRequestMsg(GlobalMessage message, Integer nodeId){
+		Header.Builder hb = Header.newBuilder();
+		hb.setNodeId(nodeId);
+		hb.setTime(System.currentTimeMillis());
+
+		WorkMessage.Builder wb = WorkMessage.newBuilder();
+		wb.setHeader(hb);
+		wb.setSecret(1234);
+		
+		File file = message.getRequest().getFile();
+		FileTask.Builder tb = FileTask.newBuilder();
+		tb.setChunkNo(file.getChunkId());
+		tb.setChunk(file.getData());
+		tb.setFilename(file.getFilename());
+		tb.setFileTaskType(FileTaskType.UPDATE);
+		tb.setChunkCounts(file.getTotalNoOfChunks());
+		tb.setSender(message.getRequest().getRequestId());
 		wb.setFiletask(tb);
 
 		wb.setWorktype(Worktype.UPDATE_DELETE_REQUEST);

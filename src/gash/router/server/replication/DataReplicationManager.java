@@ -13,6 +13,7 @@ import gash.router.database.datatypes.FluffyFile;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.QueueManager;
+import global.Global.GlobalMessage;
 import io.netty.channel.Channel;
 import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
@@ -48,8 +49,36 @@ public class DataReplicationManager {
 
 		}
 	}
+	
+	public void broadcastReplication(GlobalMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateReplicationRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
 
 	public void broadcastDeletion(CommandMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateDeletionRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
+	
+	public void broadcastDeletion(GlobalMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
 
@@ -77,7 +106,35 @@ public class DataReplicationManager {
 		}
 	}
 	
+	public void broadcastUpdateReplication(GlobalMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateGlobalUpdateReplicationRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
+	
 	public void broadcastUpdateDeletion(CommandMessage message) {
+		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
+		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
+
+			Set<Integer> nodeIds = node2ChannelMap.keySet();
+			for (Integer nodeId : nodeIds) {
+				Channel channel = node2ChannelMap.get(nodeId);
+				WorkMessage workMessage = MessageGenerator.getInstance().generateUpdateDeletionRequestMsg(message, nodeId);
+				QueueManager.getInstance().enqueueOutboundWorkWrite(workMessage, channel);
+			}
+
+		}
+	}
+	
+	public void broadcastUpdateDeletion(GlobalMessage message) {
 		ConcurrentHashMap<Integer, Channel> node2ChannelMap = EdgeMonitor.node2ChannelMap;
 		if (node2ChannelMap != null && !node2ChannelMap.isEmpty()) {
 
