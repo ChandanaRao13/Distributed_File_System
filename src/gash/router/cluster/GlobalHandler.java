@@ -55,7 +55,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	 * @param msg
 	 */
 	public void handleMessage(GlobalMessage msg, Channel channel) {
-		System.out.println("Global " + msg);
+		System.out.println("Recieved global message");
 		try {
 			if (msg == null) {
 				System.out.println("Error: Received a null message as globalMessage: " + msg);

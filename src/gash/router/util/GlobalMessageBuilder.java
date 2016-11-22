@@ -200,18 +200,21 @@ public static GlobalMessage generateGlobalReadResponseMessage(GlobalMessage mess
 	GlobalHeader.Builder gh = GlobalHeader.newBuilder(message.getGlobalHeader());
 	gh.setTime(System.currentTimeMillis());
 	
-	
-	Response.Builder rb = Response.newBuilder();
-	rb.setRequestId(message.getRequest().getRequestId());
-	rb.setRequestType(RequestType.READ);
-	
 	File.Builder fb = File.newBuilder(); 
 	fb.setChunkId(chunkId);
 	fb.setData(data);
 	fb.setFilename(message.getRequest().getFileName());
 	fb.setTotalNoOfChunks(totalChunks);
+		
 	
+	Response.Builder rb = Response.newBuilder();
+	rb.setRequestId(message.getRequest().getRequestId());
+	rb.setRequestType(RequestType.READ);
+	rb.setFile(fb.build());
+
 	GlobalMessage.Builder gb = GlobalMessage.newBuilder();
+	gb.setGlobalHeader(gh.build());
+	gb.setResponse(rb);
 	return gb.build();
 }
 
