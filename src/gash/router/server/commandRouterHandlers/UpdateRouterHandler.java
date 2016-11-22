@@ -46,7 +46,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 
 					if(DatabaseHandler.deleteFile(filename)){
-						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
+//						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -61,7 +61,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 						
-						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
+//						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry with write ...");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -76,7 +76,11 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
 				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 				
-			} 
+			}/* else {
+				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("Cannot update as file is not in the database");
+				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
+				logger.error("File cannot be updated as it is not available in the database");
+			}*/
 				String clientId = EdgeMonitor.clientInfoMap(request);
 				if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 					// Convert to Global Command Message and send it
@@ -85,12 +89,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 				} else {
 					logger.info("Send update requests to leader");
 				}
-			
-		
-			/*	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("Cannot update as file is not in the database");
-				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-				logger.error("File cannot be updated as it is not available in the database");
-			} */
+
 		} else{
 			logger.error("Handles only client read and write requests ");
 		}

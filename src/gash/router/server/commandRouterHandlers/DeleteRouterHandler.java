@@ -40,7 +40,7 @@ public class DeleteRouterHandler implements ICommandRouterHandlers {
 				if(DatabaseHandler.deleteFile(filename)){
 					CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
 					QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-					DataReplicationManager.getInstance().broadcastDeletion(request.getCommandMessage());
+//					DataReplicationManager.getInstance().broadcastDeletion(request.getCommandMessage());
 				} else {
 					CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not successfully deleted....");
 					QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
