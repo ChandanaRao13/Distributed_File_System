@@ -86,10 +86,10 @@ public class RaftElectionContext implements Runnable {
 	public void run() {		
 		while(true){
 			int activeChannel = state.getEmon().getActiveChannels();
-			if(activeChannel>=2){
+		//	if(activeChannel>=2){
 				timerBegin = System.currentTimeMillis();
 				currentState.doAction(); 
-			} 
+		//	} 
 		}
 
 	}

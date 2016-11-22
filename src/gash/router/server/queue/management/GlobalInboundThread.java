@@ -153,6 +153,7 @@ public class GlobalInboundThread extends Thread {
 						QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
 					}
 				} else if (message.getRequest().getRequestType() == RequestType.WRITE){
+					logger.info("Recieved global message to write");
 					if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 						File file = message.getRequest().getFile();
 						if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
