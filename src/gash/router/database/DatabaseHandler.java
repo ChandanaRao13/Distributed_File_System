@@ -380,7 +380,6 @@ public class DatabaseHandler {
 	
 	public static boolean isFileAvailableInRethink(String filename) throws EmptyConnectionPoolException{
 		Connection connection = databaseConnectionManager.getConnection();
-
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
 				.filter(rethinkDBInstance.hashMap(Constants.FILE_NAME, filename)).run(connection);
 		databaseConnectionManager.releaseConnection(connection);

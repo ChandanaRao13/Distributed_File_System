@@ -42,6 +42,7 @@ public class GlobalInboundThread extends Thread {
 							GlobalMessage globalMessage = GlobalMessageBuilder.buildPingMessage();
 							GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
 						} else {
+							logger.info("Successfully able to ping all the clusters");
 							CommandMessage msg = MessageGenerator.getInstance()
 									.generateClientResponseMsg("Successfully able to ping all the clusters ");
 						/*	String clientId = message.getRequest().getRequestId();
@@ -87,11 +88,13 @@ public class GlobalInboundThread extends Thread {
 						}
 					}
 				} else if(message.hasResponse()){
+				   
 					if (message.getRequest().getRequestType() == RequestType.READ) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 							GlobalMessage globalForwardMessage = GlobalMessageBuilder.generateGlobalForwardReadResponseMessage(message);
 							GlobalEdgeMonitor.broadcastToClusterFriends(globalForwardMessage);
 						} else {
+							System.out.println("Received message from cluster");
 							CommandMessage outputMsg = GlobalMessageBuilder.forwardChunkToClient(message);
 							InternalChannelNode channelNode = EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId());
 							

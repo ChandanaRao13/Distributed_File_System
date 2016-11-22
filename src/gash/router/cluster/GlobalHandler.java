@@ -82,7 +82,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	 * @param msg
 	 */
 	public void handleMessage(GlobalMessage msg, Channel channel) {
-		System.out.println("Global " + msg);
+		System.out.println("Global message received");
 		if (msg == null) {
 			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
@@ -100,6 +100,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 			}
 		} else if(msg.hasResponse()){
 			if(EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
+				System.out.println("I am sending to the client");
 				QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
 			}
 		} 

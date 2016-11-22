@@ -117,7 +117,7 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 
 						if (channel == null) {
-							logger.info("trying to connect to cluster  " + ei.getRef());
+							//logger.info("trying to connect to cluster  " + ei.getRef());
 						} else {
 							ei.setChannel(channel);
 							ei.setActive(true);
@@ -189,7 +189,7 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 	}
 
 	public static void broadcastToClusterFriends(GlobalMessage msg){
-		System.out.println("Broadcasting");
+		System.out.println("Broadcasting the message to others");
 		for(GlobalEdgeInfo ei : outboundEdges.map.values()){
 			Channel ch =ei.getChannel(); 
 			QueueManager.getInstance().enqueueglobalOutboundQueue(msg, ch);
