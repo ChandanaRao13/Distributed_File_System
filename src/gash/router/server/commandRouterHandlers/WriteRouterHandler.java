@@ -46,7 +46,7 @@ public class WriteRouterHandler implements ICommandRouterHandlers{
 			String clientId = EdgeMonitor.clientInfoMap(request);
 			if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 				// Convert to Global Command Message and send it
-				GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalUpdateRequestMessage(request.getCommandMessage(), clientId);
+				GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalWriteRequestMessage(request.getCommandMessage(), clientId);
 				GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
 			} else {
 				logger.info("Send update requests to leader");

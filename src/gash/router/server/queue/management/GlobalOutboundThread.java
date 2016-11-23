@@ -37,6 +37,7 @@ public class GlobalOutboundThread extends Thread {
 				} else {
 					logger.info("Checking if channel is null : "+(message.getChannel() == null));
 					manager.returnOutboundGlobalMessage(message);
+					this.sleep(5000);
 				}
 			} catch (InterruptedException ie) {
 				break;
