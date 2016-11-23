@@ -114,6 +114,7 @@ class FluffyClientApplication:
                             sys.stdout.flush()
                             index += 1
                         chunkId += 1
+                    print("")
 
                 else:
                     self.print_info("Uploading.......")
@@ -127,13 +128,16 @@ class FluffyClientApplication:
             # retrieving the file from Fluffy
             ##
             elif (optionSelected == 2):
-                self.print_info("Enter the filename you want to download from Fluffy: ")
-                filename = raw_input()
-                self.print_info("Enter the filepath for file download location: ")
-                filepath = raw_input()
-                fileContents = self.fluffyClient.getFileFromServer(filepath, filename)
-                self.print_success("Client: Successfully downloaded file")
-                self._printHelpContent()
+                try:
+                    self.print_info("Enter the filename you want to download from Fluffy: ")
+                    filename = raw_input()
+                    self.print_info("Enter the filepath for file download location: ")
+                    filepath = raw_input()
+                    fileContents = self.fluffyClient.getFileFromServer(filepath, filename)
+                    self.print_success("Client: Successfully downloaded file")
+                    self._printHelpContent()
+                except RuntimeError as re:
+                    self.print_error("Client Error: Data received is empty")
 
             ##
             # re-upload the file i.e update
@@ -159,6 +163,7 @@ class FluffyClientApplication:
                             sys.stdout.flush()
                             index += 1
                         chunkId += 1
+                    print("")
 
                 else:
                     self.print_info("ReUploading.......")

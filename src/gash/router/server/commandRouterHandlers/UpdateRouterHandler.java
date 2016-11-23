@@ -46,7 +46,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 
 					if(DatabaseHandler.deleteFile(filename)){
-//						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
+						DataReplicationManager.getInstance().broadcastUpdateDeletion(request.getCommandMessage());						
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -61,7 +61,7 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 						
-//						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
+						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
 					} else {
 						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry with write ...");
 						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());

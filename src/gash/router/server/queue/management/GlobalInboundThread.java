@@ -103,7 +103,7 @@ public class GlobalInboundThread extends Thread {
 								DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 
 								if(DatabaseHandler.deleteFile(filename)){
-//									DataReplicationManager.getInstance().broadcastUpdateDeletion(message);						
+									DataReplicationManager.getInstance().broadcastUpdateDeletion(message);						
 								} else {
 								//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
 								//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -119,7 +119,7 @@ public class GlobalInboundThread extends Thread {
 									//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
 									//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 									
-//									DataReplicationManager.getInstance().broadcastUpdateReplication(message);
+									DataReplicationManager.getInstance().broadcastUpdateReplication(message);
 								} else {
 									//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry with write ...");
 									//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -161,7 +161,7 @@ public class GlobalInboundThread extends Thread {
 						//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
 						//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 							logger.info("Global check:  File" + file.getFilename()  + "is stored successfully in the cluster with chunkId:" + file.getChunkId());
-//							DataReplicationManager.getInstance().broadcastReplication(message);
+							DataReplicationManager.getInstance().broadcastReplication(message);
 						} else {
 							//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry");
 							//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
@@ -187,7 +187,7 @@ public class GlobalInboundThread extends Thread {
 							if(DatabaseHandler.deleteFile(filename)){
 							//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
 							//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-//								DataReplicationManager.getInstance().broadcastDeletion(message);
+								DataReplicationManager.getInstance().broadcastDeletion(message);
 							} else {
 						//		CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not successfully deleted....");
 						//		QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
