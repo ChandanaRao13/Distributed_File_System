@@ -57,6 +57,7 @@ public class GlobalInboundThread extends Thread {
 					}
 				}
 				if (message.hasRequest()) {
+					
 					if (message.getRequest().getRequestType() == RequestType.READ) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 							String filename = message.getRequest().getFileName();
@@ -211,7 +212,7 @@ public class GlobalInboundThread extends Thread {
 					}
 				}
 			} else if(message.hasResponse()){
-				   
+				
 					if (message.getRequest().getRequestType() == RequestType.READ) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 							GlobalMessage globalForwardMessage = GlobalMessageBuilder.generateGlobalForwardReadResponseMessage(message);
@@ -219,11 +220,17 @@ public class GlobalInboundThread extends Thread {
 						} else {
 							System.out.println("Received message from cluster");
 							CommandMessage outputMsg = GlobalMessageBuilder.forwardChunkToClient(message);
+							logger.info("Client id is :" + message.getResponse().getRequestId() + "length: " + message.getResponse().getRequestId().length() + 
+									"channel: " + EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId()));
 							InternalChannelNode channelNode = EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId());
 							
+							if(channelNode.getChunkCount() == 0) {
+								channelNode.setChunkCount(message.getResponse().getFile().getTotalNoOfChunks());
+							}
 							channelNode.decrementChunkCount();
 							if(channelNode.getChunkCount() == 0){
-								logger.info("Removing client info from the client channel Map");
+								
+								logger.info("Removing client info from the client channel Map in Response");
 								try {
 									EdgeMonitor.removeClientChannelInfoFromMap(message.getResponse().getRequestId());
 								} catch (Exception e) {
@@ -231,6 +238,7 @@ public class GlobalInboundThread extends Thread {
 									e.printStackTrace();
 								}
 							}
+							
 							Channel clientChannel = channelNode.getChannel(); 
 							QueueManager.getInstance().enqueueOutboundCommand(outputMsg, clientChannel);
 						}
@@ -238,7 +246,7 @@ public class GlobalInboundThread extends Thread {
 				}
 
 			} catch (Exception e) {
-				
+
 				logger.error("Unexpected management communcation failure", e);
 				break;
 			}
