@@ -58,8 +58,8 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 				if(DatabaseHandler.addFile(fileTask.getFilename(), fileTask.getChunkCounts(), fileTask.getChunk().toByteArray(), fileTask.getChunkNo())){
 						fileInfo.decrementChunkProcessed();
 						
-						CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
-						QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
+						//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
+						//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 						
 						DataReplicationManager.getInstance().broadcastUpdateReplication(request.getCommandMessage());
 					} else {
@@ -71,10 +71,12 @@ public class UpdateRouterHandler implements ICommandRouterHandlers  {
 					DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
 				} else {
 					DataReplicationManager.fileUpdateTracker.remove(filename);
+					CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
+					QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 				}
 				
-				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
-				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
+				//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated	 successfully");
+				//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 				
 			}/* else {
 				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("Cannot update as file is not in the database");
