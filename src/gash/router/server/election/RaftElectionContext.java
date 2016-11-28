@@ -69,7 +69,7 @@ public class RaftElectionContext implements Runnable {
 	protected void broadcast(WorkMessage msg){		
 		for(EdgeInfo ei : emon.getOutBoundEdgesList().getEdgeListMap().values()){	
 			if(ei.isActive() && ei.getChannel()!=null){
-				System.out.println("Sending HB::"+ei.getRef());
+				//System.out.println("Sending HB::"+ei.getRef());
 				ei.getChannel().writeAndFlush(msg);
 			}
 		}
@@ -86,10 +86,10 @@ public class RaftElectionContext implements Runnable {
 	public void run() {		
 		while(true){
 			int activeChannel = state.getEmon().getActiveChannels();
-			if(activeChannel>=2){
+			//if(activeChannel>=2){
 				timerBegin = System.currentTimeMillis();
 				currentState.doAction(); 
-			} 
+			//} 
 		}
 
 	}

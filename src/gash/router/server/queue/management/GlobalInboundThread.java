@@ -40,10 +40,11 @@ public class GlobalInboundThread extends Thread {
 				InternalChannelNode globalNode = manager.dequeueglobalInboundQueue();
 				GlobalMessage message = globalNode.getGlobalMessage();
 				if(message.hasPing()){
+					System.out.println("Got Ping message: " + message);
 					if(EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-							GlobalMessage globalMessage = GlobalMessageBuilder.buildPingMessage();
-							GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
+							//GlobalMessage globalMessage = GlobalMessageBuilder.buildPingMessage();
+							GlobalEdgeMonitor.broadcastToClusterFriends(message);
 						} else {
 							logger.info("Successfully able to ping all the clusters");
 							CommandMessage msg = MessageGenerator.getInstance()
@@ -71,10 +72,10 @@ public class GlobalInboundThread extends Thread {
 								globalNode.setChunkCount(chunkCount);
 
 								for (int index = 0; index < chunkCount; index++) {
-									List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename, index +1);
+									List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename, index);
 									ByteString byteStringContent = ByteString.copyFrom(content.get(0).getFile());
 									GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalReadResponseMessage(
-											globalNode.getGlobalMessage(), index + 1, byteStringContent, chunkCount);
+											globalNode.getGlobalMessage(), index, byteStringContent, chunkCount);
 									GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
 								}
 							} else {

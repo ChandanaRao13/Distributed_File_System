@@ -50,7 +50,7 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 				// chunks
 				for (int index = 0; index < chunkCount; index++) {
 					WorkMessage worKMessage = MessageGenerator.getInstance().generateReadRequestMessage(
-							request.getCommandMessage(), clientId, node.getNodeId(), index + 1);
+							request.getCommandMessage(), clientId, node.getNodeId(), index);
 					Channel nodeChannel = EdgeMonitor.node2ChannelMap.get(node.getNodeId());
 					QueueManager.getInstance().enqueueOutboundRead(worKMessage, nodeChannel);
 				}

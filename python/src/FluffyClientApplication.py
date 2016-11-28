@@ -101,7 +101,7 @@ class FluffyClientApplication:
                 #bc.sendData(bc.genPing(),"127.0.0.1",4186);
                 fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
                 chunkCount = len(fileChunks)
-                chunkId = 1
+                chunkId = 0
                 index = 1
                 multiple = chunkCount / 100
                 if (multiple > 0):
@@ -150,7 +150,7 @@ class FluffyClientApplication:
                 # bc.sendData(bc.genPing(),"127.0.0.1",4186);
                 fileChunks = self.fluffyClient.chunkFileInto1MB(filepath + '/' + filename)
                 chunkCount = len(fileChunks)
-                chunkId = 1
+                chunkId = 0
                 index = 1
                 multiple = chunkCount / 100
                 if(multiple > 0):

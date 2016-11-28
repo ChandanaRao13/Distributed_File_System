@@ -111,11 +111,12 @@ class FluffyClient:
         for x in range(chunkCounts):
             msg = self._recvCommandMessage()
             self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
+            #print(msg.filetask.chunk)
             pass
 
         with open(filepath + "/" + "new" + msg.filetask.filename, "w") as file:
             for x in range(chunkCounts + 1):
-                file.write(self.fileResponseMap[x + 1])
+                file.write(self.fileResponseMap[x])
             file.close()
             pass
         return "created file at: " + filepath + " with name: " + filename

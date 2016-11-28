@@ -82,7 +82,7 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	 * @param msg
 	 */
 	public void handleMessage(GlobalMessage msg, Channel channel) {
-		System.out.println("Global message received");
+		System.out.println("Global message received msg: " + msg);
 		if (msg == null) {
 			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
