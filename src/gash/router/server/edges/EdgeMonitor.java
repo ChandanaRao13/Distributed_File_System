@@ -379,14 +379,14 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 										logger.info("Added node " + nodeId + " " + edgeListMapper.get(nodeId).getHost()
 												+ " to channel map. ");
 										node2ChannelMap.put(nodeId, edgeListMapper.get(nodeId).getChannel());
+										addNodeLoadToQueue(nodeId);
 										if(!workStealQueue.contains(nodeId)) {
 											logger.info("Adding node to the stealing queue: " + nodeId);
 											workStealQueue.add(nodeId);
 										}
 									}
 								}
-								
-							    addNodeLoadToQueue(nodeId);
+								//addNodeLoadToQueue(nodeId);
 							}
 					}
 				}
@@ -403,6 +403,13 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 				NodeLoad node = new NodeLoad(nodeId.intValue(), 0);
 				LoadQueueManager.getInstance().insertNodeLoadInfo(node);
 			} 
+		}
+		
+		private synchronized void deleteNodeFromQueue(Integer nodeId) {
+			if(nodeId != null && loadNodeSet.contains(nodeId.intValue())) {
+				System.out.println("Deleting loadNode: " + nodeId);
+				loadNodeSet.remove(nodeId);
+			}
 		}
 
 	}

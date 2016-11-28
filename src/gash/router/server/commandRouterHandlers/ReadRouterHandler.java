@@ -37,9 +37,12 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 		FileTaskType taskType = request.getCommandMessage().getFiletask().getFileTaskType();
 		FileTask fileTask = request.getCommandMessage().getFiletask();
 		if (taskType == FileTaskType.READ) {
+			System.out.println("Got read Request: ");
 			boolean inRiak = DatabaseHandler.isFileAvailableInRiak(fileTask.getFilename());
 			boolean inRethink = DatabaseHandler.isFileAvailableInRethink(fileTask.getFilename());
-			String filename = fileTask.getFilename();
+			System.out.println("File present inRaik: " + inRiak);
+			System.out.println("File present inRethink: " + inRethink);
+			//String filename = fileTask.getFilename();
 			String clientId = EdgeMonitor.clientInfoMap(request);
 			if (inRiak || inRethink) {
 				int chunkCount = DatabaseHandler
@@ -53,6 +56,7 @@ public class ReadRouterHandler implements ICommandRouterHandlers{
 							request.getCommandMessage(), clientId, node.getNodeId(), index);
 					Channel nodeChannel = EdgeMonitor.node2ChannelMap.get(node.getNodeId());
 					QueueManager.getInstance().enqueueOutboundRead(worKMessage, nodeChannel);
+					System.out.println("Reading chunk: " + index + " from node " + node.getNodeId());
 				}
 			} else {
 				if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
