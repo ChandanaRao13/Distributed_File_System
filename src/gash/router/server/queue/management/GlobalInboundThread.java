@@ -156,21 +156,28 @@ public class GlobalInboundThread extends Thread {
 					}
 				} else if (message.getRequest().getRequestType() == RequestType.WRITE){
 					logger.info("Recieved global message to write");
-					if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-						File file = message.getRequest().getFile();
-						if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
-						//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
-						//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-							logger.info("Global check:  File" + file.getFilename()  + "is stored successfully in the cluster with chunkId:" + file.getChunkId());
-							DataReplicationManager.getInstance().broadcastReplication(message);
-						} else {
-							//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry");
-							//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-							logger.error("Global check: Database write error, couldnot save the file into the database");
-						}
+					String filename = message.getRequest().getFileName();
+					boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
+					boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
+					if(!inRiak && !inRethink) {
+						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
+							File file = message.getRequest().getFile();
+							if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
+							//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
+							//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
+								logger.info("Global check:  File" + file.getFilename()  + "is stored successfully in the cluster with chunkId:" + file.getChunkId());
+								DataReplicationManager.getInstance().broadcastReplication(message);
+							} else {
+								//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry");
+								//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
+								logger.error("Global check: Database write error, couldnot save the file into the database");
+							}
+					}
+					else {
+						logger.info("File Already present riak: " +inRiak +" in rethink: " +inRethink + "so we are not writing it again");
+					}
 					
-					
-						GlobalEdgeMonitor.broadcastToClusterFriends(message);
+					GlobalEdgeMonitor.broadcastToClusterFriends(message);
 
 					} else {
 						CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg("File is written successfully: " + message.getRequest().getFileName());
