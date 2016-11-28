@@ -96,7 +96,10 @@ public class MessageGenerator {
 		FileTask.Builder fb = FileTask.newBuilder();
 		fb.setFilename(message.getRequest().getFile().getFilename());
 		fb.setChunkNo(message.getRequest().getFile().getChunkId());
+		fb.setChunk(message.getRequest().getFile().getData());
+		fb.setChunkCounts(message.getRequest().getFile().getTotalNoOfChunks());
 		fb.setFileTaskType(FileTaskType.WRITE);
+
 		fb.setSender(message.getRequest().getRequestId());
 		
 		WorkMessage.Builder wb = WorkMessage.newBuilder();
