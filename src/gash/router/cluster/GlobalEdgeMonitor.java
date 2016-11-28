@@ -108,6 +108,23 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 			try {
 
 				for (GlobalEdgeInfo ei : this.outboundEdges.map.values()) {
+					if(ei.isActive()) {
+						if(!ei.getChannel().isActive()) {
+							ei.setActive(false);
+						}
+					}
+					else {
+						try {
+                            Channel channel = connectToChannel(ei.getHost(), ei.getPort());
+                            ei.setChannel(channel);
+                            if (channel.isActive()) {
+                                ei.setActive(true);
+                            }
+                        } catch (Throwable ex) {
+                        	logger.error("Error: In connecting to host: " + ei.getHost() + " and port: " + ei.getPort());
+                        	logger.error("Error: errmsg: " + ex.getMessage());
+                        }
+					}
 					if (ei.isActive() && ei.getChannel() != null) {
 						if(ei.getChannel()!=null){
 							//ei.getChannel().writeAndFlush(GlobalMessageBuilder.buildPingMessage());
