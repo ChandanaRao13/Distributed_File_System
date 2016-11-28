@@ -155,7 +155,7 @@ public class DemoApp implements CommListener {
 
 			// do stuff w/ the connection
 			 da.ping(1);
-			//da.sendReadFileTasks(args[0]);
+			//da.sendReadFileTassks(args[0]);
 			//da.chunkFile(args[0]);
 			//da.sendFileAsChunks(new File(args[0]));
 			//da.updateFileAsChunks(args[0], new File(args[1]));

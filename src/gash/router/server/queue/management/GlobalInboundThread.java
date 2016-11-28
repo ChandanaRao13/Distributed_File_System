@@ -159,7 +159,7 @@ public class GlobalInboundThread extends Thread {
 					String filename = message.getRequest().getFileName();
 					boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
 					boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
-					if(!inRiak && !inRethink) {
+					//if(!inRiak && !inRethink) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
 							File file = message.getRequest().getFile();
 							if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
@@ -172,10 +172,10 @@ public class GlobalInboundThread extends Thread {
 								//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
 								logger.error("Global check: Database write error, couldnot save the file into the database");
 							}
-					}
-					else {
-						logger.info("File Already present riak: " +inRiak +" in rethink: " +inRethink + "so we are not writing it again");
-					}
+					//}
+					//else {
+						//logger.info("File Already present riak: " +inRiak +" in rethink: " +inRethink + "so we are not writing it again");
+					//}
 					
 					GlobalEdgeMonitor.broadcastToClusterFriends(message);
 
