@@ -190,13 +190,21 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 					if (ei.isActive() && ei.getChannel() != null) {
 						WorkMessage wm = createHB(ei);
 						ei.getChannel().writeAndFlush(wm);
-					} else if(ei.getChannel() == null){
+					}
+					else if(ei.getChannel() == null){
 						Channel channel = connectToChannel(ei.getHost(), ei.getPort());
 						ei.setChannel(channel);
 						ei.setActive(true);
 						if (channel == null) {
 							logger.info("trying to connect to node " + ei.getRef());
 						}
+					}
+					
+					if(ei.getChannel() != null) {
+						ei.setActive(ei.getChannel().isActive());
+						if(!ei.getChannel().isActive())
+							ei.setChannel(null);
+						//deleteNodeFromQueue(ei.getRef())
 					}
 				}
 				if(!state.getConf().isNewNode())
@@ -355,10 +363,25 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		public void run() {
 			try {
 				while (forever) {
-					addToNode2ChannelMap(getInboundEdges());
-					addToNode2ChannelMap(getOutboundEdges());				}
+						addToNode2ChannelMap(getInboundEdges());
+						addToNode2ChannelMap(getOutboundEdges());	
+						removeUnAvailableNodes(getOutboundEdges());
+					}
 			} catch (Exception e) {
 				logger.error("An error has occured ", e);
+			}
+		}
+		
+		private void removeUnAvailableNodes(EdgeList edges) {
+			try{
+				for (EdgeInfo ei : edges.map.values()) {
+					if(!ei.isActive() || ei.getChannel() == null || !ei.getChannel().isActive()){
+						deleteNodeFromQueue(ei.getRef());
+					}
+				}
+			}
+			catch (Exception e) {
+				System.out.println("Error: error at removeUnAvailableNodes while removing nodes: " + e.getMessage());
 			}
 		}
 
