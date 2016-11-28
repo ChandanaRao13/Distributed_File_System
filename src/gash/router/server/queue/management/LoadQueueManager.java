@@ -44,6 +44,15 @@ public class LoadQueueManager {
 		}
 		
 	}
+
+	public synchronized void removeLoadInfo(int nodeId) {
+		for(NodeLoad node: loadQueue) {
+			if(node.getNodeId() == nodeId) {
+				loadQueue.remove(node);
+				return;
+			}
+		}
+	}
 	
 	public NodeLoad getMininumNodeLoadInfo(int chunkCount){
 		NodeLoad node = loadQueue.poll();

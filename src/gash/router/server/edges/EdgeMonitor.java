@@ -432,6 +432,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			if(nodeId != null && loadNodeSet.contains(nodeId.intValue())) {
 				System.out.println("Deleting loadNode: " + nodeId);
 				loadNodeSet.remove(nodeId);
+				LoadQueueManager.getInstance().removeLoadInfo(nodeId);
 			}
 		}
 
