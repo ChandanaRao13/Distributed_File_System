@@ -140,6 +140,12 @@ public class GlobalEdgeMonitor implements GlobalEdgeListener, Runnable {
 							ei.setActive(true);
 						}
 					}
+					
+					if(ei.getChannel() != null) {
+						ei.setActive(ei.getChannel().isActive());
+						if(!ei.getChannel().isActive())
+							ei.setChannel(null);
+					}
 				}
 				Thread.sleep(dt);
 			} catch (InterruptedException e) {
