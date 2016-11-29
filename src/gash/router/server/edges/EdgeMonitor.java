@@ -89,7 +89,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			electionCtx.setAmReady(false);
 		System.out.println("I am a new node:: sending a message to friend");
 			for(EdgeInfo ei : outboundEdges.getEdgeListMap().values()){
-				System.out.println("No routing entries..possibly a new node");
 				try {
 					Channel detectedChannel = null;
 					try {
