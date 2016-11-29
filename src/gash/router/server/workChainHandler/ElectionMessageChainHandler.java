@@ -46,7 +46,7 @@ public class ElectionMessageChainHandler implements IWorkChainHandler {
 			state.getEmon().getOutBoundEdgesList().getNode(workMessage.getHeader().getNodeId()).setChannel(channel);
 
 		}else if (workMessage.hasLeader() && workMessage.getLeader().getAction() == LeaderQuery.THELEADERIS /*&& msg.getLeader().getState()==LeaderState.LEADERALIVE*/) {
-			System.out.println("Current leader is ::"+workMessage.getLeader().getLeaderId());
+			//System.out.println("Current leader is ::"+workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setLeaderId(workMessage.getLeader().getLeaderId());
 			state.getElectionCtx().setTerm(workMessage.getLeader().getTerm());
 		} else if(workMessage.hasRaftMessage() && workMessage.getRaftMessage().getType() == ElectionMessageType.LEADER_HB_ACK) {

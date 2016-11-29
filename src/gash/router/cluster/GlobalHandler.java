@@ -82,12 +82,15 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 	 * @param msg
 	 */
 	public void handleMessage(GlobalMessage msg, Channel channel) {
-		System.out.println("Global message received: ");
+		//System.out.println("Global message received clusterID: " + msg.getGlobalHeader().getClusterId() + " and destinationId: " + msg.getGlobalHeader().getDestinationId());
 		if (msg == null) {
 			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
 			return;
-		}else if(msg.hasPing()){
+		}
+
+		System.out.println("Global message received clusterID: " + msg.getGlobalHeader().getClusterId() + " and destinationId: " + msg.getGlobalHeader().getDestinationId());
+		if(msg.hasPing()){
 			System.out.println("Got Ping from Cluster Id:"+msg.getGlobalHeader().getClusterId());
 			//state.getEmon().broadcastToClusterFriends(GlobalMessageBuilder.buildPingMessage());
 			QueueManager.getInstance().enqueueglobalInboundQueue(msg, channel);
