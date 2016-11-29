@@ -226,7 +226,7 @@ public class GlobalInboundThread extends Thread {
 							GlobalMessage globalForwardMessage = GlobalMessageBuilder.generateGlobalForwardReadResponseMessage(message);
 							GlobalEdgeMonitor.broadcastToClusterFriends(globalForwardMessage);
 						} else {
-							System.out.println("Received message from cluster");
+							System.out.println("Received message from cluster for client");
 							CommandMessage outputMsg = GlobalMessageBuilder.forwardChunkToClient(message);
 							logger.info("Client id is :" + message.getResponse().getRequestId() + "length: " + message.getResponse().getRequestId().length() + 
 									"channel: " + EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId()));

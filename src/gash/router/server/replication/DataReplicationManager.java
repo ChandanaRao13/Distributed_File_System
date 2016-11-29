@@ -1,5 +1,6 @@
 package gash.router.server.replication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -152,7 +153,11 @@ public class DataReplicationManager {
 		System.out.println("Entered DataReplicationManager::newNodeReplication::Channel open?::"+(channel!=null));
 		try {
 			List<FluffyFile> filesFromRethinkDB = DatabaseHandler.getAllFileContentsFromRethink();
+			if(filesFromRethinkDB == null)
+				filesFromRethinkDB = new ArrayList<FluffyFile>();
 			List<FluffyFile> filesFromRiakDB = DatabaseHandler.getAllFileContentsFromRiak();
+			if(filesFromRiakDB == null)
+				filesFromRiakDB = new ArrayList<FluffyFile>();
 			filesFromRethinkDB.addAll(filesFromRiakDB);
 			System.out.println("Returned from Database handler::"+filesFromRethinkDB.size());
 			for(FluffyFile record : filesFromRethinkDB){
@@ -161,7 +166,8 @@ public class DataReplicationManager {
 				
 			}
 		} catch (Exception e) {
-			System.out.println("Exception at newNodeReplication");
+			System.out.println("Exception at newNodeReplication: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }
