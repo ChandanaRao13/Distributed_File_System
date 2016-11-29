@@ -105,10 +105,12 @@ class FluffyClient:
         self._sendCommandMessage(newReadCommandMessage)
         self.fileResponseMap = {}
         msg = self._recvCommandMessage()
+        #print(msg)
         self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
         chunkCounts = msg.filetask.chunk_counts
         chunkCounts = chunkCounts - 1
         for x in range(chunkCounts):
+            #print(msg)
             msg = self._recvCommandMessage()
             self.fileResponseMap[msg.filetask.chunk_no] = msg.filetask.chunk
             #print(msg.filetask.chunk)
@@ -130,6 +132,7 @@ class FluffyClient:
     def deleteFileFromServer(self, filename):
         newdeleteCommandMessage = self.clientServerMessageBuilder.buildDeleteFileCommandMessage(self.nodeId, self.time, self.myIp, filename)
         self._sendCommandMessage(newdeleteCommandMessage)
+        return self._recvCommandMessage()
         pass
 
     def receiveMessageFromServer(self, socket, n):

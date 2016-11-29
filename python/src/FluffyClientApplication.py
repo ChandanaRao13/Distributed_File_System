@@ -120,6 +120,7 @@ class FluffyClientApplication:
                     self.print_info("Uploading.......")
                     for fileChunk in fileChunks:
                         serverResponse = self.fluffyClient.sendFileToServer(filename, chunkCount, chunkId, fileChunk)
+                        print(serverResponse)
                         chunkId += 1
 
                 self.print_success("Client: Successfully uploaded file")
@@ -134,7 +135,7 @@ class FluffyClientApplication:
                     self.print_info("Enter the filepath for file download location: ")
                     filepath = raw_input()
                     fileContents = self.fluffyClient.getFileFromServer(filepath, filename)
-                    self.print_success("Client: Successfully downloaded file")
+                    self.print_success("Client: Successfully downloaded file: " + fileContents)
                     self._printHelpContent()
                 except RuntimeError as re:
                     self.print_error("Client Error: Data received is empty")
@@ -169,6 +170,7 @@ class FluffyClientApplication:
                     self.print_info("ReUploading.......")
                     for fileChunk in fileChunks:
                         serverResponse = self.fluffyClient.updateFileInServer(filename, chunkCount, chunkId, fileChunk)
+                        print(serverResponse)
                         chunkId += 1
 
 
@@ -181,7 +183,8 @@ class FluffyClientApplication:
             elif (optionSelected == 4):
                 self.print_info("Enter the filename you want to delete from Fluffy: ")
                 filename = raw_input()
-                self.fluffyClient.deleteFileFromServer(filename)
+                serverResponse = self.fluffyClient.deleteFileFromServer(filename)
+                print(serverResponse)
                 self.print_error("Successfully deleted the file: " + filename)
                 self._printHelpContent()
             ##
@@ -200,12 +203,12 @@ class FluffyClientApplication:
             ##
             # exiting the client application
             ##
-            elif (optionSelected == 6):
+            elif (optionSelected == 7):
                 self.fluffyClient.closeConnection()
                 self._printClosingMessage(self.name)
                 break
             else:
-                self.print_error("Error: Incorrect option selected: " + str(optionSelected) + " ,option should be in range (1 - 6)")
+                self.print_error("Error: Incorrect option selected: " + str(optionSelected) + " ,option should be in range (1 - 7)")
 
 if __name__ == "__main__":
     fluffyApp = FluffyClientApplication()
