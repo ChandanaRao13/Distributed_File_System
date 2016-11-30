@@ -3,7 +3,6 @@ package gash.router.server.commandRouterHandlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pipe.common.Common.Header;
 import gash.router.cluster.GlobalEdgeMonitor;
 import gash.router.database.DatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;

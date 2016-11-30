@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import gash.router.server.ServerState;
 import io.netty.channel.Channel;
-import pipe.common.Common.Failure;
 import pipe.work.Work.WorkMessage;
 
 /**
@@ -13,7 +12,7 @@ import pipe.work.Work.WorkMessage;
  * @author vaishampayan
  *
  */
-public class FailureHandler implements IWorkChainHandler{
+public class FailureHandler implements IWorkChainHandler {
 	private IWorkChainHandler nextChainHandler;
 	protected ServerState state;
 	protected static Logger logger = LoggerFactory.getLogger(FailureHandler.class);
@@ -27,11 +26,9 @@ public class FailureHandler implements IWorkChainHandler{
 	@Override
 	public void handle(WorkMessage workMessage, Channel channel) {
 		// TODO Auto-generated method stub
-		if(workMessage.hasErr()) {
-			Failure err = workMessage.getErr();
+		if (workMessage.hasErr()) {
 			logger.error("failure from " + workMessage.getHeader().getNodeId());
-		}
-		else {
+		} else {
 			nextChainHandler.handle(workMessage, channel);
 		}
 	}

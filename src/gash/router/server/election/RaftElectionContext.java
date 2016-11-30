@@ -2,19 +2,13 @@ package gash.router.server.election;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.channels.Channel;
 import java.util.Random;
-import java.util.logging.Logger;
-
-import org.slf4j.LoggerFactory;
 
 import gash.router.cluster.GlobalServerState;
 import gash.router.container.RoutingConf;
 import gash.router.server.ServerState;
-import gash.router.server.WorkHandler;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.edges.EdgeMonitor;
-import gash.router.util.RaftMessageBuilder;
 import pipe.work.Work.WorkMessage;
 
 public class RaftElectionContext implements Runnable {
@@ -37,7 +31,6 @@ public class RaftElectionContext implements Runnable {
 	private int heartbeatdt = 3000;
 	private long timeOut = 3000;
 	private long globalTimer =5000;
-	private long globalTimerBegin=0;
 	private Random rand;
 	private long timerBegin = 0;
 

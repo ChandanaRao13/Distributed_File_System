@@ -76,7 +76,6 @@ public class MessageServer {
 	public void release() {
 	}
 
-	@SuppressWarnings("static-access")
 	public void startServer() throws InterruptedException {
 		QueueManager.initManager();
 		DataReplicationManager.initDataReplicationManager();
@@ -191,6 +190,7 @@ public class MessageServer {
 	 */
 	private static class StartCommandCommunication implements Runnable {
 		RoutingConf conf;
+		@SuppressWarnings("unused")
 		RaftElectionContext electionCtx; 
 		public StartCommandCommunication(RoutingConf conf,StartWorkCommunication work) {
 			this.conf = conf;
@@ -330,6 +330,7 @@ public class MessageServer {
 	 */
 	private static class StartGlobalCommunication implements Runnable {
 		GlobalServerState state;
+		@SuppressWarnings("unused")
 		RaftElectionContext electionCtx; 
 		
 

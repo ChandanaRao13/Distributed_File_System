@@ -28,7 +28,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import pipe.common.Common.Failure;
 import routing.Pipe.CommandMessage;
-import routing.Pipe.FileTask;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -81,6 +80,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 			CommandMessage.Builder rb = CommandMessage.newBuilder(msg);
 			rb.setErr(eb);
 			channel.write(rb.build());
+			logger.error("Error: Exception caught: " + e.getMessage());
 		}
 
 		System.out.flush();

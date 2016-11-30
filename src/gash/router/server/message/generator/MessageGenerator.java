@@ -8,15 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.protobuf.ByteString;
 
-import gash.router.container.GlobalRoutingConf;
 import gash.router.container.RoutingConf;
 import gash.router.database.datatypes.FluffyFile;
 import global.Global.File;
-import global.Global.GlobalHeader;
 import global.Global.GlobalMessage;
-import global.Global.Request;
-import global.Global.RequestType;
-import global.Global.Response;
 import pipe.common.Common.Header;
 import pipe.election.Election.AllNodeInfo;
 import pipe.election.Election.NewNodeMessage;
@@ -399,40 +394,6 @@ public class MessageGenerator {
 		Steal.Builder sb = Steal.newBuilder();
 		sb.setReadSteal(READ_STEAL.READ_STEAL_RESPONSE);
 		wb.setSteal(sb.build());
-		System.out.println("SEnding chunkId: " + workMessage.getFiletask().getChunkNo());
-		/*		Header.Builder hb = Header.newBuilder();
-		//System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getDestination());
-		try {
-			System.out.println("Setting main server nodeId as header for steal read id: " + workMessage.getHeader().getNodeId());
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		hb.setNodeId(workMessage.getHeader().getNodeId());
-		hb.setTime(System.currentTimeMillis());
-
-		Steal.Builder sb = Steal.newBuilder();
-		sb.setReadSteal(READ_STEAL.READ_STEAL_RESPONSE);
-
-		//System.out.println("SEnding filename: " + workMessage.getFiletask().getFilename());
-		System.out.println("SEnding chunkId: " + workMessage.getFiletask().getChunkNo());
-		//System.out.println("SEnding chunkCount: " + workMessage.getFiletask().getChunkCounts());
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		FileTask.Builder ft  = FileTask.newBuilder();
-		ft.setFilename(workMessage.getFiletask().getFilename());
-		ft.setChunkNo(workMessage.getFiletask().getChunkNo());
-
-		WorkMessage.Builder wb = WorkMessage.newBuilder();
-		wb.setFiletask(ft.build());
-		wb.setHeader(hb.build());
-		wb.setSteal(sb.build());
-		wb.setSecret(1234);*/
 		return wb.build();
 	}
 

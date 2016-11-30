@@ -39,223 +39,203 @@ public class GlobalInboundThread extends Thread {
 			try {
 				InternalChannelNode globalNode = manager.dequeueglobalInboundQueue();
 				GlobalMessage message = globalNode.getGlobalMessage();
-				if(message.hasPing()){
+				if (message.hasPing()) {
 					System.out.println("Got Ping message: " + message);
-					if(EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
+					if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-							//GlobalMessage globalMessage = GlobalMessageBuilder.buildPingMessage();
 							GlobalEdgeMonitor.broadcastToClusterFriends(message);
 						} else {
 							logger.info("Successfully able to ping all the clusters");
 							CommandMessage msg = MessageGenerator.getInstance()
 									.generateClientResponseMsg("Successfully able to ping all the clusters ");
-						/*	String clientId = message.getRequest().getRequestId();
-
-							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
-							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
-							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());*/
-						}
-					}
-				}
-				if (message.hasRequest()) {
-					
-					if (message.getRequest().getRequestType() == RequestType.READ) {
-						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-							String filename = message.getRequest().getFileName();
-							boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
-							boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
-							if (inRiak || inRethink) {
-								//Read from leader database and return to another cluster
-								
-								int chunkCount = DatabaseHandler
-										.getFilesChunkCount(message.getRequest().getFileName());
-								globalNode.setChunkCount(chunkCount);
-
-								for (int index = 0; index < chunkCount; index++) {
-									List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename, index);
-									ByteString byteStringContent = ByteString.copyFrom(content.get(0).getFile());
-									GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalReadResponseMessage(
-											globalNode.getGlobalMessage(), index, byteStringContent, chunkCount);
-									GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
-								}
-							} else {
-								GlobalMessage messageForward = GlobalMessageBuilder.generateGlobalForwardRequestMessage(message);
-								GlobalEdgeMonitor.broadcastToClusterFriends(messageForward);
-							}
-						} else {
-							// Send it back to the Client
-							CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg("File is not available: " + message.getRequest().getFileName());
 							String clientId = message.getRequest().getRequestId();
 
 							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
 							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
 							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
 						}
-					} else if (message.getRequest().getRequestType() == RequestType.UPDATE){
-						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-						File file = message.getRequest().getFile();
-						boolean inRiak = DatabaseHandler.isFileAvailableInRiak(file.getFilename());
-						boolean inRethink = DatabaseHandler.isFileAvailableInRethink(file.getFilename());
-						String filename = file.getFilename();
-						if(inRiak || inRethink){
-							logger.info("Deleting the file from database to update : " + filename);
-							if(!DataReplicationManager.fileUpdateTracker.containsKey(filename)){
-								UpdateFileInfo fileInfo = new UpdateFileInfo(file.getTotalNoOfChunks());
-								DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
-
-								if(DatabaseHandler.deleteFile(filename)){
-									DataReplicationManager.getInstance().broadcastUpdateDeletion(message);						
-								} else {
-								//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not updated successfully, issues while deleting previous file....");
-								//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-									logger.error("Global Check: File requested to update operation failed, in step to delete from the database");					
-								} 
-							} 
-							UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
-							
-							if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
-									fileInfo.decrementChunkProcessed();
-									
-									logger.info("File is updated successfully with chunk id : " + file.getChunkId());
-									//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully in the database");
-									//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-									
-									DataReplicationManager.getInstance().broadcastUpdateReplication(message);
-								} else {
-									//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry with write ...");
-									//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-									logger.error("Global check : Database write error, couldnot update the file into the database");
-								}
-							if(fileInfo.getChunksProcessed() > 0) {
-								DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
-							} else {
-								DataReplicationManager.fileUpdateTracker.remove(filename);
-							}
-							
-							logger.info("File " + file.getFilename() + " is deleted successfully with chunck id: " + file.getChunkId());
-					//		CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
-					//		QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-							
-						}
-						
-						String clientId = EdgeMonitor.clientInfoMap(globalNode);
-						if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
-							// Convert to Global Command Message and send it
-							//GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalUpdateRequestMessage(request.getCommandMessage(), clientId);
-							GlobalEdgeMonitor.broadcastToClusterFriends(message);
-						} else {
-							logger.info("Send update requests to leader");
-						}
-					} else {
-						CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg("File is updated successfully: " + message.getRequest().getFileName());
-						String clientId = message.getRequest().getRequestId();
-
-						InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
-						EdgeMonitor.removeClientChannelInfoFromMap(clientId);
-						QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
-					}
-				} else if (message.getRequest().getRequestType() == RequestType.WRITE){
-					logger.info("Recieved global message to write");
-					String filename = message.getRequest().getFileName();
-					boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
-					boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
-					//if(!inRiak && !inRethink) {
-						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-							File file = message.getRequest().getFile();
-							if(DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(), file.getData().toByteArray(), file.getChunkId())){
-							//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is stored in the database");
-							//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-								logger.info("Global check:  File" + file.getFilename()  + "is stored successfully in the cluster with chunkId:" + file.getChunkId());
-								DataReplicationManager.getInstance().broadcastReplication(message);
-							} else {
-								//CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not stored in the database, please retry");
-								//QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-								logger.error("Global check: Database write error, couldnot save the file into the database");
-							}
-					//}
-					//else {
-						//logger.info("File Already present riak: " +inRiak +" in rethink: " +inRethink + "so we are not writing it again");
-					//}
-					
-					GlobalEdgeMonitor.broadcastToClusterFriends(message);
-
-					} else {
-						CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg("File is written successfully: " + message.getRequest().getFileName());
-						String clientId = message.getRequest().getRequestId();
-
-						InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
-						EdgeMonitor.removeClientChannelInfoFromMap(clientId);
-						QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
-					}	
-				} else if (message.getRequest().getRequestType() == RequestType.DELETE){
-					if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-						String filename = message.getRequest().getFileName();
-						if(DatabaseHandler.isFileAvailable(filename)){
-							logger.info("Deleting the file from database : " + filename);
-							if(DatabaseHandler.deleteFile(filename)){
-							//	CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is deleted successfully");
-							//	QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-								DataReplicationManager.getInstance().broadcastDeletion(message);
-							} else {
-						//		CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not successfully deleted....");
-						//		QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-								logger.error("Global check: File requested to delete is not deleted from the database");					
-							}
-						}
-						/* else {
-						
-							CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not available so cannot be deleted....");
-							QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-							logger.error("File requested to delete is not available in the database");
-							}*/
-
-							GlobalEdgeMonitor.broadcastToClusterFriends(message);
-					} else {
-						CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg("File is successfully deleted: " + message.getRequest().getFileName());
-						String clientId = message.getRequest().getRequestId();
-
-						InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
-						EdgeMonitor.removeClientChannelInfoFromMap(clientId);
-						QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
 					}
 				}
-			} else if(message.hasResponse()){
-				
+				if (message.hasRequest()) {
+
 					if (message.getRequest().getRequestType() == RequestType.READ) {
 						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
-							GlobalMessage globalForwardMessage = GlobalMessageBuilder.generateGlobalForwardReadResponseMessage(message);
+							String filename = message.getRequest().getFileName();
+							boolean inRiak = DatabaseHandler.isFileAvailableInRiak(filename);
+							boolean inRethink = DatabaseHandler.isFileAvailableInRethink(filename);
+							if (inRiak || inRethink) {
+								// Read from leader database and return to
+								// another cluster
+
+								int chunkCount = DatabaseHandler.getFilesChunkCount(message.getRequest().getFileName());
+								globalNode.setChunkCount(chunkCount);
+
+								for (int index = 0; index < chunkCount; index++) {
+									List<FluffyFile> content = DatabaseHandler.getFileContentWithChunkId(filename,
+											index);
+									ByteString byteStringContent = ByteString.copyFrom(content.get(0).getFile());
+									GlobalMessage globalMessage = GlobalMessageBuilder
+											.generateGlobalReadResponseMessage(globalNode.getGlobalMessage(), index,
+													byteStringContent, chunkCount);
+									GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
+								}
+							} else {
+								GlobalMessage messageForward = GlobalMessageBuilder
+										.generateGlobalForwardRequestMessage(message);
+								GlobalEdgeMonitor.broadcastToClusterFriends(messageForward);
+							}
+						} else {
+							// Send it back to the Client
+							CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg(
+									"File is not available: " + message.getRequest().getFileName());
+							String clientId = message.getRequest().getRequestId();
+
+							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
+							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
+							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
+						}
+					} else if (message.getRequest().getRequestType() == RequestType.UPDATE) {
+						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
+							File file = message.getRequest().getFile();
+							boolean inRiak = DatabaseHandler.isFileAvailableInRiak(file.getFilename());
+							boolean inRethink = DatabaseHandler.isFileAvailableInRethink(file.getFilename());
+							String filename = file.getFilename();
+							if (inRiak || inRethink) {
+								logger.info("Deleting the file from database to update : " + filename);
+								if (!DataReplicationManager.fileUpdateTracker.containsKey(filename)) {
+									UpdateFileInfo fileInfo = new UpdateFileInfo(file.getTotalNoOfChunks());
+									DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
+
+									if (DatabaseHandler.deleteFile(filename)) {
+										DataReplicationManager.getInstance().broadcastUpdateDeletion(message);
+									} else {
+										logger.error(
+												"Global Check: File requested to update operation failed, in step to delete from the database");
+									}
+								}
+								UpdateFileInfo fileInfo = DataReplicationManager.fileUpdateTracker.get(filename);
+
+								if (DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(),
+										file.getData().toByteArray(), file.getChunkId())) {
+									fileInfo.decrementChunkProcessed();
+
+									logger.info("File is updated successfully with chunk id : " + file.getChunkId());
+									DataReplicationManager.getInstance().broadcastUpdateReplication(message);
+								} else {
+									logger.error(
+											"Global check : Database write error, couldnot update the file into the database");
+								}
+								if (fileInfo.getChunksProcessed() > 0) {
+									DataReplicationManager.fileUpdateTracker.put(filename, fileInfo);
+								} else {
+									DataReplicationManager.fileUpdateTracker.remove(filename);
+								}
+
+								logger.info("File " + file.getFilename() + " is deleted successfully with chunck id: "
+										+ file.getChunkId());
+							}
+
+							if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
+								GlobalEdgeMonitor.broadcastToClusterFriends(message);
+							} else {
+								logger.info("Send update requests to leader");
+							}
+						} else {
+							CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg(
+									"File is updated successfully: " + message.getRequest().getFileName());
+							String clientId = message.getRequest().getRequestId();
+
+							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
+							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
+							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
+						}
+					} else if (message.getRequest().getRequestType() == RequestType.WRITE) {
+						logger.info("Recieved global message to write");
+						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
+							File file = message.getRequest().getFile();
+							if (DatabaseHandler.addFile(file.getFilename(), file.getTotalNoOfChunks(),
+									file.getData().toByteArray(), file.getChunkId())) {
+								logger.info("Global check:  File" + file.getFilename()
+										+ "is stored successfully in the cluster with chunkId:" + file.getChunkId());
+								DataReplicationManager.getInstance().broadcastReplication(message);
+							} else {
+								logger.error(
+										"Global check: Database write error, couldnot save the file into the database");
+							}
+							GlobalEdgeMonitor.broadcastToClusterFriends(message);
+
+						} else {
+							CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg(
+									"File is written successfully: " + message.getRequest().getFileName());
+							String clientId = message.getRequest().getRequestId();
+
+							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
+							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
+							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
+						}
+					} else if (message.getRequest().getRequestType() == RequestType.DELETE) {
+						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
+							String filename = message.getRequest().getFileName();
+							if (DatabaseHandler.isFileAvailable(filename)) {
+								logger.info("Deleting the file from database : " + filename);
+								if (DatabaseHandler.deleteFile(filename)) {
+									DataReplicationManager.getInstance().broadcastDeletion(message);
+								} else {
+									logger.error(
+											"Global check: File requested to delete is not deleted from the database");
+								}
+							}
+
+							GlobalEdgeMonitor.broadcastToClusterFriends(message);
+						} else {
+							CommandMessage msg = MessageGenerator.getInstance().generateClientResponseMsg(
+									"File is successfully deleted: " + message.getRequest().getFileName());
+							String clientId = message.getRequest().getRequestId();
+
+							InternalChannelNode ch = EdgeMonitor.getClientChannelFromMap(clientId);
+							EdgeMonitor.removeClientChannelInfoFromMap(clientId);
+							QueueManager.getInstance().enqueueOutboundCommand(msg, ch.getChannel());
+						}
+					}
+				} else if (message.hasResponse()) {
+
+					if (message.getRequest().getRequestType() == RequestType.READ) {
+						if (message.getGlobalHeader().getDestinationId() != GlobalEdgeMonitor.getClusterId()) {
+							GlobalMessage globalForwardMessage = GlobalMessageBuilder
+									.generateGlobalForwardReadResponseMessage(message);
 							GlobalEdgeMonitor.broadcastToClusterFriends(globalForwardMessage);
 						} else {
 							System.out.println("Received message from cluster for client");
 							CommandMessage outputMsg = GlobalMessageBuilder.forwardChunkToClient(message);
-							logger.info("Client id is :" + message.getResponse().getRequestId() + "length: " + message.getResponse().getRequestId().length() + 
-									"channel: " + EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId()));
-							InternalChannelNode channelNode = EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId());
-							
-							if(channelNode.getChunkCount() == 0) {
+							logger.info("Client id is :" + message.getResponse().getRequestId() + "length: "
+									+ message.getResponse().getRequestId().length() + "channel: "
+									+ EdgeMonitor.getClientChannelFromMap(message.getResponse().getRequestId()));
+							InternalChannelNode channelNode = EdgeMonitor
+									.getClientChannelFromMap(message.getResponse().getRequestId());
+
+							if (channelNode.getChunkCount() == 0) {
 								channelNode.setChunkCount(message.getResponse().getFile().getTotalNoOfChunks());
 							}
 							channelNode.decrementChunkCount();
-							if(channelNode.getChunkCount() == 0){
-								
+							if (channelNode.getChunkCount() == 0) {
+
 								logger.info("Removing client info from the client channel Map in Response");
 								try {
 									EdgeMonitor.removeClientChannelInfoFromMap(message.getResponse().getRequestId());
 								} catch (Exception e) {
-									logger.info("Client channel is not removed successfully from the client channel Map");
+									logger.info(
+											"Client channel is not removed successfully from the client channel Map");
 									e.printStackTrace();
 								}
 							}
-							
-							Channel clientChannel = channelNode.getChannel(); 
+
+							Channel clientChannel = channelNode.getChannel();
 							QueueManager.getInstance().enqueueOutboundCommand(outputMsg, clientChannel);
 						}
 					}
 				}
-
 			} catch (Exception e) {
-
-				logger.error("Unexpected management communcation failure", e);
+				logger.error("Unexpected management communcation failure", e.getMessage());
 				break;
 			}
 		}

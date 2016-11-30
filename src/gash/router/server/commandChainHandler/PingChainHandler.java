@@ -4,16 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gash.router.cluster.GlobalEdgeMonitor;
-import gash.router.server.edges.EdgeMonitor;
-import gash.router.server.message.generator.MessageGenerator;
-import gash.router.server.queue.management.InternalChannelNode;
-import gash.router.server.queue.management.QueueManager;
 import gash.router.util.GlobalMessageBuilder;
 import global.Global.GlobalMessage;
 import io.netty.channel.Channel;
 import routing.Pipe.CommandMessage;
 
 public class PingChainHandler implements ICommandChainHandler {
+	@SuppressWarnings("unused")
 	private ICommandChainHandler nextInChain;
 	protected static Logger logger = LoggerFactory.getLogger(PingChainHandler.class);
 

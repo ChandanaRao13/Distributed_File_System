@@ -22,32 +22,30 @@ public class GlobalOutboundThread extends Thread {
 		while (true) {
 			try {
 				InternalChannelNode message = manager.dequeueglobalOutboundQueue();
-		       	logger.info("Routing global message to next cluster ");
+				logger.info("Routing global message to next cluster ");
 
-				if (message.getChannel()!= null && message.getChannel().isOpen()) {
-					
+				if (message.getChannel() != null && message.getChannel().isOpen()) {
+
 					ChannelFuture cf = message.getChannel().writeAndFlush(message.getGlobalMessage());
-				//	message.getChannel().flush();
+					// message.getChannel().flush();
 					cf.awaitUninterruptibly();
-					if(cf.isSuccess()){
+					if (cf.isSuccess()) {
 						logger.info("Wrote message to the channel of another cluster");
 					} else {
 						manager.returnOutboundGlobalMessage(message);
 					}
 				} else {
-					logger.info("Checking if channel is null : "+(message.getChannel() == null));
+					logger.info("Checking if channel is null : " + (message.getChannel() == null));
 					manager.returnOutboundGlobalMessage(message);
-					this.sleep(5000);
 				}
 			} catch (InterruptedException ie) {
 				break;
 			} catch (Exception e) {
-				
+
 				logger.error("Exception thrown in client communcation", e);
 				break;
 			}
 		}
 
-		}
 	}
-
+}

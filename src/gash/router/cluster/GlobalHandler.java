@@ -14,43 +14,16 @@
  * under the License.
  */
 package gash.router.cluster;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-
-import gash.router.server.workChainHandler.ElectionMessageChainHandler;
-import gash.router.server.workChainHandler.FailureHandler;
-import gash.router.server.workChainHandler.HeartBeatHandler;
-import gash.router.server.workChainHandler.IWorkChainHandler;
-import gash.router.server.workChainHandler.NewNodeChainHandlerV2;
-import gash.router.server.workChainHandler.PingHandler;
-import gash.router.server.workChainHandler.TaskHandler;
-import gash.router.server.workChainHandler.WorkStealHandler;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import gash.router.server.PrintUtil;
-import gash.router.server.edges.EdgeInfo;
-import gash.router.server.edges.EdgeList;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.queue.management.QueueManager;
-import gash.router.util.GlobalMessageBuilder;
-import gash.router.util.RaftMessageBuilder;
 import global.Global.GlobalMessage;
-import io.netty.channel.ChannelFuture;
-import pipe.common.Common.Failure;
-import pipe.common.Common.Header;
-import pipe.election.Election;
-import pipe.election.Election.LeaderStatus.LeaderQuery;
-import pipe.election.Election.LeaderStatus.LeaderState;
-import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
-import pipe.work.Work.Heartbeat;
-import pipe.work.Work.Task;
-
-import pipe.work.Work.WorkState;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -110,22 +83,11 @@ public class GlobalHandler extends SimpleChannelInboundHandler<GlobalMessage> {
 
 		if (debug)
 			PrintUtil.printCommand(msg);
-
-		// TODO How can you implement this without if-else statements?
 		try {
 
 
 		} catch (Exception e) {
-			// TODO add logging
-			/*Failure.Builder eb = Failure.newBuilder();
-			eb.setId(state.getConf().getClusterId());
-			eb.setRefId(msg.getHeader().getClusterId());
-			// changing e.getMessage to some string
-			//eb.setMessage(e.getMessage());
-			eb.setMessage("fixing the null pointer");
-			GlobalMessage.Builder rb = GlobalMessage.newBuilder(msg);
-			rb.setErr(eb);
-			channel.write(rb.build());*/
+			logger.error("Error: Exception caught: " + e.getMessage());
 			System.out.println("Caught Exception in Global Handler!!!!!!!!!!!!!!!!!!!!!!");
 		}
 

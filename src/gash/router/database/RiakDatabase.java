@@ -1,9 +1,7 @@
 package gash.router.database;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +17,6 @@ import com.basho.riak.client.api.commands.kv.FetchValue;
 import com.basho.riak.client.api.commands.kv.StoreValue;
 import com.basho.riak.client.core.RiakCluster;
 import com.basho.riak.client.core.RiakNode;
-import com.basho.riak.client.core.operations.ts.DeleteOperation;
 import com.basho.riak.client.core.query.Location;
 import com.basho.riak.client.core.query.Namespace;
 
@@ -34,7 +31,9 @@ public class RiakDatabase {
 	private RiakNode riakNode = null;
 	private RiakClient riakClient =null;
 
-
+	/**
+	 * 
+	 */
 	private RiakDatabase() {
 		try {
 			riakNode = new RiakNode.Builder().withRemoteAddress(Constants.RIAK_HOST).build();
@@ -53,6 +52,14 @@ public class RiakDatabase {
 		return riakDatabase;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param chunkCount
+	 * @param input
+	 * @param chunkId
+	 */
+	@SuppressWarnings("unused")
 	public void storeFileOneChunk(String filename, int chunkCount, byte[] input, int chunkId) {
 		try {
 			riakClient = new RiakClient(riakCluster);
@@ -73,6 +80,11 @@ public class RiakDatabase {
 		}
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 */
+	@SuppressWarnings("unused")
 	public void getFileOneChunk(String filename) {
 		try {
 			riakClient = new RiakClient(riakCluster);
@@ -89,7 +101,15 @@ public class RiakDatabase {
 		}
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param chunkCount
+	 * @param input
+	 * @param chunkId
+	 */
 	//store the file with chunkcount < 4
+	@SuppressWarnings("unused")
 	public synchronized void storeFile(String filename, int chunkCount, byte[] input, int chunkId) {
 		try {
 			riakClient = new RiakClient(riakCluster);
@@ -140,7 +160,11 @@ public class RiakDatabase {
 		}
 	} 
 
-
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
 	//retrieve the file if present
 	public synchronized List<FluffyFile> getFile(String filename) {
 		try {
@@ -161,7 +185,11 @@ public class RiakDatabase {
 		return null;
 	}
 
-
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
 	//get the chunk count of the file
 	public synchronized int getChunkCount(String filename) {
 		try {
@@ -182,6 +210,12 @@ public class RiakDatabase {
 		return 0;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param chunkId
+	 * @return
+	 */
 	//retrieve the file if present
 	public synchronized FluffyFile getFileWithChunkID(String filename,int chunkId) {
 		try {
@@ -207,6 +241,12 @@ public class RiakDatabase {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param chunkId
+	 * @return
+	 */
 	//retrieve the file if present
 	public synchronized FluffyFile getChunk(String filename,int chunkId) {
 		try {
@@ -232,6 +272,10 @@ public class RiakDatabase {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	//retrieve all files
 	public synchronized List<FluffyFile> getAllFiles() {
 		try {
@@ -268,6 +312,10 @@ public class RiakDatabase {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 */
 	//delete the file from database
 	public synchronized void deleteFile(String filename) {
 		try {

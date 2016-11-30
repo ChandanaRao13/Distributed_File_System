@@ -1,13 +1,13 @@
 package gash.router.server.election;
 
 import gash.router.server.edges.EdgeInfo;
-import gash.router.util.GlobalMessageBuilder;
 import gash.router.util.RaftMessageBuilder;
 import pipe.work.Work.WorkMessage;
 
 public class CandidateState implements IRaftNodeState {
 	private RaftElectionContext electionCtx;
 	private int voteCount = 0;
+	@SuppressWarnings("unused")
 	private boolean voted = false;
 	private int totalActiveNodes = 1;
 

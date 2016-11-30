@@ -28,6 +28,10 @@ public class DatabaseConnectionManager {
 		return instance;
 	}
 
+	/**
+	 * creates a connection
+	 * @return
+	 */
 	private Connection createConnection() {
 		Connection conn = null;
 		try {
@@ -41,6 +45,9 @@ public class DatabaseConnectionManager {
 		return conn;
 	}
 
+	/**
+	 * initializes connection pool
+	 */
 	private void initConnectionManager() {
 		int connectionPoolSize = Constants.RETHINK_DB_CONNECTION_POOL_SIZE;
 		connectionsPool = new LinkedList<Connection>();
@@ -51,6 +58,11 @@ public class DatabaseConnectionManager {
 		logger.info("DatabaseConnectionManager: Successfully setup " + connectionPoolSize + " rethinkDB database Connections");
 	}
 
+	/**
+	 * returns a connection
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static Connection getConnection() throws EmptyConnectionPoolException {
 		if(connectionsPool == null || connectionsPool.size() == 0)
 			throw new EmptyConnectionPoolException("Connection Pool Empty exception !!!");
@@ -59,6 +71,10 @@ public class DatabaseConnectionManager {
 		return connection;
 	}
 
+	/**
+	 * adds the connection back to the pool
+	 * @param connection
+	 */
 	public static void releaseConnection(Connection connection) {
 		connectionsPool.add(connection);
 	}

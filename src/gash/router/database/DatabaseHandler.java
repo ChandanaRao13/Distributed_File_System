@@ -21,6 +21,7 @@ import gash.router.server.manage.exceptions.FileChunkNotFoundException;
 import gash.router.server.manage.exceptions.FileNotFoundException;
 import gash.router.util.Constants;
 
+@SuppressWarnings({"static-access", "unchecked"})
 public class DatabaseHandler {
 
 	private static DatabaseConnectionManager databaseConnectionManager = DatabaseConnectionManager.getInstance();
@@ -272,7 +273,6 @@ public class DatabaseHandler {
 
 		databaseConnectionManager.releaseConnection(connection);
 		if (dataFromDB != null) {
-			List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
 			int result = dataFromDB.bufferedSize();
 			if(result != 0){
 				for (Object record : dataFromDB) {
@@ -293,6 +293,13 @@ public class DatabaseHandler {
 		throw new FileChunkNotFoundException(filename, chunkId);	
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
+	@SuppressWarnings("unused")
 	public static boolean isFileAvailable(String filename) throws EmptyConnectionPoolException{
 		Connection connection = databaseConnectionManager.getConnection();
 
@@ -328,6 +335,7 @@ public class DatabaseHandler {
 	 * @throws EmptyConnectionPoolException 
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unused")
 	public static boolean deleteFile(String filename) throws EmptyConnectionPoolException {
 		Connection connection = databaseConnectionManager.getConnection();
 		try {
@@ -347,7 +355,14 @@ public class DatabaseHandler {
 		}
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static List<FluffyFile> getAllFileContentsFromRethink()
 			throws FileNotFoundException, IOException, ParseException, EmptyConnectionPoolException {
 		System.out.println("Entered DatabaseHandler::getAllFileContents");
@@ -369,7 +384,14 @@ public class DatabaseHandler {
 		return fileContents;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static List<FluffyFile> getAllFileContentsFromRiak()
 			throws FileNotFoundException, IOException, ParseException, EmptyConnectionPoolException {
 		List<FluffyFile> fileContents = new ArrayList<FluffyFile>();
@@ -377,7 +399,14 @@ public class DatabaseHandler {
 		fileContents = riakDatabase.getAllFiles();
 		return fileContents;
 	}
-	
+
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
+	@SuppressWarnings("unused")
 	public static boolean isFileAvailableInRethink(String filename) throws EmptyConnectionPoolException{
 		Connection connection = databaseConnectionManager.getConnection();
 		Cursor<String> dataFromDB = rethinkDBInstance.db(Constants.DATABASE).table(Constants.TABLE)
@@ -398,6 +427,12 @@ public class DatabaseHandler {
 		return false;	
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws EmptyConnectionPoolException
+	 */
 	public static boolean isFileAvailableInRiak(String filename) throws EmptyConnectionPoolException{
 		riakDatabase = RiakDatabase.getRiakInstance();
 		int isAvailable = riakDatabase.getChunkCount(filename);

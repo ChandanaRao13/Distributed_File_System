@@ -1,24 +1,19 @@
 package gash.router.server.commandRouterHandlers;
 
-import io.netty.channel.Channel;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pipe.work.Work.WorkMessage;
-import routing.Pipe.CommandMessage;
-import routing.Pipe.FileTask.FileTaskType;
 import gash.router.cluster.GlobalEdgeMonitor;
 import gash.router.database.DatabaseHandler;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.message.generator.MessageGenerator;
 import gash.router.server.queue.management.InternalChannelNode;
-import gash.router.server.queue.management.LoadQueueManager;
-import gash.router.server.queue.management.NodeLoad;
 import gash.router.server.queue.management.QueueManager;
 import gash.router.server.replication.DataReplicationManager;
 import gash.router.util.GlobalMessageBuilder;
 import global.Global.GlobalMessage;
+import routing.Pipe.CommandMessage;
+import routing.Pipe.FileTask.FileTaskType;
 
 public class DeleteRouterHandler implements ICommandRouterHandlers {
 	private  ICommandRouterHandlers nextInChain;
@@ -47,16 +42,8 @@ public class DeleteRouterHandler implements ICommandRouterHandlers {
 					logger.error("File requested to delete is not deleted from the database");					
 				}
 			}
-			/* else {
-			
-				CommandMessage commandMessage = MessageGenerator.getInstance().generateClientResponseMsg("File is not available so cannot be deleted....");
-				QueueManager.getInstance().enqueueOutboundCommmand(commandMessage, request.getChannel());
-				logger.error("File requested to delete is not available in the database");
-				}*/
-			
 			String clientId = EdgeMonitor.clientInfoMap(request);
 			if (EdgeMonitor.getLeaderId() == EdgeMonitor.getNodeId()) {
-				// Convert to Global Command Message and send it
 				GlobalMessage globalMessage = GlobalMessageBuilder.generateGlobalDeleteRequestMessage(request.getCommandMessage().getFiletask().getFilename(), clientId);
 				GlobalEdgeMonitor.broadcastToClusterFriends(globalMessage);
 			} else {

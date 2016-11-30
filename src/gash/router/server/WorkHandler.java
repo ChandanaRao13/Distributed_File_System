@@ -14,8 +14,8 @@
  * under the License.
  */
 package gash.router.server;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gash.router.server.workChainHandler.ElectionMessageChainHandler;
 import gash.router.server.workChainHandler.FailureHandler;
@@ -28,24 +28,8 @@ import gash.router.server.workChainHandler.WorkStealHandler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import gash.router.server.edges.EdgeInfo;
-import gash.router.server.edges.EdgeList;
-import gash.router.util.RaftMessageBuilder;
-import io.netty.channel.ChannelFuture;
 import pipe.common.Common.Failure;
-import pipe.common.Common.Header;
-import pipe.election.Election;
-import pipe.election.Election.LeaderStatus.LeaderQuery;
-import pipe.election.Election.LeaderStatus.LeaderState;
-import pipe.election.Election.RaftElectionMessage.ElectionMessageType;
-import pipe.work.Work.Heartbeat;
-import pipe.work.Work.Task;
 import pipe.work.Work.WorkMessage;
-import pipe.work.Work.WorkState;
 
 /**
  * The message handler processes json messages that are delimited by a 'newline'
@@ -96,25 +80,20 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 	 */
 	public void handleMessage(WorkMessage msg, Channel channel) {
 		if (msg == null) {
-			// TODO add logging
-			System.out.println("ERROR: Unexpected content - " + msg);
+			logger.error("ERROR: Unexpected content - " + msg);
 			return;
 		}
 
 		if (debug)
 			PrintUtil.printWork(msg);
-
-		// TODO How can you implement this without if-else statements?
 		try {
 			hearBeatChainHandler.handle(msg, channel);
 			 
 		} catch (Exception e) {
-			// TODO add logging
+			logger.error("Error: Exception caught: " + e.getMessage());
 			Failure.Builder eb = Failure.newBuilder();
 			eb.setId(state.getConf().getNodeId());
 			eb.setRefId(msg.getHeader().getNodeId());
-			// changing e.getMessage to some string
-			//eb.setMessage(e.getMessage());
 			eb.setMessage("fixing the null pointer");
 			WorkMessage.Builder rb = WorkMessage.newBuilder(msg);
 			rb.setErr(eb);

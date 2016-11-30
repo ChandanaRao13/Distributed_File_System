@@ -18,21 +18,12 @@
 //changes
 package gash.router.server.edges;
 
-//change
-import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +37,12 @@ import gash.router.server.queue.management.InternalChannelNode;
 import gash.router.server.queue.management.LoadQueueManager;
 import gash.router.server.queue.management.NodeLoad;
 import gash.router.util.RaftMessageBuilder;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import pipe.common.Common.Header;
 import pipe.work.Work.Heartbeat;
 import pipe.work.Work.WorkMessage;
@@ -64,9 +60,9 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 	private static ServerState state;
 	private static RaftElectionContext electionCtx;
 	private boolean forever = true;
-	private ArrayList<InetAddress> activeIps;
 
 
+	@SuppressWarnings("static-access")
 	public EdgeMonitor(ServerState state) {
 		if (state == null)
 			throw new RuntimeException("state is null");
@@ -111,6 +107,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 							}
 						}
 					} catch (Exception e) {
+						logger.error("Error: Exception caught: " + e.getMessage());
 						System.out.println("Connection unsuccessful: " + e.getMessage());
 						System.out.println("Connection unsuccessful: " + ei.getHost());
 					}
@@ -203,7 +200,6 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 						ei.setActive(ei.getChannel().isActive());
 						if(!ei.getChannel().isActive())
 							ei.setChannel(null);
-						//deleteNodeFromQueue(ei.getRef())
 					}
 				}
 				if(!state.getConf().isNewNode())
@@ -217,8 +213,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 				}
 				Thread.sleep(dt);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				logger.error("Error: Exception caught: " + e.getMessage());
 			}
 		}
 	}
@@ -237,9 +232,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			ch = b.connect(host, port).syncUninterruptibly().channel();
 			Thread.sleep(dt);
 		} catch (Exception e) {
-				//e.printStackTrace();
-				//logger.info("trying to connect to node"+host);
-			
+			logger.error("Error: Exception caught: " + e.getMessage());
 		}
 		return ch;
 
@@ -339,15 +332,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 
 	public static Channel fetchChannelToStealReadWork() {
 		Channel channel = null;
-		//logger.info("work Steal Queue is empty: " + workStealQueue.isEmpty());
-
 		if(!workStealQueue.isEmpty()) {
-			// TO DO - need to see if the node is leader. if yes enqueue it.
 			Integer nodeId = workStealQueue.remove();
-			/*if(nodeId.intValue() == 5) {
-				workStealQueue.add(nodeId);
-				return null;
-			}*/
 			channel = node2ChannelMap.get(nodeId);
 			workStealQueue.add(nodeId);
 		}
@@ -362,25 +348,24 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		public void run() {
 			try {
 				while (forever) {
-						addToNode2ChannelMap(getInboundEdges());
-						addToNode2ChannelMap(getOutboundEdges());	
-						removeUnAvailableNodes(getOutboundEdges());
-					}
+					addToNode2ChannelMap(getInboundEdges());
+					addToNode2ChannelMap(getOutboundEdges());
+					removeUnAvailableNodes(getOutboundEdges());
+				}
 			} catch (Exception e) {
 				logger.error("An error has occured ", e);
 			}
 		}
-		
+
 		private void removeUnAvailableNodes(EdgeList edges) {
-			try{
+			try {
 				for (EdgeInfo ei : edges.map.values()) {
-					if(!ei.isActive() || ei.getChannel() == null || !ei.getChannel().isActive()){
+					if (!ei.isActive() || ei.getChannel() == null || !ei.getChannel().isActive()) {
 						deleteNodeFromQueue(ei.getRef());
 					}
 				}
-			}
-			catch (Exception e) {
-				System.out.println("Error: error at removeUnAvailableNodes while removing nodes: " + e.getMessage());
+			} catch (Exception e) {
+				logger.error("Error: error at removeUnAvailableNodes while removing nodes: " + e.getMessage());
 			}
 		}
 
@@ -393,22 +378,21 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 						Set<Integer> nodeIdSet = edgeListMapper.keySet();
 						if (nodeIdSet != null)
 							for (Integer nodeId : nodeIdSet) {
-								
+
 								if (nodeId != null && !node2ChannelMap.containsKey(nodeId)
 										&& edgeListMapper.containsKey(nodeId)
 										&& edgeListMapper.get(nodeId).getChannel() != null) {
-									if(edgeListMapper.get(nodeId).getChannel() != null ) {
+									if (edgeListMapper.get(nodeId).getChannel() != null) {
 										logger.info("Added node " + nodeId + " " + edgeListMapper.get(nodeId).getHost()
 												+ " to channel map. ");
 										node2ChannelMap.put(nodeId, edgeListMapper.get(nodeId).getChannel());
 										addNodeLoadToQueue(nodeId);
-										if(!workStealQueue.contains(nodeId)) {
+										if (!workStealQueue.contains(nodeId)) {
 											logger.info("Adding node to the stealing queue: " + nodeId);
 											workStealQueue.add(nodeId);
 										}
 									}
 								}
-								//addNodeLoadToQueue(nodeId);
 							}
 					}
 				}
@@ -416,19 +400,18 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 				logger.error("An Error has occured ", exception);
 			}
 		}
-		
-		
-		private synchronized void addNodeLoadToQueue(Integer nodeId){
-			if(nodeId != null && !loadNodeSet.contains(nodeId.intValue())){
+
+		private synchronized void addNodeLoadToQueue(Integer nodeId) {
+			if (nodeId != null && !loadNodeSet.contains(nodeId.intValue())) {
 				System.out.println("Adding loadNodeset: " + nodeId);
 				loadNodeSet.add(nodeId.intValue());
 				NodeLoad node = new NodeLoad(nodeId.intValue(), 0);
 				LoadQueueManager.getInstance().insertNodeLoadInfo(node);
-			} 
+			}
 		}
-		
+
 		private synchronized void deleteNodeFromQueue(Integer nodeId) {
-			if(nodeId != null && loadNodeSet.contains(nodeId.intValue())) {
+			if (nodeId != null && loadNodeSet.contains(nodeId.intValue())) {
 				System.out.println("Deleting loadNode: " + nodeId);
 				loadNodeSet.remove(nodeId);
 				LoadQueueManager.getInstance().removeLoadInfo(nodeId);
@@ -436,21 +419,20 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 		}
 
 	}
+
 	public void connectToAll() {
-		for(EdgeInfo ei:this.outboundEdges.map.values()){
-			if(ei.getChannel() == null) 
+		for (EdgeInfo ei : this.outboundEdges.map.values()) {
+			if (ei.getChannel() == null)
 				ei.setChannel(connectToChannel(ei.getHost(), ei.getPort()));
 		}
-		
+
 	}
-	
-	public static int getLeaderId(){
+
+	public static int getLeaderId() {
 		return electionCtx.getLeaderId();
 	}
-	
-	public static int getNodeId(){
+
+	public static int getNodeId() {
 		return state.getConf().getNodeId();
 	}
 }
-
-
